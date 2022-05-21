@@ -1,17 +1,14 @@
 <script>
-
+  import banner from '$lib/banner/vgerbanner.png'
 </script>
 
-<div>
-  <div class='triangle' />
-  <div class='pips'>
-    <div class='pip empty' />
-    <div class='pip filled' />
-    <div class='pip filled' />
-  </div>
-</div>
+<img id="topbanner" src={banner} alt="banner">
 
 <style>
+  #topbanner {
+    width: 100vw;
+    display: block;
+  }
   div {
     background-color: #313131;
     width: 100%;
