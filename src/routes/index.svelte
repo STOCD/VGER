@@ -1,8 +1,10 @@
 <script>
   import { onMount } from 'svelte';
-  import { activeTab, activeCard } from '$lib/stores';
+  import { activeTab, activeCard} from '$lib/stores';
   import Header from '$lib/header/Header.svelte';
   import Grid from '$lib/grid/Grid.svelte';
+  import Acronyms from '$lib/acronyms/Acronyms.svelte';
+  
 
   // placeholder data
   const entry = {
@@ -28,6 +30,10 @@
 
 <Header />
 <main>
+  <Acronyms />
+  <!--{#if $activeTab == 'Knowledgebase'}
+    <Acronyms />
+  {:else}
   <section>
     <Grid {data} />
   </section>
@@ -40,12 +46,13 @@
     <p>{$activeCard.description.detailed}</p>
     {/if}
   </aside>
+  {/if}-->
 </main>
 
 <style>
   main {
     display: flex;
-    height: calc(100vh - 9.25rem); /* minus the height of the rest of the UI */
+    height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter)); /* minus the height of the rest of the UI */
     width: 100%;
     margin: 0;
     padding: var(--gutter);

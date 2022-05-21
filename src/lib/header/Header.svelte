@@ -1,11 +1,11 @@
 <script>
-  import { activeTab } from '$lib/stores';
+  import { activeTab, srcValue } from '$lib/stores';
   import SearchIcon from './SearchIcon.svelte';
   import HamburgerIcon from './HamburgerIcon.svelte';
 
   const tabs = ['Traits and Skills', 'Starship Gear', 'Ground Gear', 'Knowledgebase'];
 
-  let value;
+  
 
   const handleClick = (title) => {
     $activeTab = title;
@@ -31,7 +31,7 @@
   <form on:submit={handleSubmit}>
     <label for="search" aria-label="search" class="visually-hidden"> Search </label>
     <button type="submit" class="search-button"><SearchIcon /></button>
-    <input type="text" id="search" bind:value placeholder="SEARCH" />
+    <input type="text" id="search" bind:value={$srcValue} placeholder="SEARCH" />
     <button class="hamburger"><HamburgerIcon /></button>
   </form>
 </header>

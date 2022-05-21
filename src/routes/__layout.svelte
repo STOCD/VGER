@@ -6,10 +6,6 @@
 
 <Banner />
 <div>
-  <h1>
-    <span>Visual Glossary Educational Repository</span>
-    <img src={Chevron} alt='Starfleet science chevron' />
-  </h1>
   <slot />
 </div>
 
@@ -17,8 +13,10 @@
 <style>
   div {
     background-color: var(--science-blue);
-    padding: var(--gutter);
-    height: 100%;
+    padding: 0 var(--gutter) var(--gutter);
+    margin-top: 0;
+    width: 100%;
+    position: fixed;
   }
   h1 {
     display: flex;
