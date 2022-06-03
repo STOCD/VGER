@@ -1,6 +1,10 @@
 <script>
-  import { activeCard } from '$lib/stores';
+  import { activeCard, image_path } from '$lib/stores';
+  import { onMount } from 'svelte';
+  import {starship_traits} from '$lib/fetch/masterfetch';
   export let item;
+  let cardimage = image_path+item.name+'.png';
+  $: cardimage = image_path+item.name+'.png';
 
   const handleClick = () => {
     $activeCard = item;
@@ -10,19 +14,7 @@
 </script>
 
 <button class='card' on:click={handleClick}>
-  <img src="https://via.placeholder.com/150" alt="placeholder" />
-  <div class='content'>
-    <h2>{item.type}</h2>
-    <h3>{item.name}</h3>
-  </div>
-  <div class='content'>
-    <h2>Obtained From</h2>
-    <ul>
-      {#each item.obtained as method, index (index)}
-        <li>{method}</li>
-      {/each}
-    </ul>
-  </div>
+  <img src={cardimage} alt={item.name} />
 </button>
 
 <style>
@@ -31,16 +23,17 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    height: 19rem;
+    /*height: 10rem;*/
     border: none;
     margin: 0;
-    padding: 1rem;
+    padding: calc(0.5*var(--gutter));
     color: var(--gray-text);
     background-color: var(--light-background);
   }
 
   .card:hover {
     cursor: pointer;
+    background-color: var(--light-background-hover);
   }
 
   .card:active {
@@ -48,35 +41,8 @@
   }
 
   img {
-    height: 9rem;
-    width: 8rem;
-    margin: 0 0 var(--gutter);
-    margin-bottom: var(--gutter);
-  }
-
-  .content {
-    text-align: center;
-    /* margin-bottom: var(--gutter); */
-  }
-
-  h2 {
-    font-size: 0.75rem;
-    margin: 0 0 0.35rem;
-  }
-
-  h3 {
-    font-size: 1rem;
-    margin: 0;
-  }
-
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  li {
-    margin-bottom: 0.25rem;
-    font-size: 0.75rem;
+    width: var(--card-image-width);
+    /*margin: 0 0 var(--gutter);
+    margin-bottom: var(--gutter);*/
   }
 </style>

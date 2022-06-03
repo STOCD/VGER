@@ -1,9 +1,9 @@
 <script>
-  import { activeTab, srcValue } from '$lib/stores';
+  import { activeTab, srcValue, active_settings } from '$lib/stores';
   import SearchIcon from './SearchIcon.svelte';
   import HamburgerIcon from './HamburgerIcon.svelte';
 
-  const tabs = ['Traits and Skills', 'Starship Gear', 'Ground Gear', 'Knowledgebase'];
+  const tabs = ['Starship Traits', 'Starship Gear', 'Ground Gear', 'Knowledgebase'];
 
   
 
@@ -16,6 +16,9 @@
     event.preventDefault();
     // filter by search term and current active tab
   };
+  const toggleSettings = (event) => {
+    active_settings.set(!$active_settings);
+  }
 </script>
 
 <header>
@@ -30,9 +33,9 @@
   </nav>
   <form on:submit={handleSubmit}>
     <label for="search" aria-label="search" class="visually-hidden"> Search </label>
-    <button type="submit" class="search-button"><SearchIcon /></button>
+    <!--<button type="submit" class="search-button"><SearchIcon /></button>-->
     <input type="text" id="search" bind:value={$srcValue} placeholder="SEARCH" />
-    <button class="hamburger"><HamburgerIcon /></button>
+    <button class="hamburger" on:click={toggleSettings}><HamburgerIcon /></button>
   </form>
 </header>
 
@@ -43,7 +46,10 @@
     width: 100%;
     background-color: #616161;
   }
-
+  #search {
+    margin: 0 auto;
+    border-right: 1px solid var(--dark-text);
+  }
   nav {
     width: 70%;
   }
@@ -66,30 +72,34 @@
   }
 
   button {
-    background-color: lightgray;
+    background-color: var(--light-text);
     color: var(--gray-text);
     border: none;
-    border-right: 1px solid black;
     text-transform: uppercase;
     font-weight: bold;
+  }
+  button:not(.hamburger) {
+    border-right: calc(.5*var(--border)) solid var(--dark-text);
   }
 
   button:hover {
     cursor: pointer;
-    background-color: #afafaf;
+    background-color: var(--light-text-hover);
     text-decoration: underline;
   }
 
   button:active:not(.hamburger):not(.search-button) {
     transform: scale(0.98);
   }
-
+  .hamburger:active {
+    background-color: var(--science-blue-dimmed);
+  }
   form {
     width: 30%;
     display: flex;
-    justify-content: center;
+    justify-content: right;
     align-items: center;
-    background-color: lightgray;
+    background-color: var(--light-text);
   }
 
   .search-button {
@@ -99,6 +109,7 @@
 
   .hamburger {
     width: 15%;
+    border-left: calc(.5*var(--border)) solid var(--dark-text);
   }
 
   .visually-hidden {

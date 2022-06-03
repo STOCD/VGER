@@ -18,7 +18,7 @@
     width: 100%;
     position: fixed;
   }
-  h1 {
+  /*h1 {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -35,5 +35,5 @@
     height: 2rem;
     width: 1.25rem;
     margin-left: 0.5rem;
-  }
+  }*/
 </style>

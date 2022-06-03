@@ -1,7 +1,7 @@
 <script>
-    import acr from '$lib/acronyms/acronyms.json'
-    import {srcValue, filtered} from '$lib/stores'
-    import {matchSorter} from 'match-sorter'
+    import acr from '$lib/acronyms/acronyms.json';
+    import {srcValue, filtered} from '$lib/stores';
+    import {matchSorter} from 'match-sorter';
     import { onMount } from 'svelte';
     const items = acr.content
     onMount(async () =>
@@ -32,20 +32,13 @@
             <th>Term</th>
             <th>Description</th>
         </thead>
-        <tr id='parter'>
-            <td class='small'></td>
-            <td class='small'></td>
-            <td class='small'></td>
-        </tr>
-    {#each $filtered as it,i}
-        <p style='display:none'>   
-        {#if i%2 == 0}
-            {rowhighlight = 'highlight'}
-        {:else}
-            {rowhighlight = ''}
-        {/if}
-        </p>
-        <tr class={rowhighlight}>
+        <!--<tr class='parter'>
+            <td class='small parter'></td>
+            <td class='small parter'></td>
+            <td class='small parter'></td>
+        </tr>-->
+    {#each $filtered as it}
+        <tr>
             <td>
                 {it.acr}
             </td>
@@ -73,7 +66,7 @@
         color: var(--light-text);
     }
     
-    .highlight {
+    tr:nth-child(2n+1) {
         background-color: var(--science-blue-dimmed);
     }
     #tbl1 {
@@ -96,15 +89,6 @@
         font-weight: bold;
         text-align: left;
         padding: var(--gutter) 0 var(--gutter) var(--gutter);
-    }
-    #parter {
-        position: -webkit-sticky;
-        position: sticky;
-        top: 2.15rem;
-        height: 2px;
-        background-color: var(--light-text);
-    }
-    .small {
-        padding: 0;
+        box-shadow: 0 var(--border) 0 #fff;
     }
 </style>
