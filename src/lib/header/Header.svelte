@@ -1,14 +1,20 @@
 <script>
-  import { activeTab, srcValue, active_settings } from '$lib/stores';
+  import { activeTab, srcValue, active_settings, current_list, activeCard, settings_env, settings_type, settings_av } from '$lib/stores';
   import SearchIcon from './SearchIcon.svelte';
   import HamburgerIcon from './HamburgerIcon.svelte';
 
-  const tabs = ['Starship Traits', 'Starship Gear', 'Ground Gear', 'Knowledgebase'];
-
+  const tabs = ['Starship Traits', 'Starship Gear', 'Personal Traits', 'Knowledgebase'];
+  const lists = {'Starship Traits':'starship_traits', 'Personal Traits':'personal_traits','Starship Gear':'','Knowledgebase':''};
   
 
   const handleClick = (title) => {
     $activeTab = title;
+    $current_list = lists[title];
+    $srcValue = '';
+    $activeCard = '';
+    $settings_env = '';
+    $settings_type = [];
+    $settings_av = [];
     // fetch active tab category json for card information
   };
 
@@ -34,8 +40,8 @@
   <form on:submit={handleSubmit}>
     <label for="search" aria-label="search" class="visually-hidden"> Search </label>
     <!--<button type="submit" class="search-button"><SearchIcon /></button>-->
-    <input type="text" id="search" bind:value={$srcValue} placeholder="SEARCH" />
-    <button class="hamburger" on:click={toggleSettings}><HamburgerIcon /></button>
+    <input type="text" id="search" bind:value={$srcValue} placeholder="SEARCH" title='search the current tab'/>
+    <button class="hamburger" on:click={toggleSettings} title='Settings and Filters (tab-specific)'><HamburgerIcon /></button>
   </form>
 </header>
 
@@ -48,7 +54,20 @@
   }
   #search {
     margin: 0 auto;
-    border-right: 1px solid var(--dark-text);
+    border-right: 1px solid var(--dark-text); 
+    height: 60%;
+    width: 70%;
+    font-size: 1rem;
+    padding: 0 0.25rem;
+    border: none;
+    background-color: var(--dark-background);
+    color: var(--light-text);
+  }
+  #search:hover {
+    background-color: var(--dark-background-hover);
+  }
+  #search::placeholder {
+    color: var(--light-background);
   }
   nav {
     width: 70%;
@@ -120,19 +139,5 @@
     position: absolute;
     white-space: nowrap;
     width: 1px;
-  }
-
-  input {
-    height: 60%;
-    width: 70%;
-    font-size: 1rem;
-    padding: 0 0.25rem;
-    border: none;
-    background-color: var(--dark-background);
-    color: var(--light-background);
-  }
-
-  input::placeholder {
-    color: var(--light-background);
   }
 </style>

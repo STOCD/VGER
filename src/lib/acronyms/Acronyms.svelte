@@ -1,21 +1,21 @@
 <script>
-    import acr from '$lib/acronyms/acronyms.json';
-    import {srcValue, filtered} from '$lib/stores';
+    import {srcValue, filtered, acronyms, activeTab} from '$lib/stores';
     import {matchSorter} from 'match-sorter';
     import { onMount } from 'svelte';
-    const items = acr.content
-    onMount(async () =>
-    {
+
         srcValue.subscribe( () => {
-            filtered.set(matchSorter(items, $srcValue, {keys : ['acr', 'term', 'desc']}));
+            if ($activeTab == 'Knowledgebase') {
+            console.log('hey')
+            console.log(acronyms);
+            filtered.set(matchSorter(acronyms, $srcValue, {keys : ['acr', 'term', 'desc']}));
             if (document) {
                 let div1 = document.getElementById('div1')
                 if (div1 != null) {
                     div1.scrollTop = 0;
             }}
+        }
         });
-    }   )
-    let rowhighlight = ''
+
     
     
     

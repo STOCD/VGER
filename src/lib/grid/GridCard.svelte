@@ -1,7 +1,5 @@
 <script>
   import { activeCard, image_path } from '$lib/stores';
-  import { onMount } from 'svelte';
-  import {starship_traits} from '$lib/fetch/masterfetch';
   export let item;
   let cardimage = image_path+item.name+'.png';
   $: cardimage = image_path+item.name+'.png';
@@ -13,7 +11,7 @@
   // https://sto.fandom.com/wiki/Special:Filepath/Emergency_Weapon_Cycle_icon.png
 </script>
 
-<button class='card' on:click={handleClick}>
+<button class='card' title={item.name} on:click={handleClick}>
   <img src={cardimage} alt={item.name} />
 </button>
 

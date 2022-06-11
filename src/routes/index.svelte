@@ -1,12 +1,14 @@
 <script>
   import { onMount } from 'svelte';
-  import { activeTab, activeCard, image_path, wiki_url} from '$lib/stores';
+  import { activeTab, current_list} from '$lib/stores';
   import Header from '$lib/header/Header.svelte';
   import Grid from '$lib/grid/Grid.svelte';
   import Acronyms from '$lib/acronyms/Acronyms.svelte';
   import Sidebar from '$lib/sidebar/Sidebar.svelte';
   import Settings from '$lib/settings/Settings.svelte';
  
+  $current_list = 'starship_traits';
+  $activeTab = 'Starship Traits';
   /*
   const unsub = activeCard.subscribe((current_value) => {
     $activeUrl = 'https://stobuilds.com/VGER/data/images/'+current_value.name+'.png';
@@ -110,13 +112,14 @@
   <!--<Acronyms />-->
   {#if $activeTab == 'Knowledgebase'}
     <Acronyms />
-  {:else}
-  <section>
+  {:else if $activeTab == 'Starship Traits'}
     <Grid/>
-  </section>
-
   <Sidebar/>
- 
+  {:else if $activeTab == 'Personal Traits'}
+    <Grid/>
+  <Sidebar/>
+  {:else}
+    <p>empty</p>
   {/if}
 </main>
 
@@ -129,10 +132,5 @@
     padding: var(--gutter);
     background-color: var(--dark-background);
     overflow: hidden;
-  }
-  section {
-    width: 70%;
-    overflow-y: scroll;
-    margin-right: var(--gutter);
   }
 </style>
