@@ -1,20 +1,29 @@
 <script>
   import GridCard from "./GridCard.svelte";
-  import {srcValue, filtered, current_list, activeTab, settings_env, settings_type, settings_av} from '$lib/stores';
+  import {srcValue, filtered, current_list, activeTab, settings_env, settings_type, settings_av, settings_ground_slot, settings_space_slot, settings_rarity} from '$lib/stores';
   import { data } from '$lib/fetch/masterfetch';
   import {matchSorter} from 'match-sorter';
 
+  //update filter and search on change of any filter store variable
   srcValue.subscribe( () => update_filter() );
   settings_env.subscribe( () => update_filter() );
   settings_type.subscribe( () => update_filter() );
   settings_av.subscribe( () => update_filter() );
+  settings_ground_slot.subscribe( () => update_filter() );
+  settings_space_slot.subscribe( () => update_filter() );
+  settings_rarity.subscribe( () => update_filter() );
 
+
+  //updates the filter for the current tab
   function update_filter() {
+
     if ($activeTab == 'Personal Traits') {
+
       let environment_filtered = data[$current_list];
       if ($settings_env != '') {
         environment_filtered = matchSorter(data[$current_list], $settings_env, {keys: ['environment'], threshold: matchSorter.rankings.EQUAL})
       }
+
       let type_filtered = [];
       if ($settings_type.length == 0) {
         type_filtered = environment_filtered;
@@ -30,6 +39,7 @@
           type_filtered.push(...matchSorter(environment_filtered, 'activereputation', {keys: ['type'], threshold: matchSorter.rankings.EQUAL}))
         }
       }
+
       let av_filtered = [];
       if ($settings_av.length == 0) {
         av_filtered = type_filtered;
@@ -45,35 +55,111 @@
           av_filtered.push(...matchSorter(type_filtered, 'other', {keys: ['availability_type'], threshold: matchSorter.rankings.EQUAL}))
         }
       }
+
       let search_filtered = matchSorter(av_filtered, $srcValue, {keys: ['name']});
       filtered.set(search_filtered);
+
+      //scroll to the top
       try {
         document.getElementById('main_section').scrollTop(0);
       }
       catch {}
+
     }
+
     else if ($activeTab == 'Starship Traits') {
+
       let search_filtered = matchSorter(data[$current_list], $srcValue, {keys: ['name']});
       filtered.set(search_filtered);
+
+      //scroll to the top
       try {
         document.getElementById('main_section').scrollTop = 0;
       }
       catch {}
+
     }
+
+    else if ($activeTab == 'Space Equipment') {
+
+      let type_filtered = []
+      if ($settings_space_slot.length == 0) {
+        type_filtered = data[$current_list];
+      }
+      else {
+        for (let k = 0; k < $settings_space_slot.length; k++) {
+          type_filtered.push(...matchSorter(data[$current_list], $settings_space_slot[k], {keys: ['type'], threshold: matchSorter.rankings.EQUAL}))
+        }
+      }
+
+      let rarity_filtered = [];
+      if ($settings_rarity.length == 0) {
+        rarity_filtered = type_filtered;
+      }
+      else {
+        for (let k2 = 0; k2 < $settings_rarity.length; k2++) {
+          rarity_filtered.push(...matchSorter(type_filtered, $settings_rarity[k2], {keys: ['rarity'], threshold: matchSorter.rankings.EQUAL}))
+        }
+      }
+
+      let search_filtered = matchSorter(rarity_filtered, $srcValue, {keys: ['name']});
+      filtered.set(search_filtered);
+
+      // scroll to the top
+      try {
+        document.getElementById('main_section').scrollTop = 0;
+      }
+      catch {}
+
+    }
+
+    else if ($activeTab == 'Ground Equipment') {
+
+      let type_filtered = []
+      if ($settings_ground_slot.length == 0) {
+        type_filtered = data[$current_list];
+      }
+      else {
+        for (let k = 0; k < $settings_ground_slot.length; k++) {
+          type_filtered.push(...matchSorter(data[$current_list], $settings_ground_slot[k], {keys: ['type'], threshold: matchSorter.rankings.EQUAL}))
+        }
+      }
+
+      let rarity_filtered = [];
+      if ($settings_rarity.length == 0) {
+        rarity_filtered = type_filtered;
+      }
+      else {
+        for (let k2 = 0; k2 < $settings_rarity.length; k2++) {
+          rarity_filtered.push(...matchSorter(data[$current_list], $settings_rarity[k2], {keys: ['rarity'], threshold: matchSorter.rankings.EQUAL}))
+        }
+      }
+
+      let search_filtered = matchSorter(rarity_filtered, $srcValue, {keys: ['name']});
+      filtered.set(search_filtered);
+
+      // scroll to the top
+      try {
+        document.getElementById('main_section').scrollTop = 0;
+      }
+      catch {}
+
+    }
+
   }
 
-  
 </script>
+
 <section id='main_section'>
-<div id='div1'>
-  {#each $filtered as item, index (index)}
-    <GridCard {item} />
-  {/each}
-</div>
+  <div id='div1'>
+    {#each $filtered as item, index (index)}
+      <GridCard {item} />
+    {/each}
+  </div>
 </section>
 
 <style>
-  div {
+  #div1 {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(calc(var(--card-image-width) +  var(--gutter)), 1fr));
     gap: var(--gutter) var(--gutter);

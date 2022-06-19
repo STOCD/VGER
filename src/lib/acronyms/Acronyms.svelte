@@ -1,26 +1,23 @@
 <script>
-    import {srcValue, filtered, acronyms, activeTab} from '$lib/stores';
-    import {matchSorter} from 'match-sorter';
-    import { onMount } from 'svelte';
 
-        srcValue.subscribe( () => {
-            if ($activeTab == 'Knowledgebase') {
-            console.log('hey')
-            console.log(acronyms);
-            filtered.set(matchSorter(acronyms, $srcValue, {keys : ['acr', 'term', 'desc']}));
-            if (document) {
-                let div1 = document.getElementById('div1')
-                if (div1 != null) {
-                    div1.scrollTop = 0;
-            }}
-        }
-        });
+import {srcValue, filtered, acronyms, activeTab} from '$lib/stores';
+import {matchSorter} from 'match-sorter';
 
-    
-    
-    
+srcValue.subscribe( () => {
+    if ($activeTab == 'Acronyms') {
+    filtered.set(matchSorter(acronyms, $srcValue, {keys : ['acr', 'term', 'desc']}));
+    if (document) {
+        let div1 = document.getElementById('div1')
+        if (div1 != null) {
+            div1.scrollTop = 0;
+    }}
+}
+});
+ 
 </script>
+
 <div id='div1'>
+
     <table id="tbl1">
         <colgroup>
             <col id="col1"/>
@@ -32,26 +29,23 @@
             <th>Term</th>
             <th>Description</th>
         </thead>
-        <!--<tr class='parter'>
-            <td class='small parter'></td>
-            <td class='small parter'></td>
-            <td class='small parter'></td>
-        </tr>-->
-    {#each $filtered as it}
-        <tr>
-            <td>
-                {it.acr}
-            </td>
-            <td>
-                {it.term}
-            </td>
-            <td>
-                {it.desc}
-            </td>
-        </tr>
-    {/each}
+        {#each $filtered as it}
+            <tr>
+                <td>
+                    {it.acr}
+                </td>
+                <td>
+                    {it.term}
+                </td>
+                <td>
+                    {it.desc}
+                </td>
+            </tr>
+        {/each}
     </table>
+
 </div>
+
 <style>
     #div1 {
         overflow: auto;
@@ -65,7 +59,6 @@
     td {
         color: var(--light-text);
     }
-    
     tr:nth-child(2n+1) {
         background-color: var(--science-blue-dimmed);
     }
