@@ -1,7 +1,3 @@
-const dev_path = '/src';    // for dev
-
-//const dev_path = '';      // for build
-
 import { writable } from 'svelte/store';
 
 import acr from '../data/acronyms.json';
@@ -34,8 +30,12 @@ export const settings_ground_slot = writable([]);
 
 export const settings_rarity = writable([]);
 
-export const image_path = dev_path + '/images/';
+export const image_path = '/images/'; // for build
 
-export const icon_path = dev_path + '/icons/';
+export const icon_path = '/icons/';     // for build
+
+//export const image_path = '/src/images/'; // for dev
+
+//export const icon_path = '/src/icons/';     // for dev
 
 export const wiki_url = 'https://sto.fandom.com/wiki/';
