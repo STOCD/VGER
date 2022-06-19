@@ -1,13 +1,22 @@
 <script>
   import GridCard from "./GridCard.svelte";
-  import {srcValue, filtered, current_list, activeTab, settings_env, settings_type, settings_av} from '$lib/stores';
+  import {srcValue, filtered, current_list, activeTab, settings_env, settings_type, settings_av, settings_ground_slot, settings_space_slot,
+          settings_boundto, settings_boundwhen, settings_rarity
+    } from '$lib/stores';
   import { data } from '$lib/fetch/masterfetch';
   import {matchSorter} from 'match-sorter';
+
+  console.log($activeTab);
 
   srcValue.subscribe( () => update_filter() );
   settings_env.subscribe( () => update_filter() );
   settings_type.subscribe( () => update_filter() );
   settings_av.subscribe( () => update_filter() );
+  settings_ground_slot.subscribe( () => update_filter() );
+  settings_space_slot.subscribe( () => update_filter() );
+  settings_rarity.subscribe( () => update_filter() );
+  settings_boundto.subscribe( () => update_filter() );
+  settings_boundwhen.subscribe( () => update_filter() );
 
   function update_filter() {
     if ($activeTab == 'Personal Traits') {
@@ -54,6 +63,59 @@
     }
     else if ($activeTab == 'Starship Traits') {
       let search_filtered = matchSorter(data[$current_list], $srcValue, {keys: ['name']});
+      filtered.set(search_filtered);
+      try {
+        document.getElementById('main_section').scrollTop = 0;
+      }
+      catch {}
+    }
+    else if ($activeTab == 'Space Equipment') {
+      console.log(data[$current_list])
+      let type_filtered = []
+      if ($settings_space_slot.length == 0) {
+        type_filtered = data[$current_list];
+      }
+      else {
+        for (let k = 0; k < $settings_space_slot.length; k++) {
+          type_filtered.push(...matchSorter(data[$current_list], $settings_space_slot[k], {keys: ['type'], threshold: matchSorter.rankings.EQUAL}))
+        }
+      }
+      let rarity_filtered = [];
+      if ($settings_rarity.length == 0) {
+        rarity_filtered = type_filtered;
+      }
+      else {
+        for (let k2 = 0; k2 < $settings_rarity.length; k2++) {
+          rarity_filtered.push(...matchSorter(data[$current_list], $settings_rarity[k2], {keys: ['rarity'], threshold: matchSorter.rankings.EQUAL}))
+        }
+      }
+      let search_filtered = matchSorter(rarity_filtered, $srcValue, {keys: ['name']});
+      filtered.set(search_filtered);
+      try {
+        document.getElementById('main_section').scrollTop = 0;
+      }
+      catch {}
+    }
+    else if ($activeTab == 'Ground Equipment') {
+      let type_filtered = []
+      if ($settings_ground_slot.length == 0) {
+        type_filtered = data[$current_list];
+      }
+      else {
+        for (let k = 0; k < $settings_ground_slot.length; k++) {
+          type_filtered.push(...matchSorter(data[$current_list], $settings_ground_slot[k], {keys: ['type'], threshold: matchSorter.rankings.EQUAL}))
+        }
+      }
+      let rarity_filtered = [];
+      if ($settings_rarity.length == 0) {
+        rarity_filtered = type_filtered;
+      }
+      else {
+        for (let k2 = 0; k2 < $settings_rarity.length; k2++) {
+          rarity_filtered.push(...matchSorter(data[$current_list], $settings_rarity[k2], {keys: ['rarity'], threshold: matchSorter.rankings.EQUAL}))
+        }
+      }
+      let search_filtered = matchSorter(rarity_filtered, $srcValue, {keys: ['name']});
       filtered.set(search_filtered);
       try {
         document.getElementById('main_section').scrollTop = 0;

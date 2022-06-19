@@ -1,5 +1,6 @@
 <script>
   import { activeCard, activeTab, image_path, wiki_url} from '$lib/stores';
+  import { compensate_wiki_description, rarities } from '$lib/fetch/masterfetch';
   
   function showLinkIcon(e, id) {
     document.getElementById(id).style.visibility = 'visible';
@@ -15,10 +16,20 @@
       window.open(wiki_url+name.replaceAll(' ','_'));
     }
   }
+  function getDisplayRarity(rarity) {
+    for (let i = 0; i < rarities.length; i++) {
+      if (rarities[i].toLowerCase() == rarity.toLowerCase()) {
+        return rarities[i];
+      }
+    }
+    return rarity;
+  }
+  console.log($activeTab);
 </script>
 <aside>
 {#if $activeCard}
   <img class='aside_image' src={image_path+$activeCard.name+'.png'} alt={$activeCard.name}>
+  {#if $activeTab != 'Space Equipment' && $activeTab != 'Ground Equipment'}
   <h2 class='item_name' 
     on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')} 
     on:click={event => openLink(event,'trait', $activeCard.name)} 
@@ -26,6 +37,15 @@
     <span class='hover_underline'>{$activeCard.name}</span>
     <i class='fa fa-link link_icon' id='link_icon_header'/>
   </h2>
+  {:else}
+  <h2 class='item_name' 
+    on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')} 
+    on:click={event => window.open($activeCard.url)} 
+    on:focus={event => showLinkIcon(event, 'link_icon_header')} on:blur={event => hideLinkIcon(event, 'link_icon_header')}>
+    <span class='hover_underline'>{$activeCard.name}</span>
+    <i class='fa fa-link link_icon' id='link_icon_header'/>
+  </h2>
+  {/if}
   {#if $activeTab == 'Starship Traits'}
   <h4 class='item_type'>{$activeCard.type}</h4>
   <h3 class='aside_head'>Obtained from:</h3>
@@ -41,19 +61,33 @@
      </li>
      {/each}
   </ul>
+  {:else if $activeTab == 'Personal Traits'}
+    <h4 class='item_type'>{$activeCard.display_type}</h4>
+    {#if $activeCard.availability_type == 'innate'}
+      <h3 class='aside_head'>Availability</h3>
+      <p class='aside_text'>{'This Trait is an innate trait to the following species: '+$activeCard.availability}</p>
+    {:else if $activeCard.availability_type == 'species'}
+      <h3 class='aside_head'>Availability</h3>
+      <p class='aside_text'>{'The following species have this trait available by default: '+$activeCard.availability}</p>
   {/if}
-  {#if $activeTab == 'Personal Traits'}
-  <h4 class='item_type'>{$activeCard.display_type}</h4>
-  {#if $activeCard.availability_type == 'innate'}
-    <h3 class='aside_head'>Availability</h3>
-    <p class='aside_text'>{'This Trait is an innate trait to the following species: '+$activeCard.availability}</p>
-  {:else if $activeCard.availability_type == 'species'}
-    <h3 class='aside_head'>Availability</h3>
-    <p class='aside_text'>{'The following species have this trait available by default: '+$activeCard.availability}</p>
   {/if}
-  {/if}
+  <h4 class='item_type'>{getDisplayRarity($activeCard.rarity) + ' ' + $activeCard.display_type}</h4>
     <h3 class='aside_head'>Description:</h3>
+    {#if $activeTab == 'Personal Traits' || $activeTab == 'Starship Traits'}
     <p class='aside_text'>{@html $activeCard.desc.replaceAll('<li>', '<li class="infobox_li">').replaceAll('<ul>', '<ul class="infobox_ul">')}</p> <!--$activeCard.desc-->
+    {:else if $activeTab == 'Space Equipment' || $activeTab == 'Ground Equipment'}
+      {#each [1,2,3,4,5,6,7,8,9] as int}
+        {#if $activeCard.desc.head[int] != ''}
+          <p class='item_head'>{@html $activeCard.desc.head[int]}</p>
+        {/if}
+        {#if $activeCard.desc.subhead[int] != ''}
+          <p class='item_subhead'>{@html $activeCard.desc.subhead[int]}</p>
+        {/if}
+        {#if $activeCard.desc.text[int] != ''}
+          <p class='item_text'>{@html compensate_wiki_description($activeCard.desc.text[int]).replaceAll('\n:','<br>&nbsp;&nbsp;&nbsp;&nbsp;')}</p>
+        {/if}
+      {/each}
+    {/if}
 {/if}
 </aside>
 <style>
@@ -127,5 +161,21 @@ margin: calc(3*var(--gutter)) 0 var(--gutter) 0;
 }
 .fa-angle-right {
 margin-right: var(--border);
+}
+.item_head {
+font-size: 105%;
+padding-left: 0;
+margin: calc(.5*var(--gutter)) 0 0 0;
+}
+.item_subhead {
+font-size: 90%;
+font-style: italic;
+padding-left: 0;
+margin: 0;
+}
+.item_text {
+font-size: 85%;
+padding-left: 0;
+margin: 0;
 }
 </style>

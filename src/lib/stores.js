@@ -22,13 +22,23 @@ export const settings_type = writable([]);
 
 export const settings_av = writable([]);
 
-export const image_path = '/images/';   //for build
+export const settings_space_slot = writable([]);
 
-//export const image_path = '/src/images/';   //for dev
+export const settings_ground_slot = writable([]);
 
-//export const icon_path = '/src/lib/settings/'; //for dev
+export const settings_rarity = writable([]);
 
-export const icon_path = '/icons/'; // for build
+export const settings_boundto = writable([]);
+
+export const settings_boundwhen = writable([]);
+
+//export const image_path = '/images/';   //for build
+
+export const image_path = '/src/images/';   //for dev
+
+export const icon_path = '/src/lib/settings/'; //for dev
+
+//export const icon_path = '/icons/'; // for build
 
 export const wiki_url = 'https://sto.fandom.com/wiki/';
 

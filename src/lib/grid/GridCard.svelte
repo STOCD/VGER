@@ -6,6 +6,7 @@
 
   const handleClick = () => {
     $activeCard = item;
+    console.log($activeCard)
   };
   // https://static.wikia.nocookie.net/sto_gamepedia/images/8/80/Emergency_Weapon_Cycle_icon.png/
   // https://sto.fandom.com/wiki/Special:Filepath/Emergency_Weapon_Cycle_icon.png

@@ -118,8 +118,12 @@
   {:else if $activeTab == 'Personal Traits'}
     <Grid/>
   <Sidebar/>
-  {:else}
-    <p>empty</p>
+  {:else if $activeTab == 'Space Equipment'}
+    <Grid/>
+    <Sidebar/>
+  {:else if $activeTab == 'Ground Equipment'}
+    <Grid/>
+    <Sidebar/>
   {/if}
 </main>
 

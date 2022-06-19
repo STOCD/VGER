@@ -1,10 +1,12 @@
 <script>
-  import { activeTab, srcValue, active_settings, current_list, activeCard, settings_env, settings_type, settings_av } from '$lib/stores';
+  import { activeTab, srcValue, active_settings, current_list, activeCard, settings_env, settings_type, settings_av, settings_ground_slot, settings_space_slot,
+        settings_rarity, settings_boundto, settings_boundwhen
+  } from '$lib/stores';
   import SearchIcon from './SearchIcon.svelte';
   import HamburgerIcon from './HamburgerIcon.svelte';
 
-  const tabs = ['Starship Traits', 'Starship Gear', 'Personal Traits', 'Knowledgebase'];
-  const lists = {'Starship Traits':'starship_traits', 'Personal Traits':'personal_traits','Starship Gear':'','Knowledgebase':''};
+  const tabs = ['Starship Traits', 'Space Equipment', 'Ground Equipment', 'Personal Traits', 'Knowledgebase'];
+  const lists = {'Starship Traits':'starship_traits', 'Personal Traits':'personal_traits','Space Equipment':'space_equipment', 'Ground Equipment':'ground_equipment','Knowledgebase':''};
   
 
   const handleClick = (title) => {
@@ -15,12 +17,15 @@
     $settings_env = '';
     $settings_type = [];
     $settings_av = [];
-    // fetch active tab category json for card information
+    $settings_ground_slot = [];
+    $settings_space_slot = [];
+    $settings_rarity = [];
+    $settings_boundto = [];
+    $settings_boundwhen = [];
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // filter by search term and current active tab
   };
   const toggleSettings = (event) => {
     active_settings.set(!$active_settings);
