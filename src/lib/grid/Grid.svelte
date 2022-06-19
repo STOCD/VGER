@@ -98,7 +98,7 @@
       }
       else {
         for (let k2 = 0; k2 < $settings_rarity.length; k2++) {
-          rarity_filtered.push(...matchSorter(data[$current_list], $settings_rarity[k2], {keys: ['rarity'], threshold: matchSorter.rankings.EQUAL}))
+          rarity_filtered.push(...matchSorter(type_filtered, $settings_rarity[k2], {keys: ['rarity'], threshold: matchSorter.rankings.EQUAL}))
         }
       }
 
