@@ -3,6 +3,7 @@
 import { activeCard, image_path } from '$lib/stores';
 export let item;
 let cardimage = image_path+item.name+'.png';
+$: cardimage = image_path+item.name+'.png';
 
 const handleClick = () => {
   $activeCard = item;
