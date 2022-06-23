@@ -1,18 +1,49 @@
 <script>
 
-import { activeCard, image_path } from '$lib/stores';
+import { activeCard, image_path, mobile_sidebar_active } from '$lib/stores';
 export let item;
-let cardimage = image_path+item.name+'.png';
-$: cardimage = image_path+item.name+'.png';
+export let lazy = false;
+let path = '';
+let observer = null;
+//let cardimage = image_path+item.name+'.png';
+//$: {cardimage = image_path+item.name+'.png';}
+
+$: {  
+    if (path != image_path+item.name+'.png' && path != '') {
+      path = image_path+item.name+'.png';
+    }
+  }
 
 const handleClick = () => {
   $activeCard = item;
+  $mobile_sidebar_active = true;
 };
+
+function onIntersect(entries) {
+  if (!path && entries[0].isIntersecting) {
+    path = image_path+item.name+'.png';
+  
+  }
+}
+
+function lazy_load(node) {
+  observer && observer.observe(node);
+  return {
+    destroy() {
+      observer && observer.unobserve(node)
+    }
+  }
+}
+
+if (lazy && typeof window !== 'undefined') {
+  path = '';
+  observer = new IntersectionObserver(onIntersect, {rootMargin:'20px'});
+}
 
 </script>
 
 <button class='card' title={item.name} on:click={handleClick}>
-  <img src={cardimage} alt={item.name} />
+  <img src={path} alt='hover' use:lazy_load />
 </button>
 
 <style>

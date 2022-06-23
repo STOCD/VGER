@@ -1,11 +1,12 @@
 <script>
   import { onMount } from 'svelte';
-  import { activeTab, current_list} from '$lib/stores';
+  import { activeTab, current_list, mobile, mobile_auto, mobile_override} from '$lib/stores';
   import Header from '$lib/header/Header.svelte';
   import Grid from '$lib/grid/Grid.svelte';
   import Acronyms from '$lib/acronyms/Acronyms.svelte';
   import Sidebar from '$lib/sidebar/Sidebar.svelte';
   import Settings from '$lib/settings/Settings.svelte';
+  import MobileSidebar from '$lib/sidebar/MobileSidebar.svelte';
  
   //default tab
   $current_list = 'starship_traits';
@@ -13,8 +14,20 @@
   
   onMount(() => {
     // test whether user is on mobile device
-    const mobile = navigator.userAgent.toLowerCase().indexOf('mobi') != -1;
+    $mobile_auto = navigator.userAgent.toLowerCase().indexOf('mobi') != -1;
   });
+
+  $: {
+    if ($mobile_override === 'auto') {
+      $mobile = $mobile_auto;
+    }
+    else {
+      let new_mobile = $mobile_override == 'pc' ? false : true;
+      if (new_mobile != $mobile) {
+        $mobile = new_mobile;
+      }
+    }
+  }
 
 </script>
 
@@ -33,6 +46,9 @@
 <!-- Settings sidebar, outside of viewport by default -->
 <Settings/>
 
+{#if $mobile}
+  <MobileSidebar/>
+{/if}
 
 <main>
 
@@ -41,16 +57,32 @@
     <Acronyms />
   {:else if $activeTab == 'Starship Traits'}
     <Grid/>
-    <Sidebar/>
+    {#if !$mobile}
+      <aside>
+        <Sidebar/>
+      </aside>
+    {/if}
   {:else if $activeTab == 'Personal Traits'}
     <Grid/>
-    <Sidebar/>
+    {#if !$mobile}
+      <aside>
+        <Sidebar/>
+      </aside>
+    {/if}
   {:else if $activeTab == 'Space Equipment'}
     <Grid/>
-    <Sidebar/>
+    {#if !$mobile}
+      <aside>
+        <Sidebar/>
+      </aside>
+    {/if}
   {:else if $activeTab == 'Ground Equipment'}
     <Grid/>
-    <Sidebar/>
+    {#if !$mobile}
+      <aside>
+        <Sidebar/>
+      </aside>
+    {/if}
   {/if}
 
 </main>
@@ -65,4 +97,10 @@
     background-color: var(--dark-background);
     overflow: hidden;
   }
+  aside {
+  width: 30%;
+  padding: 1rem;
+  background-color: var(--light-background);
+  overflow-y: auto;
+}
 </style>

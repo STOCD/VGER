@@ -4,6 +4,7 @@
 </script>
 
 <Banner />
+
 <div>
   <slot />
 </div>

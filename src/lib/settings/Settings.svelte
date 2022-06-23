@@ -2,7 +2,7 @@
 
 import { 
     active_settings, icon_path, activeTab, settings_env, settings_type, settings_av, 
-    settings_space_slot, settings_ground_slot, settings_rarity
+    settings_space_slot, settings_ground_slot, settings_rarity, mobile_override, mobile
     } from '$lib/stores';
 import {equipment_types_ground, equipment_types_space, rarities} from '$lib/fetch/masterfetch';
 const links = [{name:'Website',link:'https://stobuilds.com/VGER'},{name:'STOCD',link:'https://github.com/STOCD'},{name:'STOBuilds Discord',link:'https://discord.gg/stobuilds'}]
@@ -12,7 +12,12 @@ active_settings.subscribe(() => {
     try {
     let settings_window = document.getElementById('settings_window');
     if ($active_settings == true) {
-        settings_window.style.transform = 'translateX(-30.5vw)';
+        if (!$mobile) {
+            settings_window.style.transform = 'translateX(-30.5vw)';
+        }
+        else {
+            settings_window.style.transform = 'translateX(-100vw)';
+        }
     }
     if ($active_settings == false) {
         settings_window.style.transform = 'translateX(0)';
@@ -119,10 +124,10 @@ function raritySettingsCallback(item) {
 </script>
 
 <!-- Settings Sidebar -- sliding in from the right on click -->
-<div class='settings_div' id='settings_window'>
+<div class='settings_div' class:mobile_settings_div='{$mobile}' id='settings_window'>
 
     <!-- Wrapper for Settings -->
-    <div class='settings_content'>
+    <div class='settings_content' class:mobile_settings_content='{$mobile}'>
 
         <!-- Settings exclusive for Personal Traits -->
         {#if $activeTab == 'Personal Traits'}
@@ -169,6 +174,13 @@ function raritySettingsCallback(item) {
                     Obtainable
                 </label>     
             </div>
+
+            <!-- Title replacement as mobile devices have no hover -->
+            {#if $mobile}
+                <p class='text'>Innate: Includes species specific and exclusive Traits when activated -- each species has one of those and it cannot be unslotted</p>
+                <p class='text'>Species: Includes Traits available to the respective species by default</p>
+                <p class='text'>Obtainable: Includes Traits available from Lockboxes, Missions, Recruitment Events and Traits unlocked by default depending on the player characters profession</p>
+            {/if}
 
             <hr style='margin-top: calc(3*var(--gutter));'/>
 
@@ -231,6 +243,16 @@ function raritySettingsCallback(item) {
             <input type='radio' class='settings_input'  id='size_large' name='size'>
             <label class='settings_button' for= 'size_large' on:click={()=>sizeSettingsCallback('large')}>Large</label>
         </div>
+
+        <p class='settings_header'>Mobile Website:</p>
+        <div class='button_group'>
+            <input type='radio' class='settings_input' id='mobile_auto' name='mobile' checked>
+            <label class='settings_button' for='mobile_auto' on:click={()=>$mobile_override='auto'}>Auto</label>
+            <input type='radio' class='settings_input' id='mobile_mobile' name='mobile'>
+            <label class='settings_button' for='mobile_mobile' on:click={()=>$mobile_override='mobile'}>Mobile Website</label>
+            <input type='radio' class='settings_input' id='mobile_pc' name='mobile'>
+            <label class='settings_button' for='mobile_pc' on:click={()=>$mobile_override='pc'}>Desktop Website</label>
+        </div>
         
     </div>
 
@@ -244,7 +266,7 @@ function raritySettingsCallback(item) {
                 Check out links below!
             </p>
             {#each links as link, i}
-                <p style="font-size: 70%;" class='link_list' 
+                <p style="font-size: 70%;" class='link_list' class:mobile_margin='{$mobile}'
                         on:mouseover={event => showLinkIcon(event, 'settings_link_icon'+i)} on:mouseleave={event => hideLinkIcon(event, 'settings_link_icon'+i)} 
                         on:click={event => window.open(link.link)} 
                         on:focus={event => showLinkIcon(event, 'settings_link_icon'+i)} on:blur={event => hideLinkIcon(event, 'settings_link_icon'+i)}>
@@ -272,10 +294,18 @@ function raritySettingsCallback(item) {
         border-left: var(--gutter) solid var(--science-blue);
         border-top: calc(.5*var(--border)) solid var(--dark-text);
     }
+    .mobile_settings_div {
+        width: calc(100vw - 2*var(--gutter));
+        right: -100vw;
+        border-left: none;
+    }
     .settings_content {
         overflow-y: auto;
         height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter) - 1.2*var(--aside-image-width)); /*.settings_div height minus .promo_footer height*/
         margin-right: var(--border);
+    }
+    .mobile_settings_content {
+        height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter) - 1.75*var(--aside-image-width)); /*.settings_div height minus .promo_footer height*/
     }
     .button_group {
         display: flex;
@@ -312,15 +342,17 @@ function raritySettingsCallback(item) {
         width: 100%;
         display: flex;
         justify-content: center;
+        align-items: center;
         box-shadow: 0 calc(-1* var(--border)) var(--border) 0 var(--light-background);
     }
     .promo_footer_center {
-        margin: 0 auto;
+        margin: auto;
     }
     .footer_img {
         display: block;
         height: var(--aside-image-width);
-        margin: var(--gutter);
+        margin: 0 var(--gutter);
+        
     }
     .promo_footer_text {
         text-align: center;
@@ -354,5 +386,15 @@ function raritySettingsCallback(item) {
     .hover_underline:hover {
         text-decoration: underline;
         cursor: pointer;
+    }
+    .mobile_margin{
+        margin-top: var(--gutter);
+        margin-bottom: var(--gutter);
+    }
+    .text {
+        text-align: left;
+        margin: var(--gutter) 0 0 var(--gutter);
+        font-size: 80%;
+        color: var(--dark-background);
     }
 </style>

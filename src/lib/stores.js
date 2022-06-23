@@ -30,6 +30,16 @@ export const settings_ground_slot = writable([]);
 
 export const settings_rarity = writable([]);
 
+export const mobile_auto = writable(false);
+
+export const mobile_override = writable('auto');
+
+export const mobile = writable(false);
+
+export const mobile_menu_active = writable(false);
+
+export const mobile_sidebar_active = writable(false);
+
 export const image_path = '/images/'; // for build
 
 export const icon_path = '/icons/';     // for build
