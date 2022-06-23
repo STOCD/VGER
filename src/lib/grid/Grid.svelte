@@ -1,8 +1,12 @@
 <script>
   import GridCard from "./GridCard.svelte";
-  import {srcValue, filtered, current_list, activeTab, settings_env, settings_type, settings_av, settings_ground_slot, settings_space_slot, settings_rarity} from '$lib/stores';
+  import {srcValue, filtered, current_list, activeTab, settings_env, settings_type, settings_av, settings_ground_slot, settings_space_slot, settings_rarity, mobile} from '$lib/stores';
   import { data } from '$lib/fetch/masterfetch';
   import {matchSorter} from 'match-sorter';
+  import { onMount } from 'svelte';
+
+  let hasAPI = true;
+  onMount(()=> {hasAPI = 'IntersectionObserver' in window;})
 
   //update filter and search on change of any filter store variable
   srcValue.subscribe( () => update_filter() );
@@ -16,7 +20,6 @@
 
   //updates the filter for the current tab
   function update_filter() {
-
     if ($activeTab == 'Personal Traits') {
 
       let environment_filtered = data[$current_list];
@@ -145,15 +148,14 @@
       catch {}
 
     }
-
   }
 
 </script>
 
-<section id='main_section'>
+<section class='section' class:mobile_section='{$mobile}' id='main_section'>
   <div id='div1'>
     {#each $filtered as item, index (index)}
-      <GridCard {item} />
+      <GridCard {item} lazy={hasAPI && index > -1}/>
     {/each}
   </div>
 </section>
@@ -165,9 +167,13 @@
     gap: var(--gutter) var(--gutter);
     margin-right: var(--gutter);
   }
-  #main_section {
+  .section {
     width: 70%;
     overflow-y: scroll;
     margin-right: var(--gutter);
+  }
+  .mobile_section {
+    width: 100%;
+    margin: 0;
   }
 </style>

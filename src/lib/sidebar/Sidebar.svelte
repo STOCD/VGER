@@ -1,5 +1,5 @@
 <script>
-  import { activeCard, activeTab, image_path, wiki_url} from '$lib/stores';
+  import { activeCard, activeTab, image_path, wiki_url, mobile, mobile_sidebar_active} from '$lib/stores';
   import { compensate_wiki_description, rarities } from '$lib/fetch/masterfetch';
   
   function showLinkIcon(e, id) {
@@ -30,114 +30,121 @@
 
 </script>
 
-<aside>
 {#if $activeCard}
+  <div class='sidebar_content' class:mobile_sidebar_content='{$mobile}'>
 
-  <!-- Image of current card -->
-  <img class='aside_image' src={image_path+$activeCard.name+'.png'} alt={$activeCard.name}>
+    <!-- Image of current card -->
+    <img class='aside_image' src={image_path+$activeCard.name+'.png'} alt={$activeCard.name}>
 
-  <!-- Name of currently selected item with link -- Traits -->
-  {#if $activeTab == 'Starship Traits' || $activeTab == 'Personal Traits'}
-    <h2 class='item_name' 
-        on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')} 
-        on:click={event => openLink(event,'trait', $activeCard.name)} 
-        on:focus={event => showLinkIcon(event, 'link_icon_header')} on:blur={event => hideLinkIcon(event, 'link_icon_header')}>
-      <span class='hover_underline'>{$activeCard.name}</span>
-      <i class='fa fa-link link_icon' id='link_icon_header'/>
-    </h2>
-  
-  <!-- Name of currently selected item with link -- Equipment -->
-  {:else if $activeTab == 'Space Equipment' || $activeTab == 'Ground Equipment'}
-    <h2 class='item_name' 
-        on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')} 
-        on:click={event => window.open($activeCard.url)} 
-        on:focus={event => showLinkIcon(event, 'link_icon_header')} on:blur={event => hideLinkIcon(event, 'link_icon_header')}>
-      <span class='hover_underline'>{$activeCard.name}</span>
-      <i class='fa fa-link link_icon' id='link_icon_header'/>
-    </h2>
-  {/if}
-
-  <!-- Individual Sections for the tabs ahead -->
-
-  <!-- Starship Traits -->
-  {#if $activeTab == 'Starship Traits'}
-
-    <!-- type: Starship Trait -->
-    <h4 class='item_type'>Starship Trait</h4>
-
-    <!-- Obtained Information -->
-    <h3 class='aside_head'>Obtained from:</h3>
-    <ul class='item_obtained'>
-      {#each $activeCard.obtained as method, i}
-        <li style="font-size: 100%;" 
-            on:mouseover={event => showLinkIcon(event, 'link_icon_'+i)} on:mouseleave={event => hideLinkIcon(event, 'link_icon_'+i)} 
-            on:click={event => openLink(event, 'none', method)} 
-            on:focus={event => showLinkIcon(event, 'link_icon_'+i)} on:blur={event => hideLinkIcon(event, 'link_icon_'+i)}>
-          <i class='fa fa-angle-right'/>
-          <span class='hover_underline' >{method}</span>
-          <i class='fa fa-link link_icon' id={'link_icon_'+i} />
-        </li>
-      {/each}
-    </ul>
-
-    <!-- Description -->
-    <h3 class='aside_head'>Description:</h3>
-    <p class='aside_text'>
-      {@html $activeCard.desc.replaceAll('<li>', '<li class="infobox_li">').replaceAll('<ul>', '<ul class="infobox_ul">')}
-    </p>
-
-  <!-- Personal Traits -->
-  {:else if $activeTab == 'Personal Traits'}
-
-    <!-- type of the trait -->
-    <h4 class='item_type'>{$activeCard.display_type}</h4>
-
-    <!-- shows obtain information if trait is an innate or species trait -->
-    {#if $activeCard.availability_type == 'innate'}
-      <h3 class='aside_head'>Availability</h3>
-      <p class='aside_text'>
-        {'This Trait is an innate trait to the following species: '+$activeCard.availability}
-      </p>
-    {:else if $activeCard.availability_type == 'species'}
-      <h3 class='aside_head'>Availability</h3>
-      <p class='aside_text'>
-        {'The following species have this trait available by default: '+$activeCard.availability}
-      </p>
+    <!-- Name of currently selected item with link -- Traits -->
+    {#if $activeTab == 'Starship Traits' || $activeTab == 'Personal Traits'}
+      <h2 class='item_name' class:mobile_item_name='{$mobile}'
+          on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')} 
+          on:click={event => openLink(event,'trait', $activeCard.name)} 
+          on:focus={event => showLinkIcon(event, 'link_icon_header')} on:blur={event => hideLinkIcon(event, 'link_icon_header')}>
+        <span class='hover_underline'>{$activeCard.name}</span>
+        <i class='fa fa-link link_icon' id='link_icon_header'/>
+      </h2>
+    
+    <!-- Name of currently selected item with link -- Equipment -->
+    {:else if $activeTab == 'Space Equipment' || $activeTab == 'Ground Equipment'}
+      <h2 class='item_name' class:mobile_item_name='{$mobile}'
+          on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')} 
+          on:click={event => window.open($activeCard.url)} 
+          on:focus={event => showLinkIcon(event, 'link_icon_header')} on:blur={event => hideLinkIcon(event, 'link_icon_header')}>
+        <span class='hover_underline'>{$activeCard.name}</span>
+        <i class='fa fa-link link_icon' id='link_icon_header'/>
+      </h2>
     {/if}
 
-    <!-- Description -->
-    <h3 class='aside_head'>Description:</h3>
-    <p class='aside_text'>
-      {@html $activeCard.desc.replaceAll('<li>', '<li class="infobox_li">').replaceAll('<ul>', '<ul class="infobox_ul">')}
-    </p>
+    <!-- Individual Sections for the tabs ahead -->
 
-  <!-- Space and Ground Equipment -->
-  {:else if $activeTab == 'Space Equipment' || $activeTab == 'Ground Equipment'}
+    <!-- Starship Traits -->
+    {#if $activeTab == 'Starship Traits'}
 
-    <!-- display rarity and type -->
-    <h4 class='item_type'>
-      {getDisplayRarity($activeCard.rarity) + ' ' + $activeCard.display_type}
-    </h4>
+      <!-- type: Starship Trait -->
+      <h4 class='item_type'>Starship Trait</h4>
 
-    <!-- Description -->
-    <h3 class='aside_head'>Description:</h3>
-    {#each [1,2,3,4,5,6,7,8,9] as int}
-        {#if $activeCard.desc.head[int] != ''}
-          <p class='item_head'>{@html $activeCard.desc.head[int]}</p>
-        {/if}
-        {#if $activeCard.desc.subhead[int] != ''}
-          <p class='item_subhead'>{@html $activeCard.desc.subhead[int]}</p>
-        {/if}
-        {#if $activeCard.desc.text[int] != ''}
-          <p class='item_text'>{@html compensate_wiki_description($activeCard.desc.text[int]).replaceAll('\n:','<br>&nbsp;&nbsp;&nbsp;&nbsp;')}</p>
-        {/if}
-      {/each}
+      <!-- Obtained Information -->
+      <h3 class='aside_head'>Obtained from:</h3>
+      <ul class='item_obtained'>
+        {#each $activeCard.obtained as method, i}
+          <li style="font-size: 100%;" class:mobile_margin='{$mobile}'
+              on:mouseover={event => showLinkIcon(event, 'link_icon_'+i)} on:mouseleave={event => hideLinkIcon(event, 'link_icon_'+i)} 
+              on:click={event => openLink(event, 'none', method)} 
+              on:focus={event => showLinkIcon(event, 'link_icon_'+i)} on:blur={event => hideLinkIcon(event, 'link_icon_'+i)}>
+            <i class='fa fa-angle-right'/>
+            <span class='hover_underline' class:mobile_underline='{$mobile}'>{method}</span>
+            <i class='fa fa-link link_icon' id={'link_icon_'+i} />
+          </li>
+        {/each}
+      </ul>
 
+      <!-- Description -->
+      <h3 class='aside_head'>Description:</h3>
+      <p class='aside_text'>
+        {@html $activeCard.desc.replaceAll('<li>', '<li class="infobox_li">').replaceAll('<ul>', '<ul class="infobox_ul">')}
+      </p>
+
+    <!-- Personal Traits -->
+    {:else if $activeTab == 'Personal Traits'}
+
+      <!-- type of the trait -->
+      <h4 class='item_type'>{$activeCard.display_type}</h4>
+
+      <!-- shows obtain information if trait is an innate or species trait -->
+      {#if $activeCard.availability_type == 'innate'}
+        <h3 class='aside_head'>Availability</h3>
+        <p class='aside_text'>
+          {'This Trait is an innate trait to the following species: '+$activeCard.availability}
+        </p>
+      {:else if $activeCard.availability_type == 'species'}
+        <h3 class='aside_head'>Availability</h3>
+        <p class='aside_text'>
+          {'The following species have this trait available by default: '+$activeCard.availability}
+        </p>
+      {/if}
+
+      <!-- Description -->
+      <h3 class='aside_head'>Description:</h3>
+      <p class='aside_text'>
+        {@html $activeCard.desc.replaceAll('<li>', '<li class="infobox_li">').replaceAll('<ul>', '<ul class="infobox_ul">')}
+      </p>
+
+    <!-- Space and Ground Equipment -->
+    {:else if $activeTab == 'Space Equipment' || $activeTab == 'Ground Equipment'}
+
+      <!-- display rarity and type -->
+      <h4 class='item_type'>
+        {getDisplayRarity($activeCard.rarity) + ' ' + $activeCard.display_type}
+      </h4>
+
+      <!-- Description -->
+      <h3 class='aside_head'>Description:</h3>
+      {#each [1,2,3,4,5,6,7,8,9] as int}
+          {#if $activeCard.desc.head[int] != ''}
+            <p class='item_head'>{@html $activeCard.desc.head[int]}</p>
+          {/if}
+          {#if $activeCard.desc.subhead[int] != ''}
+            <p class='item_subhead'>{@html $activeCard.desc.subhead[int]}</p>
+          {/if}
+          {#if $activeCard.desc.text[int] != ''}
+            <p class='item_text'>{@html compensate_wiki_description($activeCard.desc.text[int]).replaceAll('\n:','<br>&nbsp;&nbsp;&nbsp;&nbsp;')}</p>
+          {/if}
+        {/each}
+
+    {/if}
+
+  </div>
+
+  <!-- Close Button for Mobile Page-->
+  {#if $mobile}
+    <div class='close_div'>
+      <button class='close_button' on:click={()=>$mobile_sidebar_active=false}>Close</button>
+    </div>
   {/if}
-
+  
 {/if}
-
-</aside>
 
 <style>
 .link_icon {
@@ -157,12 +164,6 @@ padding: var(--border);
 }
 #link_icon_header {
 margin: calc(.5*var(--gutter)) !important;
-}
-aside {
-width: 30%;
-padding: 1rem;
-background-color: var(--light-background);
-overflow-y: auto;
 }
 ul {
 list-style: disc;
@@ -226,5 +227,39 @@ margin: 0;
 font-size: 85%;
 padding-left: 0;
 margin: 0;
+}
+.close_button {
+  background-color: rgba(0,0,0,0);
+  border: calc(.5*var(--border)) solid var(--dark-background);
+  border-radius: calc(.5*var(--gutter));
+  padding: calc(.5*var(--gutter));
+  padding-bottom: calc(.7*var(--gutter));
+  width: 100%;
+  height: calc(3.5*var(--gutter));
+}
+.close_div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.sidebar_content {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+}
+.mobile_sidebar_content {
+  height: calc(100vh - 100vw*(143/1920) - 12.5*var(--gutter)); /*height of parent div minus it's padding minus close button height*/
+}
+.mobile_margin {
+  margin-top: var(--gutter);
+  margin-bottom: var(--gutter);
+}
+.mobile_underline {
+  text-decoration: underline;
+}
+.mobile_item_name {
+  text-decoration: underline;
 }
 </style>
