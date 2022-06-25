@@ -1,3 +1,5 @@
+/* SVELTE ENDPOINTS!!!*/
+
 import st from '../../data/starship_traits.json';
 import t from '../../data/traits.json';
 import e from '../../data/infoboxes.json';

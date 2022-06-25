@@ -40,12 +40,14 @@ export const mobile_menu_active = writable(false);
 
 export const mobile_sidebar_active = writable(false);
 
-export const image_path = '/images/'; // for build
+export const mobile_description = writable('');
 
-export const icon_path = '/icons/';     // for build
+//export const image_path = '/images/'; // for build
 
-//export const image_path = '/src/images/'; // for dev
+//export const icon_path = '/icons/';     // for build
 
-//export const icon_path = '/src/icons/';     // for dev
+export const image_path = '/src/images/'; // for dev
+
+export const icon_path = '/src/icons/';     // for dev
 
 export const wiki_url = 'https://sto.fandom.com/wiki/';

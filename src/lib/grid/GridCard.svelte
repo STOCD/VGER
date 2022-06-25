@@ -1,6 +1,6 @@
 <script>
 
-import { activeCard, image_path, mobile_sidebar_active } from '$lib/stores';
+import { activeCard, image_path, mobile_sidebar_active, active_settings } from '$lib/stores';
 export let item;
 export let lazy = false;
 let path = '';
@@ -17,6 +17,7 @@ $: {
 const handleClick = () => {
   $activeCard = item;
   $mobile_sidebar_active = true;
+  $active_settings = false;
 };
 
 function onIntersect(entries) {

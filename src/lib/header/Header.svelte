@@ -10,6 +10,7 @@
   const handleClick = (title) => {
     $activeTab = title;
     $current_list = lists[title];
+    $active_settings = false;
 
     //close mobile menu and sidebar
     if ($mobile) {
