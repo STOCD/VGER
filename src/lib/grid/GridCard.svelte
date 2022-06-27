@@ -1,6 +1,6 @@
 <script>
 
-import { activeCard, image_path, mobile_sidebar_active, active_settings } from '$lib/stores';
+import { activeCard, image_path, mobile_sidebar_active, active_settings, reload_queue } from '$lib/stores';
 export let item;
 export let lazy = false;
 let path = '';
@@ -23,8 +23,14 @@ const handleClick = () => {
 function onIntersect(entries) {
   if (!path && entries[0].isIntersecting) {
     path = image_path+item.name+'.png';
-  
   }
+}
+
+async function getImage(p) {
+  const f = async () => await fetch(p);
+  const response = await f();
+  if (response.status == 200)
+    path = response.url;
 }
 
 function lazy_load(node) {
@@ -36,6 +42,16 @@ function lazy_load(node) {
   }
 }
 
+function setPath() {
+  path = null;
+}
+
+function loadError() {
+  if (path != '') {
+    $reload_queue.push({'path':path, 'callback':setPath})
+  }
+}
+
 if (lazy && typeof window !== 'undefined') {
   path = '';
   observer = new IntersectionObserver(onIntersect, {rootMargin:'20px'});
@@ -44,7 +60,7 @@ if (lazy && typeof window !== 'undefined') {
 </script>
 
 <button class='card' title={item.name} on:click={handleClick}>
-  <img src={path} alt='hover' use:lazy_load />
+  <img src={path} alt='hover' use:lazy_load on:error={()=>loadError()}/>
 </button>
 
 <style>

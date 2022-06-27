@@ -197,7 +197,7 @@ for (let i3 = 0; i3< equipment_json.length; i3++) {
             description.text[i] = current_item['text'+i.toString()];
         }
         let current_obj = {
-            'name':compensate_wiki_description(current_name), 
+            'name':compensate_wiki_description(current_name.replaceAll('"',"''").replaceAll('&amp;','&').replaceAll('&#34;',"''").replaceAll('&quot;',"''").replaceAll(':','')), 
             'url':wikihttp+compensate_url(current_item.Page)+'#'+compensate_url(current_name), 
             'type':current_item.type, 
             'display_type':display_type,
@@ -212,3 +212,4 @@ for (let i3 = 0; i3< equipment_json.length; i3++) {
         }
     }
 }
+console.log("hey")

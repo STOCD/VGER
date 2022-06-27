@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { activeTab, current_list, mobile, mobile_auto, mobile_override} from '$lib/stores';
+  import { activeTab, current_list, mobile, mobile_auto, mobile_override, reload_queue} from '$lib/stores';
   import Header from '$lib/header/Header.svelte';
   import Grid from '$lib/grid/Grid.svelte';
   import Acronyms from '$lib/acronyms/Acronyms.svelte';
@@ -28,6 +28,41 @@
       }
     }
   }
+
+  reload_queue.subscribe( () => handleImageReload());
+
+  function handleImageReload() {
+    if ($reload_queue.length > 0) {
+      current = $reload_queue.shift();
+      const res = fetchAndRetry(async () => await fetch(current['path']));
+      if (res.status == 200) {
+        current['callback']();
+      }
+      if ($reload_queue.length > 0) {
+        handleImageReload()
+      }
+    }
+  }
+
+  async function fetchAndRetry(f) {
+    const r = await f();
+    if (r.status === 409) {
+      const retryAfter = r.headers.get('retry-after');
+      const sleepTime = getMillisToSleep(retryAfter);
+      let r2 = null;
+      setTimeout(()=> {r2 = fetchAndRetry(f)}, sleepTime);
+      return r2
+    }
+    return r
+  }
+
+  function getMillisToSleep (retryHeaderString) {
+    let millisToSleep = Math.round(parseFloat(retryHeaderString) * 1000)
+    if (isNaN(millisToSleep)) {
+      millisToSleep = Math.max(0, new Date(retryHeaderString) - new Date())
+    }
+    return millisToSleep
+}
 
 </script>
 
