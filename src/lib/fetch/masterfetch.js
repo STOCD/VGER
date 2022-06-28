@@ -212,4 +212,3 @@ for (let i3 = 0; i3< equipment_json.length; i3++) {
         }
     }
 }
-console.log("hey")

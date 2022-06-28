@@ -1,6 +1,6 @@
 <script>
 
-import { activeCard, image_path, mobile_sidebar_active, active_settings, reload_queue } from '$lib/stores';
+import { activeCard, image_path, mobile_sidebar_active, active_settings } from '$lib/stores';
 export let item;
 export let lazy = false;
 let path = '';
@@ -26,13 +26,6 @@ function onIntersect(entries) {
   }
 }
 
-async function getImage(p) {
-  const f = async () => await fetch(p);
-  const response = await f();
-  if (response.status == 200)
-    path = response.url;
-}
-
 function lazy_load(node) {
   observer && observer.observe(node);
   return {
@@ -42,19 +35,35 @@ function lazy_load(node) {
   }
 }
 
-function setPath() {
-  path = null;
-}
-
-function loadError() {
+async function loadError() {
   if (path != '') {
-    $reload_queue.push({'path':path, 'callback':setPath})
+    const re = await fetchAndRetryIfNecessary(async () => (await fetch(path)))
+    path = null;
   }
 }
 
 if (lazy && typeof window !== 'undefined') {
   path = '';
   observer = new IntersectionObserver(onIntersect, {rootMargin:'20px'});
+}
+
+function getMillisToSleep (retryHeaderString) {
+  let millisToSleep = Math.round(parseFloat(retryHeaderString) * 1000)
+  if (isNaN(millisToSleep)) {
+    millisToSleep = Math.max(0, new Date(retryHeaderString) - new Date())
+  }
+  return millisToSleep
+}
+
+async function fetchAndRetryIfNecessary (callAPIFn) {
+  const response = await callAPIFn();
+  if (response.status === 429) {
+    const retryAfter = response.headers.get('retry-after')
+    const millisToSleep = getMillisToSleep(retryAfter)
+    await sleep(millisToSleep)
+    return fetchAndRetryIfNecessary(callAPIFn)
+  }
+  return response
 }
 
 </script>

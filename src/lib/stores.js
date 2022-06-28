@@ -42,8 +42,6 @@ export const mobile_sidebar_active = writable(false);
 
 export const mobile_description = writable('');
 
-export const reload_queue = writable([]);
-
 export const image_path = '/images/'; // for build
 
 export const icon_path = '/icons/';     // for build
