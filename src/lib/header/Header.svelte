@@ -8,6 +8,9 @@
   const lists = {'Starship Traits':'starship_traits', 'Personal Traits':'personal_traits','Space Equipment':'space_equipment', 'Ground Equipment':'ground_equipment','Knowledgebase':''};
 
   const handleClick = (title) => {
+    if ($activeTab == title) {
+      return
+    }
     $activeTab = title;
     $current_list = lists[title];
     $active_settings = false;
