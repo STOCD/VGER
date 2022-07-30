@@ -71,20 +71,20 @@ if not os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/images'):
 ship_traits = request_json(ship_trait_query, 'starship_traits')
 
 for ship in ship_traits:
-    if not ship['trait'] == '':
+    if not ship['trait'] == '' and ship['trait'] is not None:
         request_image(ship['trait'])
-    if not ship['trait2'] == '':
+    if not ship['trait2'] == '' and ship['trait2'] is not None:
         request_image(ship['trait2'])
-    if not ship['trait3'] == '':
+    if not ship['trait3'] == '' and ship['trait3'] is not None:
         request_image(ship['trait3'])
-    if not ship['acctrait'] == '':
+    if not ship['acctrait'] == '' and ship['acctrait'] is not None:
         request_image(ship['acctrait'])
 
 
 traits = request_json(trait_query, 'traits')
 
 for trait in traits:
-    if not trait['name'] == '':
+    if not trait['name'] == '' and trait['name'] is not None:
         if not trait['chartype'] == 'boff' and not trait['type'] == 'recruit' and not trait['chartype'] == 'doff':
             request_image(trait['name'])
 
@@ -98,7 +98,7 @@ for item in equipments:
             'Console', 'Ship Tactical Console', 'Ship Science Console', 'Ship Engineering Console',
             'Kit', 'Body Armor', 'EV Suit', 'Personal Shield', 'Ground Weapon', 'Ground Device', 'Ship Weapon', 'Universal Console'
         ]
-    if not item['name'] == '' and item['type'] in equipment_types:
+    if not item['name'] == '' and item['name'] is not None and item['type'] in equipment_types:
         if ' mk ' in item['name'].lower():
             index = item['name'].lower().find(' mk ')
             name = item['name'][:index]
