@@ -30,6 +30,8 @@ export const settings_ground_slot = writable([]);
 
 export const settings_rarity = writable([]);
 
+export const settings_search_desc = writable(false);
+
 export const mobile_auto = writable(false);
 
 export const mobile_override = writable('auto');

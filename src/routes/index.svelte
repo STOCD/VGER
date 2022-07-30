@@ -8,6 +8,8 @@
   import Settings from '$lib/settings/Settings.svelte';
   import MobileSidebar from '$lib/sidebar/MobileSidebar.svelte';
  
+  let vh = 0;
+
   //default tab
   $current_list = 'starship_traits';
   $activeTab = 'Starship Traits';
@@ -15,6 +17,10 @@
   onMount(() => {
     // test whether user is on mobile device
     $mobile_auto = navigator.userAgent.toLowerCase().indexOf('mobi') != -1;
+
+    // set viewport height
+    vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`)
   });
 
   $: {
@@ -91,6 +97,7 @@
   main {
     display: flex;
     height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter)); /* minus the height of the rest of the UI -- the term 100vw*(143/1920) calculates the height occupied by the banner image */
+    height: calc(var(--vh, 1vh) * 100 - 100vw*(143/1920) - 5*var(--gutter));
     width: 100%;
     margin: 0;
     padding: var(--gutter);

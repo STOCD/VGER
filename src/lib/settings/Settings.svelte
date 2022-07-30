@@ -2,7 +2,7 @@
 
 import { 
     active_settings, icon_path, activeTab, settings_env, settings_type, settings_av, 
-    settings_space_slot, settings_ground_slot, settings_rarity, mobile_override, mobile
+    settings_space_slot, settings_ground_slot, settings_rarity, mobile_override, mobile, settings_search_desc
     } from '$lib/stores';
 import {equipment_types_ground, equipment_types_space, rarities} from '$lib/fetch/masterfetch';
 const links = [{name:'Website',link:'https://stobuilds.com/VGER'},{name:'STOCD',link:'https://github.com/STOCD'},{name:'STOBuilds Discord',link:'https://discord.gg/stobuilds'}]
@@ -206,6 +206,14 @@ function raritySettingsCallback(item) {
                 {/each}
             </div>
 
+            <p class='settings_header'>Search Descriptions:</p>
+            <div class='button_group'>
+                <input type='radio' class='settings_input' id='ground_desc_false' name='ground_desc' checked>
+                <label class='settings_button' for='ground_desc_false' on:click={()=>$settings_search_desc=false}>Disabled</label>
+                <input type='radio' class='settings_input' id='ground_desc_true' name='ground_desc'>
+                <label class='settings_button' for='ground_desc_true' on:click={()=>$settings_search_desc=true}>Enabled</label>
+            </div>
+
             <hr style='margin-top: calc(3*var(--gutter));'/>
 
         <!-- Settings exclusive for Space Equipment -->
@@ -229,8 +237,17 @@ function raritySettingsCallback(item) {
                     </label>
                 {/each}
             </div>
+
+            <p class='settings_header'>Search Descriptions:</p>
+            <div class='button_group'>
+                <input type='radio' class='settings_input' id='space_desc_false' name='space_desc' checked>
+                <label class='settings_button' for='space_desc_false' on:click={()=>$settings_search_desc=false}>Disabled</label>
+                <input type='radio' class='settings_input' id='space_desc_true' name='space_desc'>
+                <label class='settings_button' for='space_desc_true' on:click={()=>$settings_search_desc=true}>Enabled</label>
+            </div>
         
             <hr style='margin-top: calc(3*var(--gutter));'/>
+
         {/if}
 
         <!-- Card Size Setting -- for all tabs -->
@@ -286,6 +303,7 @@ function raritySettingsCallback(item) {
         background-color: var(--light-text);
         position: absolute;
         height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter)); /*viewport height minus top banner height, height of the bottom margin and height of the menu bar*/
+        height: calc(var(--vh, 1vh) * 100 - 100vw*(143/1920) - 5*var(--gutter));
         width: 30vw;
         right: -30.5vw;
         margin-right: var(--gutter);
@@ -302,10 +320,12 @@ function raritySettingsCallback(item) {
     .settings_content {
         overflow-y: auto;
         height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter) - 1.2*var(--aside-image-width)); /*.settings_div height minus .promo_footer height*/
+        height: calc(var(--vh, 1vh) * 100 - 100vw*(143/1920) - 5*var(--gutter) - 1.2*var(--aside-image-width));
         margin-right: var(--border);
     }
     .mobile_settings_content {
         height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter) - 1.75*var(--aside-image-width)); /*.settings_div height minus .promo_footer height*/
+        height: calc(var(--vh, 1vh) * 100 - 100vw*(143/1920) - 5*var(--gutter) - 1.75*var(--aside-image-width));
     }
     .button_group {
         display: flex;

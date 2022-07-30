@@ -1,6 +1,6 @@
 <script>
   import GridCard from "./GridCard.svelte";
-  import {srcValue, filtered, current_list, activeTab, settings_env, settings_type, settings_av, settings_ground_slot, settings_space_slot, settings_rarity, mobile} from '$lib/stores';
+  import {srcValue, filtered, current_list, activeTab, settings_env, settings_type, settings_av, settings_ground_slot, settings_space_slot, settings_rarity, mobile, settings_search_desc} from '$lib/stores';
   import { data } from '$lib/fetch/masterfetch';
   import {matchSorter} from 'match-sorter';
   import { onMount } from 'svelte';
@@ -59,7 +59,7 @@
         }
       }
 
-      let search_filtered = matchSorter(av_filtered, $srcValue, {keys: ['name']});
+      let search_filtered = matchSorter(av_filtered, $srcValue, {keys: [{threshold: matchSorter.rankings.ACRONYM, key: 'name'}, {threshold: matchSorter.rankings.CONTAINS, key:'desc'}]});
       filtered.set(search_filtered);
 
       //scroll to the top
@@ -72,7 +72,7 @@
 
     else if ($activeTab == 'Starship Traits') {
 
-      let search_filtered = matchSorter(data[$current_list], $srcValue, {keys: ['name']});
+      let search_filtered = matchSorter(data[$current_list], $srcValue, {keys: [{threshold: matchSorter.rankings.ACRONYM, key: 'name'}, {threshold: matchSorter.rankings.CONTAINS, key:'obtained'}, {threshold: matchSorter.rankings.CONTAINS, key:'desc'}] });
       filtered.set(search_filtered);
 
       //scroll to the top
@@ -105,7 +105,10 @@
         }
       }
 
-      let search_filtered = matchSorter(rarity_filtered, $srcValue, {keys: ['name']});
+      let search_filtered = matchSorter(rarity_filtered, $srcValue, {keys: [{threshold: matchSorter.rankings.ACRONYM, key: 'name'}]});
+      if ($settings_search_desc) {
+        search_filtered = search_filtered.concat(matchSorter(rarity_filtered, $srcValue, {keys: [{threshold: matchSorter.rankings.CONTAINS, key: 'desc2'}]}))
+      }
       filtered.set(search_filtered);
 
       // scroll to the top
@@ -138,7 +141,10 @@
         }
       }
 
-      let search_filtered = matchSorter(rarity_filtered, $srcValue, {keys: ['name']});
+      let search_filtered = matchSorter(rarity_filtered, $srcValue, {keys: [{threshold: matchSorter.rankings.ACRONYM, key: 'name'}]});
+      if ($settings_search_desc) {
+        search_filtered = search_filtered.concat(matchSorter(rarity_filtered, $srcValue, {keys: [{threshold: matchSorter.rankings.CONTAINS, key: 'desc2'}]}))
+      } 
       filtered.set(search_filtered);
 
       // scroll to the top

@@ -251,6 +251,7 @@ margin: 0;
 }
 .mobile_sidebar_content {
   height: calc(100vh - 100vw*(143/1920) - 12.5*var(--gutter)); /*height of parent div minus it's padding minus close button height*/
+  height: calc(var(--vh, 1vh) * 100 - 100vw*(143/1920) - 12.5*var(--gutter));
 }
 .mobile_margin {
   margin-top: var(--gutter);

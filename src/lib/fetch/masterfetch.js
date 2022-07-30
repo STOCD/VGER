@@ -21,6 +21,7 @@ export const rarities = ['Epic','Ultra Rare','Very Rare','Rare','Uncommon','Comm
 
 export function compensate_wiki_description(text) {
     if (text == '') {return text}
+    else if (text == null) {return ''}
     text = text.replaceAll('&lt;', '<').replaceAll('&gt;','>');
     text = text.replaceAll('{{ucfirst: ','').replaceAll('{{ucfirst:','');
     text = text.replaceAll('{{lc: ','').replaceAll('{{lc:','');
@@ -60,7 +61,7 @@ function compensate_url(text) {
 let starship_trait_object = {};
 for (let i = 0; i<starship_trait_json.length; i++) {
     const current_page = starship_trait_json[i];
-    if ('trait' in current_page && current_page.trait != '') {
+    if ('trait' in current_page && current_page.trait != '' && current_page.trait != null) {
         if (! Object.keys(starship_trait_object).includes(current_page.trait)) {
             starship_trait_object[current_page.trait] = {'desc':current_page.traitdesc, 'obtained':[current_page._pageName], 'type':'Starship Trait'};
         }
@@ -68,7 +69,7 @@ for (let i = 0; i<starship_trait_json.length; i++) {
             starship_trait_object[current_page.trait]['obtained'].push(current_page._pageName);
         }
     }
-    if ('trait2' in current_page && current_page.trait2 != '') {
+    if ('trait2' in current_page && current_page.trait2 != '' && current_page.trait2 != null) {
         if (! Object.keys(starship_trait_object).includes(current_page.trait2)) {
             starship_trait_object[current_page.trait2] = {'desc':current_page.traitdesc2, 'obtained':[current_page._pageName], 'type':'Starship Trait'};
         }
@@ -76,7 +77,7 @@ for (let i = 0; i<starship_trait_json.length; i++) {
             starship_trait_object[current_page.trait2]['obtained'].push(current_page._pageName);
         }
     }
-    if ('trait3' in current_page && current_page.trait3 != '') {
+    if ('trait3' in current_page && current_page.trait3 != '' && current_page.trait3 != null) {
         if (! Object.keys(starship_trait_object).includes(current_page.trait3)) {
             starship_trait_object[current_page.trait3] = {'desc':current_page.traitdesc3, 'obtained':[current_page._pageName], 'type':'Starship Trait'};
         }
@@ -84,7 +85,7 @@ for (let i = 0; i<starship_trait_json.length; i++) {
             starship_trait_object[current_page.trait3]['obtained'].push(current_page._pageName);
         }
     }
-    if ('acctrait' in current_page && current_page.acctrait != '') {
+    if ('acctrait' in current_page && current_page.acctrait != '' && current_page.acctrait != null) {
         if (! Object.keys(starship_trait_object).includes(current_page.acctrait)) {
             starship_trait_object[current_page.acctrait] = {'desc':current_page.acctraitdesc, 'obtained':[current_page._pageName], 'type':'Starship Trait'};
         }
@@ -114,13 +115,13 @@ let specialization_traits = {
 for (let i2 = 0; i2 < trait_json.length; i2++) {
     let current_page = trait_json[i2];
     if ('chartype' in current_page && current_page['chartype'] == 'char') {
-        if ('name' in current_page && current_page['name'] != '') {
-            if ('type' in current_page && current_page['type'].toLowerCase() == 'starship') {
+        if ('name' in current_page && current_page['name'] != '' && current_page['name'] != null) {
+            if ('type' in current_page && current_page['type'] != null && current_page['type'].toLowerCase() == 'starship') {
                 let obtained = ['Infinity Prize Pack: Starship Trait'];
                 if (current_page['name'] in specialization_traits) {
                     obtained = [specialization_traits[current_page['name']]];
                 }
-                data.starship_traits.push({'name': current_page['name'], 'type':'Starship Trait', 'obtained': obtained, 'desc': compensate_wiki_description(current_page.description)});
+                data.starship_traits.push({'name': current_page['name'], 'type':'Starship Trait', 'obtained': obtained == null ? '' : obtained, 'desc': compensate_wiki_description(current_page.description)});
             }
             else {
                 let type = '';
@@ -131,11 +132,11 @@ for (let i2 = 0; i2 < trait_json.length; i2++) {
                 if ('environment' in current_page) {
                     environment = current_page['environment'];
                 }
-                if ('type' in current_page && current_page['type'].toLowerCase() == 'reputation')  {
+                if ('type' in current_page && current_page['type'] != null && current_page['type'].toLowerCase() == 'reputation')  {
                     type = 'reputation';
                     display_type = environment.substring(0,1).toUpperCase()+environment.substring(1)+' Reputation Trait';
                 }
-                else if ('type' in current_page && current_page['type'].toLowerCase() == 'activereputation') {
+                else if ('type' in current_page && current_page['type'] != null && current_page['type'].toLowerCase() == 'activereputation') {
                     type = 'activereputation';
                     display_type = 'Active '+environment.substring(0,1).toUpperCase()+environment.substring(1)+' Reputation Trait';
                 }
@@ -191,10 +192,12 @@ for (let i3 = 0; i3< equipment_json.length; i3++) {
         }
         let display_type = current_item.type == 'Hangar Bay' ? 'Hangar Pet' : current_item.type == 'Warp Engine' ? 'Warp Core' : current_item.type == 'Singularity Engine' ? 'Singularity Core' : current_item.type.replaceAll('Ship ','');
         let description = {'head':{},'subhead':{},'text':{}};
+        let description2 = '';
         for (let i = 1; i<10; i++) {
-            description.head[i] = current_item['head'+i.toString()];
-            description.subhead[i] = current_item['subhead'+i.toString()];
-            description.text[i] = current_item['text'+i.toString()];
+            description.head[i] = compensate_wiki_description(current_item['head'+i.toString()]);
+            description.subhead[i] = compensate_wiki_description(current_item['subhead'+i.toString()]);
+            description.text[i] = compensate_wiki_description(current_item['text'+i.toString()]);
+            description2 = description2 + description.head[i] + description.subhead[i] + description.text[i]
         }
         let current_obj = {
             'name':compensate_wiki_description(current_name.replaceAll('"',"''").replaceAll('&amp;','&').replaceAll('&#34;',"''").replaceAll('&quot;',"''").replaceAll(':','')), 
@@ -202,7 +205,8 @@ for (let i3 = 0; i3< equipment_json.length; i3++) {
             'type':current_item.type, 
             'display_type':display_type,
             'desc':description,
-            'rarity':current_item.rarity.toLowerCase(),
+            'desc2':description2,
+            'rarity':current_item.rarity == null ? '' : current_item.rarity.toLowerCase(),
         };
         if (equipment_types_space.includes(current_item.type)) {
             data.space_equipment.push(current_obj);
@@ -212,3 +216,4 @@ for (let i3 = 0; i3< equipment_json.length; i3++) {
         }
     }
 }
+console.log({'Starship Traits':data.starship_traits.length, 'Personal Traits':data.personal_traits.length, 'Ground Equipment': data.ground_equipment.length, 'Space Equipment': data.space_equipment.length})

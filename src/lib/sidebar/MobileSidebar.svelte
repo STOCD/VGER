@@ -32,6 +32,7 @@ div {
     overflow-y: visible;
     position: absolute;
     height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter)); /*viewport height minus top banner height, height of the bottom margin and height of the menu bar*/
+    height: calc(var(--vh, 1vh) * 100 - 100vw*(143/1920) - 5*var(--gutter)); 
     left: -100vw;
     transition: transform .5s cubic-bezier(0.075, 0.1, 0.165, 1);
     z-index: 3;

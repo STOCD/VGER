@@ -1,5 +1,5 @@
 <script>
-  import { activeTab, srcValue, active_settings, current_list, activeCard, settings_env, settings_type, settings_av, settings_ground_slot, settings_space_slot, settings_rarity, mobile, mobile_menu_active, mobile_sidebar_active
+  import { activeTab, srcValue, active_settings, current_list, activeCard, settings_env, settings_type, settings_av, settings_ground_slot, settings_space_slot, settings_rarity, mobile, mobile_menu_active, mobile_sidebar_active, settings_search_desc
   } from '$lib/stores';
   import HamburgerIcon from './HamburgerIcon.svelte';
   import {slide} from 'svelte/transition';
@@ -32,6 +32,7 @@
     $settings_ground_slot = [];
     $settings_space_slot = [];
     $settings_rarity = [];
+    $settings_search_desc = false;
   };
 
   const handleSubmit = (event) => {
