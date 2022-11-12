@@ -34,10 +34,10 @@ Constantly there are items added to the game. Manually adding them to VGER would
 ### The Data
 Sould I put in a paragraph to explain a backend that nobody cares about? I guess I have to commend myself a bit with this, given that this is the most important feature from my point of view.
 The STO Wiki implements a fandom distributed interface called 'Cargo Tables'. This does nothing else than creating a table including all the templates of one kind there are on the wiki. For example there is an Infobox template, that has a number of fields. If you use it to create an infobox, the data you inserted will also show up in the Cargo Table: Infoboxes. The wiki has a lot of such cargo tables, but only three are interesting to me. I (in fact anybody) can download those directly from the wiki, formatted as json file. For VGER they are downloaded by an API (Application Programming Interface) that runs on the same server as VGER. It then extracts the data VGER needs from the tables and formats them in a way that is most efficient for VGER. Whenever somebody opens the url, it requests the data from this API and opens the app. Once the app completely loaded, it sends an asynchronous request to update the data on the API in case there were new items added. Only once every 24h it actually refreshes the data to reduce superfluous network traffic. The initial data request takes anywhere between 0.5 and 3 seconds. In the future I will tweak this a bit to improve the overall performance.
-If you're interested in the data, you can call the API yourself to see the data:
-https://vger.netlify.app/api - For the refined dataset
-https://vger.netlify.app/api?t=1 - For the time of the last data refresh
-https://vger.netlify.app/api?t=2 - For the used Cargo Queries
+If you're interested in the data, you can call the API yourself to see the data:<br>
+https://vger.netlify.app/api - For the refined dataset<br>
+https://vger.netlify.app/api?t=1 - For the time of the last data refresh<br>
+https://vger.netlify.app/api?t=2 - For the used Cargo Queries<br>
 ### The images
 Bread and Butter of VGER.
 Sometimes there might be some images missing. This usually happens due to inconsistent naming between the image files and the infoboxes on the wiki (and in case of the Winter Wonderland items because quotes are not allowed charcters in filenames). If that's the case you can contact me on the STOBuilds Discord in the #vger-support channel (link at the top). 
