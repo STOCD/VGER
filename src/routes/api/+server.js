@@ -118,7 +118,9 @@ function compensate_url(text) {
     text = text.replaceAll('%26%2334%3B','%22');
     text = text.replaceAll('"','%22');
     text = text.replaceAll('&quot;','%22');
+    text = text.replaceAll('&#34;','%22');
     text = text.replaceAll("'",'%27');
+    text = text.replaceAll('&#39;','%27');
     text = text.replaceAll('&amp;','%26');
     text = text.replaceAll(' ','_');
     return text;
