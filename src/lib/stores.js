@@ -1,9 +1,5 @@
 import { writable } from 'svelte/store';
 
-import acr from '../data/acronyms.json';
-
-export const acronyms = acr.content;
-
 export const activeTab = writable('Visual Glossary Educational Repository');
 
 export const activeCard = writable('');
@@ -44,12 +40,18 @@ export const mobile_sidebar_active = writable(false);
 
 export const mobile_description = writable('');
 
-export const image_path = '/images/'; // for build
-
-export const icon_path = '/icons/';     // for build
-
-//export const image_path = '/src/images/'; // for dev
+export const wiki_url = 'https://sto.fandom.com/wiki/';
 
 //export const icon_path = '/src/icons/';     // for dev
 
-export const wiki_url = 'https://sto.fandom.com/wiki/';
+//export const icon_path = '/icons/';     // for build
+
+/* Deprecated content ahead! The following code was used before the automization.
+//export const image_path = '/images/'; // for build
+
+export const image_path = '/src/images/'; // for dev
+
+import acr from '../data/acronyms.json';
+
+export const acronyms = acr.content;
+*/

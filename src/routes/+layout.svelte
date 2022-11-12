@@ -6,7 +6,7 @@
 <Banner />
 
 <div>
-  <slot />
+  <slot /> <!-- page is inserted here -->
 </div>
 
 

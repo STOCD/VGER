@@ -1,2 +1,0 @@
-python xlsxparser.py
-pause

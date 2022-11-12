@@ -7,7 +7,14 @@
   import Sidebar from '$lib/sidebar/Sidebar.svelte';
   import Settings from '$lib/settings/Settings.svelte';
   import MobileSidebar from '$lib/sidebar/MobileSidebar.svelte';
+
+  // recieves data from load function
+  export let data;
+
+  const card_data = data[0];
+  const acr = data[1].content;
  
+  // viewport height
   let vh = 0;
 
   //default tab
@@ -21,8 +28,13 @@
     // set viewport height
     vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`)
+
+    // start data fetch for future visitors
+    fetch('/api', {method:'POST', body:JSON.stringify({pro:'content'})})
+
   });
 
+  // makes sure the app is always in the right mode: Desktop / Mobile
   $: {
     if ($mobile_override === 'auto') {
       $mobile = $mobile_auto;
@@ -34,7 +46,6 @@
       }
     }
   }
-
 </script>
 
 <svelte:head>
@@ -60,30 +71,30 @@
 
   <!-- slots the current module -- is done individually for every module to force reload -->
   {#if $activeTab == 'Acronyms'}
-    <Acronyms />
+    <Acronyms {acr} />
   {:else if $activeTab == 'Starship Traits'}
-    <Grid/>
+    <Grid {card_data}/>
     {#if !$mobile}
       <aside>
         <Sidebar/>
       </aside>
     {/if}
   {:else if $activeTab == 'Personal Traits'}
-    <Grid/>
+    <Grid {card_data}/>
     {#if !$mobile}
       <aside>
         <Sidebar/>
       </aside>
     {/if}
   {:else if $activeTab == 'Space Equipment'}
-    <Grid/>
+    <Grid {card_data}/>
     {#if !$mobile}
       <aside>
         <Sidebar/>
       </aside>
     {/if}
   {:else if $activeTab == 'Ground Equipment'}
-    <Grid/>
+    <Grid {card_data}/>
     {#if !$mobile}
       <aside>
         <Sidebar/>
@@ -103,11 +114,14 @@
     padding: var(--gutter);
     background-color: var(--dark-background);
     overflow: hidden;
+    border-radius: 0 0 var(--gutter) var(--gutter);
   }
   aside {
   width: 30%;
   padding: 1rem;
-  background-color: var(--light-background);
+  background-color: var(--dark-background);
+  border: calc(.5*var(--gutter)) solid var(--light-background);
+  border-radius: var(--gutter);
   overflow-y: auto;
 }
 </style>

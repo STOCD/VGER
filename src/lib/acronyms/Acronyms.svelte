@@ -1,8 +1,12 @@
 <script>
 
-import {srcValue, filtered, acronyms, activeTab, mobile, mobile_description} from '$lib/stores';
+import {srcValue, filtered, activeTab, mobile, mobile_description} from '$lib/stores';
 import {matchSorter} from 'match-sorter';
 
+export let acr;
+const acronyms = acr;
+
+// bind search string to filter module
 srcValue.subscribe( () => {
     if ($activeTab == 'Acronyms') {
     filtered.set(matchSorter(acronyms, $srcValue, {keys : ['acr', 'term', 'desc']}));
@@ -14,6 +18,7 @@ srcValue.subscribe( () => {
 }
 });
 
+//shows description section for mobile
 function showDescription(title,text) {
     if ($mobile) {
         $mobile_description = title + ': '+text;
@@ -22,12 +27,14 @@ function showDescription(title,text) {
     }
 }
 
+//hides description section for mobile
 function hideDescription() {
     document.getElementById('description').style.opacity = '0';
     setTimeout( () => document.getElementById('description').style.visibility = 'hidden', 510);    
 }
 </script>
 
+<!-- Description Section for mobile; hidden by default -->
 <div id='description'>
     <p class='text'>
         {$mobile_description}
@@ -37,6 +44,7 @@ function hideDescription() {
     </div>
 </div>
 
+<!-- Acronyms table -->
 <div id='div1'>
 
     <table id="tbl1">
@@ -83,11 +91,21 @@ function hideDescription() {
         border-collapse: collapse;
         overflow: inherit;
     }
+    tr,td {
+        border-radius: var(--gutter);
+    }
     td {
         color: var(--light-text);
     }
-    tr:nth-child(2n+1) {
+    tr:nth-child(2n+1) td {
         background-color: var(--science-blue-dimmed);
+        border-radius: 0;
+    }
+    tr:nth-child(2n+1) td:first-child {
+        border-radius: var(--gutter) 0 0 var(--gutter);
+    }
+    tr:nth-child(2n+1) td:last-child {
+        border-radius: 0 var(--gutter) var(--gutter) 0;
     }
     #tbl1 {
         width: 100%;
@@ -121,7 +139,7 @@ function hideDescription() {
         box-shadow: 0 var(--border) 0 #fff;
     }
     .text {
-        color: var(--dark-text);
+        color: var(--light-text);
         margin: var(--gutter);
         margin-bottom: calc(2*var(--gutter));
     }
@@ -131,8 +149,7 @@ function hideDescription() {
         width: calc(100% - 4*var(--gutter));
         padding: var(--gutter);
         border: var(--border) solid var(--science-blue);
-        border-top: calc(.5*var(--border)) solid var(--dark-text);
-        background-color: var(--light-background);
+        background-color: var(--dark-background-hover);
         margin: 0;
         opacity: 0;
         visibility: hidden;
@@ -141,12 +158,13 @@ function hideDescription() {
     }
     .close_button {
         background-color: rgba(0,0,0,0);
-        border: calc(.5*var(--border)) solid var(--dark-background);
+        border: calc(.5*var(--border)) solid var(--gray-text);
         border-radius: calc(.5*var(--gutter));
         padding: calc(.5*var(--gutter));
         padding-bottom: calc(.7*var(--gutter));
         width: 100%;
         height: calc(3.5*var(--gutter));
+        color: var(--gray-text);
     }
     .close_div {
         width: 100%;

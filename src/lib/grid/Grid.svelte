@@ -1,14 +1,16 @@
 <script>
   import GridCard from "./GridCard.svelte";
   import {srcValue, filtered, current_list, activeTab, settings_env, settings_type, settings_av, settings_ground_slot, settings_space_slot, settings_rarity, mobile, settings_search_desc} from '$lib/stores';
-  import { data } from '$lib/fetch/masterfetch';
   import {matchSorter} from 'match-sorter';
   import { onMount } from 'svelte';
+
+  export let card_data;
+  const data = card_data;
 
   let hasAPI = true;
   onMount(()=> {hasAPI = 'IntersectionObserver' in window;})
 
-  //update filter and search on change of any filter store variable
+  // update filter and search on change of any filter store variable
   srcValue.subscribe( () => update_filter() );
   settings_env.subscribe( () => update_filter() );
   settings_type.subscribe( () => update_filter() );
@@ -18,15 +20,18 @@
   settings_rarity.subscribe( () => update_filter() );
 
 
-  //updates the filter for the current tab
+  // updates the filter for the current tab
   function update_filter() {
+    // Personal Traits
     if ($activeTab == 'Personal Traits') {
 
+      // search filter
       let environment_filtered = data[$current_list];
       if ($settings_env != '') {
         environment_filtered = matchSorter(data[$current_list], $settings_env, {keys: ['environment'], threshold: matchSorter.rankings.EQUAL})
       }
 
+      // type filters
       let type_filtered = [];
       if ($settings_type.length == 0) {
         type_filtered = environment_filtered;
@@ -36,6 +41,7 @@
           type_filtered.push(...matchSorter(environment_filtered, 'reputation', {keys: ['type'], threshold: matchSorter.rankings.EQUAL}))
         }
         if ($settings_type.includes('personal')) {
+          console.log('here')
           type_filtered.push(...matchSorter(environment_filtered, 'personal', {keys: ['type'], threshold: matchSorter.rankings.EQUAL}))
         }
         if ($settings_type.includes('active_rep')) {
@@ -62,7 +68,7 @@
       let search_filtered = matchSorter(av_filtered, $srcValue, {keys: [{threshold: matchSorter.rankings.ACRONYM, key: 'name'}, {threshold: matchSorter.rankings.CONTAINS, key:'desc'}]});
       filtered.set(search_filtered);
 
-      //scroll to the top
+      // scroll to the top
       try {
         document.getElementById('main_section').scrollTop(0);
       }
@@ -70,12 +76,14 @@
 
     }
 
+    // Starship Traits
     else if ($activeTab == 'Starship Traits') {
 
+      // search filter
       let search_filtered = matchSorter(data[$current_list], $srcValue, {keys: [{threshold: matchSorter.rankings.ACRONYM, key: 'name'}, {threshold: matchSorter.rankings.CONTAINS, key:'obtained'}, {threshold: matchSorter.rankings.CONTAINS, key:'desc'}] });
       filtered.set(search_filtered);
 
-      //scroll to the top
+      // scroll to the top
       try {
         document.getElementById('main_section').scrollTop = 0;
       }
@@ -83,8 +91,10 @@
 
     }
 
+    // Space Equipment
     else if ($activeTab == 'Space Equipment') {
 
+      // type filters
       let type_filtered = []
       if ($settings_space_slot.length == 0) {
         type_filtered = data[$current_list];
@@ -105,6 +115,7 @@
         }
       }
 
+      // search filter
       let search_filtered = matchSorter(rarity_filtered, $srcValue, {keys: [{threshold: matchSorter.rankings.ACRONYM, key: 'name'}]});
       if ($settings_search_desc) {
         search_filtered = search_filtered.concat(matchSorter(rarity_filtered, $srcValue, {keys: [{threshold: matchSorter.rankings.CONTAINS, key: 'desc2'}]}))
@@ -119,8 +130,10 @@
 
     }
 
+    // ground equipment
     else if ($activeTab == 'Ground Equipment') {
 
+      // type filters
       let type_filtered = []
       if ($settings_ground_slot.length == 0) {
         type_filtered = data[$current_list];
@@ -141,6 +154,7 @@
         }
       }
 
+      // search filter
       let search_filtered = matchSorter(rarity_filtered, $srcValue, {keys: [{threshold: matchSorter.rankings.ACRONYM, key: 'name'}]});
       if ($settings_search_desc) {
         search_filtered = search_filtered.concat(matchSorter(rarity_filtered, $srcValue, {keys: [{threshold: matchSorter.rankings.CONTAINS, key: 'desc2'}]}))
@@ -158,8 +172,10 @@
 
 </script>
 
+<!-- main grid section -->
 <section class='section' class:mobile_section='{$mobile}' id='main_section'>
   <div id='div1'>
+    <!-- inserts a grid card for each item -->
     {#each $filtered as item, index (index)}
       <GridCard {item} lazy={hasAPI && index > -1}/>
     {/each}

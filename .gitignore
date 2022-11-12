@@ -5,5 +5,4 @@ node_modules
 /package
 .env
 .env.*
-.vercel
-.output
+!.env.example

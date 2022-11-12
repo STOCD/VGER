@@ -7,6 +7,7 @@
   const tabs = ['Starship Traits', 'Space Equipment', 'Ground Equipment', 'Personal Traits', 'Acronyms'];
   const lists = {'Starship Traits':'starship_traits', 'Personal Traits':'personal_traits','Space Equipment':'space_equipment', 'Ground Equipment':'ground_equipment','Knowledgebase':''};
 
+  // swaps modules
   const handleClick = (title) => {
     if ($activeTab == title) {
       return
@@ -35,9 +36,12 @@
     $settings_search_desc = false;
   };
 
+
   const handleSubmit = (event) => {
     event.preventDefault();
   };
+
+  // expands settings menu
   const toggleSettings = (event) => {
     active_settings.set(!$active_settings);
     if ($mobile) {
@@ -48,14 +52,14 @@
     }
   }
 
+  // expands mobile menu
   const toggleMenu = () => {
     $mobile_menu_active = !$mobile_menu_active;
     if ($active_settings) {
       $active_settings = false;
     }
 
-  }
-  
+  }  
 
 </script>
 
@@ -78,6 +82,7 @@
       <button class="hamburger desktop_button" on:click={toggleSettings} title='Settings and Filters (tab-specific)'><HamburgerIcon /></button>
     </form>
   </header>
+  <div class='seperator_background'><div class='seperator'></div></div>
 
 {:else}
 
@@ -110,17 +115,19 @@
     display: flex;
     height: 2.5rem;
     width: 100%;
-    background-color: #616161;
+    background-color: var(--dark-background);
     z-index: 3;
+    border-radius: var(--gutter) var(--gutter) 0 0;
   }
   #search {
     margin: 0 auto;
     border-right: 1px solid var(--dark-text); 
-    height: 60%;
-    width: 70%;
+    height: 70%;
+    width: 80%;
     font-size: 1rem;
     padding: 0 0.25rem;
-    border: none;
+    border: var(--border) solid var(--dark-background-hover);
+    border-radius: calc(2*var(--border));
     background-color: var(--dark-background);
     color: var(--light-text);
   }
@@ -128,15 +135,16 @@
     background-color: var(--dark-background-hover);
   }
   #search::placeholder {
-    color: var(--light-background);
+    color: var(--light-text);
   }
   nav {
     width: 70%;
+    padding-bottom: var(--border);
   }
   .horizontal_list {
     height: 100%;
-    padding: 0;
     margin: 0;
+    padding: 0 0 var(--border) 0;
     display: flex;
     justify-content: center;
     list-style: none;
@@ -152,31 +160,39 @@
   .desktop_button {
     height: 100%;
     width: 100%;
-    margin: 0;
     padding: 0;
   }
+  .desktop_li {
+    margin: var(--border) 0 var(--border) var(--border);
+  }
   .desktop_button {
-    background-color: var(--light-text);
-    color: var(--gray-text);
-    border: none;
+    background-color: var(--dark-background);
+    color: var(--light-text);
+    border: calc(.1*var(--gutter)) solid var(--dark-background);
+    margin-bottom: var(--border);
+    border-radius: var(--gutter);
     text-transform: uppercase;
     font-weight: bold;
+    font-size: 85%;
   }
   .mobile_button {
-    background-color: var(--light-text);
-    color: var(--gray-text);
+    background-color: var(--dark-background);
+    color: var(--light-text);
     border: none;
     text-transform: uppercase;
     font-weight: bold;
     width: 100%;
     height: 2.5rem;
   }
-  .desktop_button:not(.hamburger) {
-    border-right: calc(.5*var(--border)) solid var(--dark-text);
-  }
-  .desktop_button:hover,.mobile_button:hover {
+  .desktop_button:hover {
     cursor: pointer;
-    background-color: var(--light-text-hover);
+    border-color: var(--light-text);
+    text-decoration: underline;
+  }
+
+  .mobile_button:hover {
+    cursor: pointer;
+    background-color: var(--dark-background-hover);
     text-decoration: underline;
   }
   .desktop_button:active:not(.hamburger),.mobile_button:active:not(.hamburger) {
@@ -190,11 +206,16 @@
     display: flex;
     justify-content: right;
     align-items: center;
-    background-color: var(--light-text);
+    background-color: var(--dark-background);
+    border-radius: var(--gutter);
+    padding-top: var(--border);
+    padding-right: var(--border);
   }
   .hamburger {
     width: 15%;
-    border-left: calc(.5*var(--border)) solid var(--dark-text);
+    display: flex;
+    align-items: center;
+    margin-top: var(--border);
   }
   .visually-hidden {
     clip: rect(0 0 0 0);
@@ -208,9 +229,9 @@
   #mobile_menu {
     position: absolute;
     width: calc(100vw - 2*var(--gutter));
-    background-color: var(--light-text);
+    background-color: var(--dark-background);
     top: 2.5rem;
-    border-top: calc(.5*var(--border)) solid var(--dark-text);
+    border-top: calc(.5*var(--border)) solid var(--science-blue);
     z-index: 5;
     border-bottom: var(--gutter) solid var(--science-blue);
   }
@@ -219,5 +240,14 @@
   }
   #mobile_menu_button {
     width: 25%;
+  }
+  .seperator {
+    height: var(--border);
+    background-color: var(--light-background-hover);
+    margin: 0 var(--gutter) 0 var(--gutter);
+    padding: 0;
+  }
+  .seperator_background {
+    background-color: var(--dark-background);
   }
 </style>

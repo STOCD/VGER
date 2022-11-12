@@ -1,12 +1,14 @@
 <script>
 
 import { 
-    active_settings, icon_path, activeTab, settings_env, settings_type, settings_av, 
+    active_settings, activeTab, settings_env, settings_type, settings_av, 
     settings_space_slot, settings_ground_slot, settings_rarity, mobile_override, mobile, settings_search_desc
     } from '$lib/stores';
 import {equipment_types_ground, equipment_types_space, rarities} from '$lib/fetch/masterfetch';
+
 const links = [{name:'Website',link:'https://stobuilds.com/VGER'},{name:'STOCD',link:'https://github.com/STOCD'},{name:'STOBuilds Discord',link:'https://discord.gg/stobuilds'}]
 
+// listens for request to open settings menu
 active_settings.subscribe(() => {
     
     try {
@@ -26,17 +28,22 @@ active_settings.subscribe(() => {
     catch {}  
 })
 
+// show chain icon
 function showLinkIcon(e, id) {
         document.getElementById(id).style.visibility = 'visible';
     }
+
+// hide chain icon
 function hideLinkIcon(e, id) {
         document.getElementById(id).style.visibility = 'hidden';
 }
 
+// provides type to be displayed for special types with unprecise names
 function getDisplayType(text) {
     return text == 'Hangar Bay' ? 'Hangar Pet' : text == 'Warp Engine' ? 'Warp Core' : text == 'Singularity Engine' ? 'Singularity Core' : text.replaceAll('Ship ','');
 }
 
+// changes card size
 function sizeSettingsCallback(size) {
     let r = document.documentElement;
     if (size == 'small') {
@@ -49,6 +56,8 @@ function sizeSettingsCallback(size) {
         r.style.setProperty('--card-image-width', '4rem');
     }
 }
+
+// funcions changing various settings ahead
 
 function envSettingsCallback(environment) {
     if ($settings_env == '') {
@@ -113,6 +122,7 @@ function arraySettingsCallback(item, variable) {
     }
     console.log(variable)
 }
+
 function raritySettingsCallback(item) {
     if ($settings_rarity.includes(item)) {
         $settings_rarity = $settings_rarity.filter(element => element !== item);
@@ -121,6 +131,20 @@ function raritySettingsCallback(item) {
         $settings_rarity = [...$settings_rarity, item];
     }
 }
+
+// functions to implement key events ahead
+
+function keyUp(event, func, params) {
+    if (event.key == 'Enter') {
+      func(...params);
+    }
+  }
+function keyVarToggle(event, variable, state) {
+    if (event.key == 'Enter') {
+        variable = state;
+    }
+}
+
 </script>
 
 <!-- Settings Sidebar -- sliding in from the right on click -->
@@ -134,15 +158,18 @@ function raritySettingsCallback(item) {
             <p class='settings_header'>Trait Type:</p>
             <div class='button_group'>
                 <input type='checkbox'  id='type_personal' class ='settings_input' name='type'>
-                <label class='settings_button' for='type_personal' on:click={()=>typeSettingsCallback('personal')} title='Includes Personal Traits when activated'>
+                <label class='settings_button' for='type_personal' title='Includes Personal Traits when activated'
+                on:click={()=>typeSettingsCallback('personal')} on:keyup={event => keyUp(event, typeSettingsCallback, ['personal'])}>
                     Personal
                 </label>
                 <input type='checkbox' id='type_rep' class='settings_input' name='type'>
-                <label class='settings_button' for='type_rep' on:click={()=>typeSettingsCallback('rep')} title='Includes Reputation Traits when activated'>
+                <label class='settings_button' for='type_rep' title='Includes Reputation Traits when activated'
+                on:click={()=>typeSettingsCallback('rep')} on:keyup={event => keyUp(event, typeSettingsCallback, ['rep'])}>
                     Reputation
                 </label>
                 <input type='checkbox'  id='type_active_rep' class ='settings_input' name='type'>
-                <label class='settings_button' for='type_active_rep' on:click={()=>typeSettingsCallback('active_rep')} title='Includes Active Reputation Traits when activated'>
+                <label class='settings_button' for='type_active_rep' title='Includes Active Reputation Traits when activated'
+                on:click={()=>typeSettingsCallback('active_rep')} on:keyup={event => keyUp(event, typeSettingsCallback, ['active_rep'])}>
                     Active Reputation
                 </label>    
             </div>
@@ -150,11 +177,13 @@ function raritySettingsCallback(item) {
             <p class='settings_header'>Trait Environment:</p>
             <div class='button_group'>
                 <input type='checkbox' id='env_space' class='settings_input' name='env'>
-                <label class='settings_button' for='env_space' on:click={()=>envSettingsCallback('space')} title='Includes Space Traits when activated'>
+                <label class='settings_button' for='env_space' title='Includes Space Traits when activated'
+                on:click={()=>envSettingsCallback('space')} on:keyup={event => keyUp(event, envSettingsCallback, ['space'])}>
                     Space
                 </label>
                 <input type='checkbox'  id='env_ground' class ='settings_input' name='env'>
-                <label class='settings_button' for='env_ground' on:click={()=>envSettingsCallback('ground')}  title='Includes Ground Traits when activated'>
+                <label class='settings_button' for='env_ground'  title='Includes Ground Traits when activated'
+                on:click={()=>envSettingsCallback('space')} on:keyup={event => keyUp(event, envSettingsCallback, ['space'])}>
                     Ground
                 </label>    
             </div>
@@ -162,15 +191,18 @@ function raritySettingsCallback(item) {
             <p class='settings_header'>Trait Availability:</p>
             <div class='button_group'>
                 <input type='checkbox'  id='av_innate' class ='settings_input' name='type'>
-                <label class='settings_button' for='av_innate' on:click={()=>avSettingsCallback('innate')}  title='Includes species specific and exclusive Traits when activated -- each species has one of those and it cannot be unslotted'>
+                <label class='settings_button' for='av_innate' title='Includes species specific and exclusive Traits when activated -- each species has one of those and it cannot be unslotted'
+                on:click={()=>avSettingsCallback('innate')} on:keyup={event => keyUp(event, avSettingsCallback, ['innate'])}>
                     Innate
                 </label>
                 <input type='checkbox' id='av_species' class='settings_input' name='type'>
-                <label class='settings_button' for='av_species' on:click={()=>avSettingsCallback('species')} title='Includes Traits available to the respective species by default'>
+                <label class='settings_button' for='av_species' title='Includes Traits available to the respective species by default'
+                on:click={()=>avSettingsCallback('species')} on:keyup={event => keyUp(event, avSettingsCallback, ['species'])}>
                     Species
                 </label>
                 <input type='checkbox'  id='av_rest' class ='settings_input' name='type'>
-                <label class='settings_button' for='av_rest' on:click={()=>avSettingsCallback('other')} title='Includes Traits available from Lockboxes, Missions, Recruitment Events and Traits unlocked by default depending on the player characters profession'>
+                <label class='settings_button' for='av_rest' title='Includes Traits available from Lockboxes, Missions, Recruitment Events and Traits unlocked by default depending on the player characters profession'
+                on:click={()=>avSettingsCallback('other')} on:keyup={event => keyUp(event, avSettingsCallback, ['other'])}>
                     Obtainable
                 </label>     
             </div>
@@ -182,7 +214,7 @@ function raritySettingsCallback(item) {
                 <p class='text'>Obtainable: Includes Traits available from Lockboxes, Missions, Recruitment Events and Traits unlocked by default depending on the player characters profession</p>
             {/if}
 
-            <hr style='margin-top: calc(3*var(--gutter));'/>
+            <hr/>
 
         <!-- Settings exclusive for Ground Equipment -->
         {:else if $activeTab == 'Ground Equipment'}
@@ -190,7 +222,8 @@ function raritySettingsCallback(item) {
             <div class='button_group'>
                 {#each equipment_types_ground as type}
                     <input type='checkbox' id={'ground_type='+type} class='settings_input' name='ground_equipment_type'>
-                    <label class='settings_button' for={'ground_type='+type} on:click={()=>groundTypeSettingsCallback(type)} title={'Includes '+getDisplayType(type)+' Items'}> 
+                    <label class='settings_button' for={'ground_type='+type} title={'Includes '+getDisplayType(type)+' Items'}
+                    on:click={()=>groundTypeSettingsCallback(type)} on:keyup={event => keyUp(event, groundTypeSettingsCallback, [type])}> 
                         {getDisplayType(type)}
                     </label>
                 {/each}
@@ -200,7 +233,8 @@ function raritySettingsCallback(item) {
             <div class='button_group'>
                 {#each rarities as rarity}
                     <input type='checkbox' id={'ground_rarity='+rarity} class='settings_input' name='ground_rarity'>
-                    <label class='settings_button' for={'ground_rarity='+rarity} on:click={()=>raritySettingsCallback(rarity)} title={'Includes '+rarity+' Items'}> 
+                    <label class='settings_button' for={'ground_rarity='+rarity} on:click={()=>raritySettingsCallback(rarity)} title={'Includes '+rarity+' Items'}
+                        on:click={()=>raritySettingsCallback(rarity)} on:keyup={event => keyUp(event, raritySettingsCallback, [rarity])}> 
                         {rarity}
                     </label>
                 {/each}
@@ -209,12 +243,12 @@ function raritySettingsCallback(item) {
             <p class='settings_header'>Search Descriptions:</p>
             <div class='button_group'>
                 <input type='radio' class='settings_input' id='ground_desc_false' name='ground_desc' checked>
-                <label class='settings_button' for='ground_desc_false' on:click={()=>$settings_search_desc=false}>Disabled</label>
+                <label class='settings_button' for='ground_desc_false' on:click={()=>$settings_search_desc=false} on:keyup={event => keyVarToggle(event, $settings_search_desc, false)}>Disabled</label>
                 <input type='radio' class='settings_input' id='ground_desc_true' name='ground_desc'>
-                <label class='settings_button' for='ground_desc_true' on:click={()=>$settings_search_desc=true}>Enabled</label>
+                <label class='settings_button' for='ground_desc_true' on:click={()=>$settings_search_desc=true} on:keyup={event => keyVarToggle(event, $settings_search_desc, true)}>Enabled</label>
             </div>
 
-            <hr style='margin-top: calc(3*var(--gutter));'/>
+            <hr/>
 
         <!-- Settings exclusive for Space Equipment -->
         {:else if $activeTab == 'Space Equipment'}
@@ -222,7 +256,8 @@ function raritySettingsCallback(item) {
             <div class='button_group'>
                 {#each equipment_types_space as type}
                     <input type='checkbox' id={'space_type='+type} class='settings_input' name='space_equipment_type'>
-                    <label class='settings_button' for={'space_type='+type} on:click={()=>spaceTypeSettingsCallback(type)} title={'Includes '+getDisplayType(type)+' Items'}> 
+                    <label class='settings_button' for={'space_type='+type} title={'Includes '+getDisplayType(type)+' Items'}
+                    on:click={()=>spaceTypeSettingsCallback(type)} on:keyup={event => keyUp(event, spaceTypeSettingsCallback, [type])}> 
                         {getDisplayType(type)}
                     </label>
                 {/each}
@@ -232,7 +267,8 @@ function raritySettingsCallback(item) {
             <div class='button_group'>
                 {#each rarities as rarity}
                     <input type='checkbox' id={'space_rarity='+rarity} class='settings_input' name='space_rarity'>
-                    <label class='settings_button' for={'space_rarity='+rarity} on:click={()=>raritySettingsCallback(rarity)} title={'Includes '+rarity+' Items'}> 
+                    <label class='settings_button' for={'space_rarity='+rarity} title={'Includes '+rarity+' Items'}
+                    on:click={()=>raritySettingsCallback(rarity)} on:keyup={event=>keyUp(event, raritySettingsCallback(rarity))}> 
                         {rarity}
                     </label>
                 {/each}
@@ -241,12 +277,12 @@ function raritySettingsCallback(item) {
             <p class='settings_header'>Search Descriptions:</p>
             <div class='button_group'>
                 <input type='radio' class='settings_input' id='space_desc_false' name='space_desc' checked>
-                <label class='settings_button' for='space_desc_false' on:click={()=>$settings_search_desc=false}>Disabled</label>
+                <label class='settings_button' for='space_desc_false' on:click={()=>$settings_search_desc=false} on:keyup={event => keyVarToggle(event, $settings_search_desc, false)}>Disabled</label>
                 <input type='radio' class='settings_input' id='space_desc_true' name='space_desc'>
-                <label class='settings_button' for='space_desc_true' on:click={()=>$settings_search_desc=true}>Enabled</label>
+                <label class='settings_button' for='space_desc_true' on:click={()=>$settings_search_desc=true} on:keyup={event => keyVarToggle(event, $settings_search_desc, false)}>Enabled</label>
             </div>
         
-            <hr style='margin-top: calc(3*var(--gutter));'/>
+            <hr/>
 
         {/if}
 
@@ -254,28 +290,31 @@ function raritySettingsCallback(item) {
         <p class='settings_header'>Card size:</p>
         <div class='button_group'>
             <input type='radio' class='settings_input' id='size_small' name='size'>
-            <label class='settings_button' for='size_small' on:click={()=>sizeSettingsCallback('small')}>Small</label>
+            <label class='settings_button' for='size_small' on:click={()=>sizeSettingsCallback('small')} on:keyup={event => keyUp(event, sizeSettingsCallback, ['small'])}>Small</label>
             <input type='radio' class='settings_input' id='size_medium'name='size' checked>
-            <label class='settings_button' for='size_medium' on:click={()=>sizeSettingsCallback('medium')}>Medium</label>
+            <label class='settings_button' for='size_medium' on:click={()=>sizeSettingsCallback('medium')} on:keyup={event => keyUp(event, sizeSettingsCallback, ['medium'])}>Medium</label>
             <input type='radio' class='settings_input'  id='size_large' name='size'>
-            <label class='settings_button' for= 'size_large' on:click={()=>sizeSettingsCallback('large')}>Large</label>
+            <label class='settings_button' for= 'size_large' on:click={()=>sizeSettingsCallback('large')} on:keyup={event => keyUp(event, sizeSettingsCallback, ['large'])}>Large</label>
         </div>
+
+        <!-- Mobile Page Setting -- for all tabs -->
 
         <p class='settings_header'>Mobile Website:</p>
         <div class='button_group'>
             <input type='radio' class='settings_input' id='mobile_auto' name='mobile' checked>
-            <label class='settings_button' for='mobile_auto' on:click={()=>$mobile_override='auto'}>Auto</label>
+            <label class='settings_button' for='mobile_auto' on:click={()=>$mobile_override='auto'} on:keyup={event => keyVarToggle(event, $mobile_override, 'auto')}>Auto</label>
             <input type='radio' class='settings_input' id='mobile_mobile' name='mobile'>
-            <label class='settings_button' for='mobile_mobile' on:click={()=>$mobile_override='mobile'}>Mobile Website</label>
+            <label class='settings_button' for='mobile_mobile' on:click={()=>$mobile_override='mobile'} on:keyup={event => keyVarToggle(event, $mobile_override, 'mobile')}>Mobile Website</label>
             <input type='radio' class='settings_input' id='mobile_pc' name='mobile'>
-            <label class='settings_button' for='mobile_pc' on:click={()=>$mobile_override='pc'}>Desktop Website</label>
+            <label class='settings_button' for='mobile_pc' on:click={()=>$mobile_override='pc'} on:keyup={event => keyVarToggle(event, $mobile_override, 'pc')}>Desktop Website</label>
         </div>
         
     </div>
 
     <!-- Footer present on all tabs at the bottom of the settings sidebar -->
+    <div class='seperator'></div>
     <div class='promo_footer'>
-        <img class='footer_img' src={icon_path+'section31badge.png'} alt='STOCD'>
+        <img class='footer_img' src={'section31badge.png'} alt='STOCD'> <!--#~# 'src/icons/section31badge.png' for dev | 'section31badge.png' for build -->
         <div class='promo_footer_center'>
             <p class='promo_footer_text'>
                 <span style='color:var(--science-blue); font-weight:bold;'>Visual Glossary for Easy Reference</span><br>
@@ -285,7 +324,7 @@ function raritySettingsCallback(item) {
             {#each links as link, i}
                 <p style="font-size: 70%;" class='link_list' class:mobile_margin='{$mobile}'
                         on:mouseover={event => showLinkIcon(event, 'settings_link_icon'+i)} on:mouseleave={event => hideLinkIcon(event, 'settings_link_icon'+i)} 
-                        on:click={event => window.open(link.link)} 
+                        on:click={event => window.open(link.link)} on:keyup={event => keyUp(event, window.open, [link.link])}
                         on:focus={event => showLinkIcon(event, 'settings_link_icon'+i)} on:blur={event => hideLinkIcon(event, 'settings_link_icon'+i)}>
                     <i class='fa fa-angle-right'/>
                     <span class='hover_underline' >{link.name}</span>
@@ -293,14 +332,14 @@ function raritySettingsCallback(item) {
                 </p>
             {/each}
         </div>
-        <img class='footer_img' src={icon_path+'stobuildslogo.png'} alt='STOBuilds'>
+        <img class='footer_img' src={'stobuildslogo.png'} alt='STOBuilds'> <!--#~# 'src/icons/stobuildslogo.png' for dev | 'stobuildslogo.png' for build -->
     </div>
 
 </div>
 
 <style>
     .settings_div {
-        background-color: var(--light-text);
+        background-color: var(--dark-background-hover);
         position: absolute;
         height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter)); /*viewport height minus top banner height, height of the bottom margin and height of the menu bar*/
         height: calc(var(--vh, 1vh) * 100 - 100vw*(143/1920) - 5*var(--gutter));
@@ -309,8 +348,9 @@ function raritySettingsCallback(item) {
         margin-right: var(--gutter);
         transition: transform .5s cubic-bezier(0.075, 0.1, 0.165, 1);
         z-index: 10;
-        border-left: var(--gutter) solid var(--science-blue);
-        border-top: calc(.5*var(--border)) solid var(--dark-text);
+        border-left: calc(.5*var(--gutter)) solid var(--science-blue);
+        border-top: calc(.5*var(--gutter)) solid var(--science-blue);
+        border-radius: calc(.5*var(--gutter)) 0 var(--gutter) 0;
     }
     .mobile_settings_div {
         width: calc(100vw - 2*var(--gutter));
@@ -325,7 +365,13 @@ function raritySettingsCallback(item) {
     }
     .mobile_settings_content {
         height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter) - 1.75*var(--aside-image-width)); /*.settings_div height minus .promo_footer height*/
-        height: calc(var(--vh, 1vh) * 100 - 100vw*(143/1920) - 5*var(--gutter) - 1.75*var(--aside-image-width));
+        height: calc(var(--vh, 1vh) * 100 - 100vw*(143/1920) - 5*var(--gutter) - 1.8*var(--aside-image-width));
+    }
+    .seperator {
+        background-color: var(--gray-text);
+        height: calc(0.02*var(--aside-image-width));
+        margin: 0 var(--gutter) 0 var(--gutter);
+        padding: 0;
     }
     .button_group {
         display: flex;
@@ -337,7 +383,7 @@ function raritySettingsCallback(item) {
         text-align: left;
         margin: calc(2*var(--gutter)) 0 0 var(--gutter);
         font-size: 130%;
-        color: var(--dark-background);
+        color: var(--medium-text);
     }
     .settings_input {
         display: none;
@@ -350,20 +396,22 @@ function raritySettingsCallback(item) {
     .settings_button {
         margin: var(--gutter) 0 0 var(--gutter);
         font-size: 100%;
-        color: var(--light-background);
+        color: var(--light-text);
         background-color: rgba(0,0,0,0);
         border: calc(.5*var(--border)) solid;
-        border-color: var(--light-background);
+        border-color: var(--light-text);
         border-radius: calc(.5*var(--gutter));
         padding: calc(.5*var(--gutter));
         vertical-align: middle;
+    }
+    .settings_button:hover{
+        cursor: pointer;
     }
     .promo_footer {
         width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
-        box-shadow: 0 calc(-1* var(--border)) var(--border) 0 var(--light-background);
     }
     .promo_footer_center {
         margin: auto;
@@ -377,13 +425,13 @@ function raritySettingsCallback(item) {
     .promo_footer_text {
         text-align: center;
         font-size: 70%;
-        color: var(--dark-background);
+        color: var(--light-text);
         margin-bottom: calc(.5*var(--gutter));
     }
     .link_icon {
         margin: calc(.5*var(--border));
         padding-left: var(--border);
-        color: var(--gray-text);
+        color: var(--light-text);
         display: inline;
         font-size: 80%;
         text-decoration: none !important;
@@ -392,11 +440,11 @@ function raritySettingsCallback(item) {
         cursor: pointer;
         position: absolute;
         border-radius: 20%;
-        background-color: var(--light-text);
+        background-color: var(--dark-background-hover);
         padding: var(--border);
     }
     .link_list {
-        color: var(--dark-background);
+        color: var(--light-text);
         text-align: center;
         margin: 0;
     }
@@ -415,6 +463,10 @@ function raritySettingsCallback(item) {
         text-align: left;
         margin: var(--gutter) 0 0 var(--gutter);
         font-size: 80%;
-        color: var(--dark-background);
+        color: var(--medium-text);
+    }
+    hr {
+        margin-top: calc(3*var(--gutter));
+        border-color: var(--gray-text);
     }
 </style>

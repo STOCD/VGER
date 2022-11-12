@@ -1,15 +1,18 @@
 <script>
-  import { activeCard, activeTab, image_path, wiki_url, mobile, mobile_sidebar_active} from '$lib/stores';
+  import { activeCard, activeTab, wiki_url, mobile, mobile_sidebar_active} from '$lib/stores';
   import { compensate_wiki_description, rarities } from '$lib/fetch/masterfetch';
   
+  // shows chain icon
   function showLinkIcon(e, id) {
     document.getElementById(id).style.visibility = 'visible';
   }
 
+  // shows chain icons
   function hideLinkIcon(e, id) {
     document.getElementById(id).style.visibility = 'hidden';
   }
 
+  // opens wiki page on click
   function openLink(e, type, name) {
     if (type == 'trait') {
       window.open(wiki_url+'Trait:_'+name.replaceAll(' ','_'));
@@ -19,6 +22,7 @@
     }
   }
 
+  // makes the display type look pretty
   function getDisplayRarity(rarity) {
     for (let i = 0; i < rarities.length; i++) {
       if (rarities[i].toLowerCase() == rarity.toLowerCase()) {
@@ -28,19 +32,27 @@
     return rarity;
   }
 
+  // key events ...
+  function keyUp(event, func, params) {
+    if (event.key == 'Enter') {
+      func(...params);
+    }
+  }
+
+
 </script>
 
 {#if $activeCard}
   <div class='sidebar_content' class:mobile_sidebar_content='{$mobile}'>
 
     <!-- Image of current card -->
-    <img class='aside_image' src={image_path+$activeCard.name+'.png'} alt={$activeCard.name}>
+    <img class='aside_image' src={$activeCard.image} referrerpolicy='no-referrer' alt={$activeCard.name}>
 
     <!-- Name of currently selected item with link -- Traits -->
     {#if $activeTab == 'Starship Traits' || $activeTab == 'Personal Traits'}
       <h2 class='item_name' class:mobile_item_name='{$mobile}'
           on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')} 
-          on:click={event => openLink(event,'trait', $activeCard.name)} 
+          on:click={event => openLink(event,'trait', $activeCard.name)} on:keyup={event => keyUp(event, openLink, [event, 'trait', $activeCard.name])}
           on:focus={event => showLinkIcon(event, 'link_icon_header')} on:blur={event => hideLinkIcon(event, 'link_icon_header')}>
         <span class='hover_underline'>{$activeCard.name}</span>
         <i class='fa fa-link link_icon' id='link_icon_header'/>
@@ -50,7 +62,7 @@
     {:else if $activeTab == 'Space Equipment' || $activeTab == 'Ground Equipment'}
       <h2 class='item_name' class:mobile_item_name='{$mobile}'
           on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')} 
-          on:click={event => window.open($activeCard.url)} 
+          on:click={event => window.open($activeCard.url)} on:keyup={event => keyUp(event, window.open, $activeCard.url)}
           on:focus={event => showLinkIcon(event, 'link_icon_header')} on:blur={event => hideLinkIcon(event, 'link_icon_header')}>
         <span class='hover_underline'>{$activeCard.name}</span>
         <i class='fa fa-link link_icon' id='link_icon_header'/>
@@ -71,7 +83,7 @@
         {#each $activeCard.obtained as method, i}
           <li style="font-size: 100%;" class:mobile_margin='{$mobile}'
               on:mouseover={event => showLinkIcon(event, 'link_icon_'+i)} on:mouseleave={event => hideLinkIcon(event, 'link_icon_'+i)} 
-              on:click={event => openLink(event, 'none', method)} 
+              on:click={event => openLink(event, 'none', method)} on:keyup={event => keyUp(event, openLink, [event, 'none', method])}
               on:focus={event => showLinkIcon(event, 'link_icon_'+i)} on:blur={event => hideLinkIcon(event, 'link_icon_'+i)}>
             <i class='fa fa-angle-right'/>
             <span class='hover_underline' class:mobile_underline='{$mobile}'>{method}</span>
@@ -159,7 +171,7 @@ visibility: hidden;
 cursor: pointer;
 position: absolute;
 border-radius: 20%;
-background-color: var(--light-background);
+background-color: var(--dark-background);
 padding: var(--border);
 }
 #link_icon_header {
@@ -173,6 +185,7 @@ padding: 0;
 .item_obtained li {
 list-style: none;
 margin-left: calc(1.5*var(--gutter));
+color: var(--light-text);
 }
 :global(.infobox_li) {
 list-style: disc;
@@ -184,17 +197,20 @@ padding: 0;
 .aside_text {
 font-size: medium;
 padding-left: 0;
+color: var(--light-text);
 }
 .aside_image {
 width: var(--aside-image-width);
 display: block;
 border: calc(0.25*var(--gutter)) solid var(--science-blue);
+border-radius: var(--gutter);
 margin: 0 0 var(--gutter) var(--gutter);
 float: right;
 }
 .item_name {
 font-size: 170%;
 margin: 0;
+color: var(--light-text);
 }
 .hover_underline:hover {
 text-decoration: underline;
@@ -208,29 +224,35 @@ font-size: 90%;
 }
 .aside_head {
 margin: calc(3*var(--gutter)) 0 var(--gutter) 0;
+color: var(--light-text);
 }
 .fa-angle-right {
 margin-right: var(--border);
 }
 .item_head {
 font-size: 105%;
+font-weight: 500;
 padding-left: 0;
 margin: calc(.5*var(--gutter)) 0 0 0;
+color: #42afca;
 }
 .item_subhead {
 font-size: 90%;
 font-style: italic;
 padding-left: 0;
 margin: 0;
+color: yellow;
 }
 .item_text {
 font-size: 85%;
 padding-left: 0;
 margin: 0;
+color: var(--light-text);
 }
 .close_button {
   background-color: rgba(0,0,0,0);
-  border: calc(.5*var(--border)) solid var(--dark-background);
+  border: calc(.5*var(--border)) solid var(--gray-text);
+  color: var(--gray-text);
   border-radius: calc(.5*var(--gutter));
   padding: calc(.5*var(--gutter));
   padding-bottom: calc(.7*var(--gutter));
