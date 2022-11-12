@@ -113,6 +113,8 @@ function compensate_wiki_description(text) {
 function compensate_url(text) {
     text = text.replaceAll(' ','_');
     text = text.replaceAll('/','_');
+    text = text.replaceAll('&amp;','&');
+    text = text.replaceAll('&#38;','&');
     text = text.replaceAll('%C2%A0','_');
     text = text.replaceAll('%26%2339%3B','%27');
     text = text.replaceAll('%26%2334%3B','%22');
@@ -121,7 +123,7 @@ function compensate_url(text) {
     text = text.replaceAll('&#34;','%22');
     text = text.replaceAll("'",'%27');
     text = text.replaceAll('&#39;','%27');
-    text = text.replaceAll('&amp;','%26');
+    text = text.replaceAll('&','%26');
     text = text.replaceAll(' ','_');
     return text;
 }
