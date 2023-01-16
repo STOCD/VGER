@@ -24,8 +24,8 @@
   function update_filter() {
     // Personal Traits
     if ($activeTab == 'Personal Traits') {
-
-      // search filter
+     
+      // environment filter
       let environment_filtered = data[$current_list];
       if ($settings_env != '') {
         environment_filtered = matchSorter(data[$current_list], $settings_env, {keys: ['environment'], threshold: matchSorter.rankings.EQUAL})
@@ -41,7 +41,6 @@
           type_filtered.push(...matchSorter(environment_filtered, 'reputation', {keys: ['type'], threshold: matchSorter.rankings.EQUAL}))
         }
         if ($settings_type.includes('personal')) {
-          console.log('here')
           type_filtered.push(...matchSorter(environment_filtered, 'personal', {keys: ['type'], threshold: matchSorter.rankings.EQUAL}))
         }
         if ($settings_type.includes('active_rep')) {
@@ -104,7 +103,6 @@
           type_filtered.push(...matchSorter(data[$current_list], $settings_space_slot[k], {keys: ['type'], threshold: matchSorter.rankings.EQUAL}))
         }
       }
-
       let rarity_filtered = [];
       if ($settings_rarity.length == 0) {
         rarity_filtered = type_filtered;
@@ -143,14 +141,13 @@
           type_filtered.push(...matchSorter(data[$current_list], $settings_ground_slot[k], {keys: ['type'], threshold: matchSorter.rankings.EQUAL}))
         }
       }
-
       let rarity_filtered = [];
       if ($settings_rarity.length == 0) {
         rarity_filtered = type_filtered;
       }
       else {
         for (let k2 = 0; k2 < $settings_rarity.length; k2++) {
-          rarity_filtered.push(...matchSorter(data[$current_list], $settings_rarity[k2], {keys: ['rarity'], threshold: matchSorter.rankings.EQUAL}))
+          rarity_filtered.push(...matchSorter(type_filtered, $settings_rarity[k2], {keys: ['rarity'], threshold: matchSorter.rankings.EQUAL}))
         }
       }
 

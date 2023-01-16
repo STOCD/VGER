@@ -135,6 +135,7 @@ function raritySettingsCallback(item) {
 // functions to implement key events ahead
 
 function keyUp(event, func, params) {
+    //return;
     if (event.key == 'Enter') {
       func(...params);
     }
@@ -183,7 +184,7 @@ function keyVarToggle(event, variable, state) {
                 </label>
                 <input type='checkbox'  id='env_ground' class ='settings_input' name='env'>
                 <label class='settings_button' for='env_ground'  title='Includes Ground Traits when activated'
-                on:click={()=>envSettingsCallback('space')} on:keyup={event => keyUp(event, envSettingsCallback, ['space'])}>
+                on:click={()=>envSettingsCallback('ground')} on:keyup={event => keyUp(event, envSettingsCallback, ['ground'])}>
                     Ground
                 </label>    
             </div>
@@ -234,7 +235,7 @@ function keyVarToggle(event, variable, state) {
                 {#each rarities as rarity}
                     <input type='checkbox' id={'ground_rarity='+rarity} class='settings_input' name='ground_rarity'>
                     <label class='settings_button' for={'ground_rarity='+rarity} on:click={()=>raritySettingsCallback(rarity)} title={'Includes '+rarity+' Items'}
-                        on:click={()=>raritySettingsCallback(rarity)} on:keyup={event => keyUp(event, raritySettingsCallback, [rarity])}> 
+                        on:keyup={event => keyUp(event, raritySettingsCallback, [rarity])}>
                         {rarity}
                     </label>
                 {/each}
@@ -268,7 +269,7 @@ function keyVarToggle(event, variable, state) {
                 {#each rarities as rarity}
                     <input type='checkbox' id={'space_rarity='+rarity} class='settings_input' name='space_rarity'>
                     <label class='settings_button' for={'space_rarity='+rarity} title={'Includes '+rarity+' Items'}
-                    on:click={()=>raritySettingsCallback(rarity)} on:keyup={event=>keyUp(event, raritySettingsCallback(rarity))}> 
+                    on:click={()=>raritySettingsCallback(rarity)} on:keyup={event=>keyUp(event, raritySettingsCallback, [rarity])}> 
                         {rarity}
                     </label>
                 {/each}
