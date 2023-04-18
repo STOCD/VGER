@@ -65,7 +65,7 @@ const equipment_types_ground = [
     'Kit', 'Body Armor', 'EV Suit', 'Personal Shield', 'Ground Weapon', 'Ground Device', 'Kit Module'
 ];
 
-const wikihttp = 'https://sto.fandom.com/wiki/';
+const wikihttp = 'https://www.stowiki.net/wiki/';
 const filepath = 'Special:FilePath/';
 const image_suffix = '_icon.png';
 
