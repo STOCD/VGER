@@ -197,6 +197,7 @@ async function create_data() {
         'Predictive Algorithms':'Intelligence Officer (specialization)','Pedal to the Metal':'Pilot (specialization)',
         'Unconventional Tactics':'Strategist (specialization)','Critical Systems':'Temporal Agent Recruitment',
         "Hunter's Instinct":'Klingon Recruitment','Temporal Insight':'Delta Recruitment', 
+      
         'Scramble Fighters':'Delta Alliance Duty Officer Pack', 'Attack Pattern Delta Prime':'Delta Alliance Duty Officer Pack',
         'Point Defense Protocols':'Delta Alliance Duty Officer Pack'
     }
