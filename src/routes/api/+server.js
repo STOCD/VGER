@@ -65,13 +65,14 @@ const equipment_types_ground = [
     'Kit', 'Body Armor', 'EV Suit', 'Personal Shield', 'Ground Weapon', 'Ground Device', 'Kit Module'
 ];
 
-const wikihttp = 'https://sto.fandom.com/wiki/';
+const wikihttp = 'https://www.stowiki.net/wiki/';
+const old_wikihttp = 'https://sto.fandom.com/wiki/';
 const filepath = 'Special:FilePath/';
 const image_suffix = '_icon.png';
 
 const item_query = wikihttp + 'Special:CargoExport?tables=Infobox&&fields=_pageName%3DPage%2Cname%3Dname%2Crarity%3Drarity%2Ctype%3Dtype%2Cboundto%3Dboundto%2Cboundwhen%3Dboundwhen%2Cwho%3Dwho%2Chead1%3Dhead1%2Chead2%3Dhead2%2Chead3%3Dhead3%2Chead4%3Dhead4%2Chead5%3Dhead5%2Chead6%3Dhead6%2Chead7%3Dhead7%2Chead8%3Dhead8%2Chead9%3Dhead9%2Csubhead1%3Dsubhead1%2Csubhead2%3Dsubhead2%2Csubhead3%3Dsubhead3%2Csubhead4%3Dsubhead4%2Csubhead5%3Dsubhead5%2Csubhead6%3Dsubhead6%2Csubhead7%3Dsubhead7%2Csubhead8%3Dsubhead8%2Csubhead9%3Dsubhead9%2Ctext1%3Dtext1%2Ctext2%3Dtext2%2Ctext3%3Dtext3%2Ctext4%3Dtext4%2Ctext5%3Dtext5%2Ctext6%3Dtext6%2Ctext7%3Dtext7%2Ctext8%3Dtext8%2Ctext9%3Dtext9&limit=5000&format=json';
 const starship_trait_query = wikihttp + "Special:CargoExport?tables=Mastery&fields=Mastery._pageName,Mastery.trait,Mastery.traitdesc,Mastery.trait2,Mastery.traitdesc2,Mastery.trait3,Mastery.traitdesc3,Mastery.acctrait,Mastery.acctraitdesc&limit=1000&offset=0&format=json";
-const trait_query = wikihttp + "Special:CargoExport?tables=Traits&&fields=_pageName%3DPage%2Cname%3Dname%2Cchartype%3Dchartype%2Cenvironment%3Denvironment%2Ctype%3Dtype%2Cisunique%3Disunique%2Cmaster%3Dmaster%2Cdescription%3Ddescription%2Crequired__full%3Drequired%2Cpossible__full%3Dpossible&limit=2500&format=json";
+const trait_query = old_wikihttp + "Special:CargoExport?tables=Traits&&fields=_pageName%3DPage%2Cname%3Dname%2Cchartype%3Dchartype%2Cenvironment%3Denvironment%2Ctype%3Dtype%2Cisunique%3Disunique%2Cmaster%3Dmaster%2Cdescription%3Ddescription%2Crequired__full%3Drequired%2Cpossible__full%3Dpossible&limit=2500&format=json";
 
 // requests and returns the cargo table
 async function get_cargo_table(url) {
@@ -195,7 +196,8 @@ async function create_data() {
         'Demolition Teams':'Commando (specialization)','Going the Extra Mile':'Miracle Worker (specialization)',
         'Predictive Algorithms':'Intelligence Officer (specialization)','Pedal to the Metal':'Pilot (specialization)',
         'Unconventional Tactics':'Strategist (specialization)','Critical Systems':'Temporal Agent Recruitment',
-        "Hunter's Instinct":'Klingon Recruitment','Temporal Insight':'Delta Recruitment',
+        "Hunter's Instinct":'Klingon Recruitment','Temporal Insight':'Delta Recruitment', 
+      
         'Scramble Fighters':'Delta Alliance Duty Officer Pack', 'Attack Pattern Delta Prime':'Delta Alliance Duty Officer Pack',
         'Point Defense Protocols':'Delta Alliance Duty Officer Pack'
     }
