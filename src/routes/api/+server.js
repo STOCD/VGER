@@ -66,13 +66,13 @@ const equipment_types_ground = [
 ];
 
 const wikihttp = 'https://www.stowiki.net/wiki/';
-const old_wikihttp = 'https://sto.fandom.com/wiki/';
 const filepath = 'Special:FilePath/';
 const image_suffix = '_icon.png';
 
 const item_query = wikihttp + 'Special:CargoExport?tables=Infobox&&fields=_pageName%3DPage%2Cname%3Dname%2Crarity%3Drarity%2Ctype%3Dtype%2Cboundto%3Dboundto%2Cboundwhen%3Dboundwhen%2Cwho%3Dwho%2Chead1%3Dhead1%2Chead2%3Dhead2%2Chead3%3Dhead3%2Chead4%3Dhead4%2Chead5%3Dhead5%2Chead6%3Dhead6%2Chead7%3Dhead7%2Chead8%3Dhead8%2Chead9%3Dhead9%2Csubhead1%3Dsubhead1%2Csubhead2%3Dsubhead2%2Csubhead3%3Dsubhead3%2Csubhead4%3Dsubhead4%2Csubhead5%3Dsubhead5%2Csubhead6%3Dsubhead6%2Csubhead7%3Dsubhead7%2Csubhead8%3Dsubhead8%2Csubhead9%3Dsubhead9%2Ctext1%3Dtext1%2Ctext2%3Dtext2%2Ctext3%3Dtext3%2Ctext4%3Dtext4%2Ctext5%3Dtext5%2Ctext6%3Dtext6%2Ctext7%3Dtext7%2Ctext8%3Dtext8%2Ctext9%3Dtext9&limit=5000&format=json';
 const starship_trait_query = wikihttp + "Special:CargoExport?tables=Mastery&fields=Mastery._pageName,Mastery.trait,Mastery.traitdesc,Mastery.trait2,Mastery.traitdesc2,Mastery.trait3,Mastery.traitdesc3,Mastery.acctrait,Mastery.acctraitdesc&limit=1000&offset=0&format=json";
 const trait_query = wikihttp + "Special:CargoExport?tables=Traits&fields=Traits._pageName%3DPage,Traits.name,Traits.chartype,Traits.environment,Traits.type,Traits.isunique,Traits.master,Traits.description&limit=2500&format=json";
+const starship_trait_query_stowiki = wikihttp + "Special:CargoExport?tables=StarshipTraits&fields=StarshipTraits._pageName,StarshipTraits.name,StarshipTraits.short,StarshipTraits.type,StarshipTraits.detailed,StarshipTraits.obtained,StarshipTraits.basic&limit=2500&format=json"
 
 // requests and returns the cargo table
 async function get_cargo_table(url) {
@@ -93,6 +93,14 @@ function compensate_wiki_description(text) {
     text = text.replaceAll('{{lc: ','').replaceAll('{{lc:','');
     text = text.replaceAll('{{','').replaceAll('}}','');
     text = text.replaceAll('&amp;','&').replaceAll('&#42;','*');
+    text = text.replace(/^\*(?<line>.+?)(?=(\n)|$)/, '<ul><li>$<line></li></ul>');
+    text = text.replaceAll(/(?<=(\n\*\*\*))(?<line>.+?)(?=(\n)|$)/g, '<ul><ul><ul><li>$<line></li></ul></ul></ul>');
+    text = text.replaceAll('\n***', '');
+    text = text.replaceAll(/(?<=(\n\*\*))(?<line>.+?)(?=(\n)|$)/g, '<ul><ul><li>$<line></li></ul></ul>');
+    text = text.replaceAll('\n**', '');
+    text = text.replaceAll(/(?<=(\n\*))(?<line>.+?)(?=(\n)|$)/g, '<ul><li>$<line></li></ul>');
+    text = text.replaceAll('\n*', '');
+
     let count = 0;
     while (text.includes('[[') && text.includes('|')) {
       let start = text.indexOf('[[');
@@ -107,6 +115,7 @@ function compensate_wiki_description(text) {
     text = text.replaceAll('&#39;',"'");
     text = text.replaceAll('&quot;','"');
     text = text.replaceAll('&#34;','"');
+    text = text.replaceAll('\n', '<br>');
     return text;
 }
 
@@ -135,16 +144,33 @@ async function create_data() {
     let temp_data = {};
 
     // requests and saves cargo tables
-    let starship_trait_json = await get_cargo_table(starship_trait_query);
+    let starship_trait_json = await get_cargo_table(starship_trait_query_stowiki);
     let trait_json = await get_cargo_table(trait_query);
     let equipment_json = await get_cargo_table(item_query);
 
-
+    temp_data.starship_traits = [];
+    const pattern = /\[\[(?<source>[a-zA-Z ']*?)(\|.*?)?\]\]/g;
+    for (let k = 0; k<starship_trait_json.length; k++) {
+        const current_trait = starship_trait_json[k];
+        if ('name' in current_trait && current_trait.name != '' && current_trait.name != null) {
+            let obtained = [];
+            for (const res of current_trait.obtained.matchAll(pattern)) {
+                obtained.push(res.groups.source);
+            }
+            temp_data.starship_traits.push({
+                'name': current_trait.name,
+                'type': 'Starship Trait',
+                'obtained': obtained,
+                'desc': compensate_wiki_description(current_trait.detailed),
+                'image': wikihttp + filepath + compensate_url(current_trait.name) + image_suffix
+            });
+        }
+    }
     
     // cache starship traits
     /* Specialty here is that traits can come from different ships, so it first creates a list indexed by trait names, adding further obtain information as it goes. 
     After that it creates an unsorted list with an object for each trait.*/
-    let starship_trait_object = {};
+    /*let starship_trait_object = {};
     for (let i = 0; i<starship_trait_json.length; i++) {
         const current_page = starship_trait_json[i];
         if ('trait' in current_page && current_page.trait != '' && current_page.trait != null) {
@@ -186,7 +212,7 @@ async function create_data() {
     for (let j = 0; j<starship_trait_list.length; j++) {
         let current_trait = starship_trait_object[starship_trait_list[j]]
         temp_data.starship_traits.push({'name': starship_trait_list[j], 'type':'Starship Trait', 'obtained': current_trait.obtained, 'desc': compensate_wiki_description(current_trait.desc), 'image':wikihttp+filepath+compensate_url(starship_trait_list[j])+image_suffix});
-    }
+    }*/
 
 
     //cache personal traits
@@ -196,10 +222,7 @@ async function create_data() {
         'Demolition Teams':'Commando (specialization)','Going the Extra Mile':'Miracle Worker (specialization)',
         'Predictive Algorithms':'Intelligence Officer (specialization)','Pedal to the Metal':'Pilot (specialization)',
         'Unconventional Tactics':'Strategist (specialization)','Critical Systems':'Temporal Agent Recruitment',
-        "Hunter's Instinct":'Klingon Recruitment','Temporal Insight':'Delta Recruitment', 
-      
-        'Scramble Fighters':'Delta Alliance Duty Officer Pack', 'Attack Pattern Delta Prime':'Delta Alliance Duty Officer Pack',
-        'Point Defense Protocols':'Delta Alliance Duty Officer Pack'
+        "Hunter's Instinct":'Klingon Recruitment','Temporal Insight':'Delta Recruitment'
     }
     for (let i2 = 0; i2 < trait_json.length; i2++) {
         let current_page = trait_json[i2];
