@@ -191,6 +191,8 @@ color: var(--light-text);
 list-style: disc;
 }
 :global(.infobox_ul) {
+margin-top: var(--gutter);
+margin-bottom: var(--gutter);
 margin-left: calc(2.5*var(--gutter));
 padding: 0;
 }
