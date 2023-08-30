@@ -77,7 +77,7 @@ async function fetch_json(url, encoded=false) {
 
 // stores json file to github
 async function store_json(object, url, msg, version) {
-    const tk = import.meta.env.VITE_GITHUB_TOKEN;
+    const tk = import.meta.env.VITE_GITHUB_TOKEN_CARGO;
     const stringified_obj = encodeURIComponent(JSON.stringify(object));
     const payload = btoa(stringified_obj);
     const file_req = await fetch(url, {
