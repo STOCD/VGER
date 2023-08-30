@@ -30,7 +30,7 @@
     document.documentElement.style.setProperty('--vh', `${vh}px`)
 
     // start data fetch for future visitors
-    fetch('/api', {method:'POST', body:JSON.stringify({pro:'content'})})
+    //fetch('/api', {method:'POST', body:JSON.stringify({pro:'content'})})
 
   });
 
