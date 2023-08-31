@@ -4,20 +4,9 @@
     export let index;
 
     import Intersector from './Intersector.svelte';
-    import Image from './Image.svelte';
-    import { onMount } from 'svelte';
     import { load_progress } from '$lib/stores';
 
-    let native_loading = false;
-    let this_img;
     let once_var = false;
-
-    onMount(() => {
-        /*if ('loading' in HTMLImageElement.prototype) {
-            native_loading = true;
-        }*/
-        console.log([index, $load_progress, src])
-    })
 
     function image_loaded() {
         once_var = true;
@@ -34,7 +23,7 @@
 </style>
 
 <Intersector once={once_var} let:intersecting={intersecting}>
-    {#if (intersecting && index < $load_progress + 10) || native_loading}
+    {#if (intersecting && index < $load_progress + 10)}
         <img {src} {alt} on:load={image_loaded} referrerpolicy='no-referrer' loading='lazy'/>
         <!--<Image {alt} {src}/>-->
     {/if}
