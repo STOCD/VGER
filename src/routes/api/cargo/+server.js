@@ -44,7 +44,7 @@ export async function GET({url}) {
         else if ('version' in cached_data && cached_data.version > 0) {
             if (cached_data.version + 8640000 < now) {
                 const [data, store_status] = await data_iteration(now);
-                return new Response(JSON.stringify(data), {status:store_status});
+                return new Response(JSON.stringify(cached_data), {status:store_status});
             }
             else {
                 return new Response(JSON.stringify(cached_data), {status:fetch_status});
