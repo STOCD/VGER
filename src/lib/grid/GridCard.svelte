@@ -1,8 +1,10 @@
 <script>
 
 import { activeCard, mobile_sidebar_active, active_settings } from '$lib/stores';
+    import ImageLoader from './ImageLoader.svelte';
 export let item;
 export let lazy = false;
+export let index;
 
 let path = '';
 let observer = null;
@@ -82,7 +84,8 @@ async function fetchAndRetryIfNecessary (callAPIFn) {
 
 <!-- One Grid card -->
 <button class='card' title={item.name} on:click={handleClick}>
-  <img src={path} alt='hover' referrerpolicy='no-referrer' use:lazy_load on:error={()=>loadError()}/>
+  <!--<img src={path} alt='hover' referrerpolicy='no-referrer' use:lazy_load on:error={()=>loadError()}/>-->
+  <ImageLoader src={item.image} alt='' {index}/>
 </button>
 
 <style>
@@ -108,10 +111,4 @@ async function fetchAndRetryIfNecessary (callAPIFn) {
   .card:active {
     transform: scale(0.98);
   }
-
-  img {
-    width: var(--card-image-width);
-    border-radius: calc(.5*var(--gutter));
-  }
-
 </style>

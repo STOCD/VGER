@@ -149,7 +149,7 @@ async function create_data() {
     let equipment_json = await get_cargo_table(item_query);
 
     temp_data.starship_traits = [];
-    const pattern = /\[\[(?<source>[a-zA-Z '\(\)]*?)(\|.*?)?\]\]/g;
+    const pattern = /\[\[(?<source>[a-zA-Z ']*?)(\|.*?)?\]\]/g;
     for (let k = 0; k<starship_trait_json.length; k++) {
         const current_trait = starship_trait_json[k];
         if ('name' in current_trait && current_trait.name != '' && current_trait.name != null) {

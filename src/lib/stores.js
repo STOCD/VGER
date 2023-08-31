@@ -40,7 +40,9 @@ export const mobile_sidebar_active = writable(false);
 
 export const mobile_description = writable('');
 
-export const wiki_url = 'https://www.stowiki.net/wiki/';
+export const load_progress = writable(0);
+
+export const wiki_url = 'https://stowiki.net/wiki/';
 
 //export const icon_path = '/src/icons/';     // for dev
 

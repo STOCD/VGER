@@ -1,11 +1,17 @@
-// desc
+/*This API endpoint returns the refined dataset for the VGER app. The parameters 'query' and 'override' change the 
+returned data:
+
+- query=data -> returns the refined dataset from cache and updates the cache if the data is older than one day
+(same behavior if no parameter is supplied)
+- query=source -> returns the three cargo query urls used to create the data
+- override=fresh -> forces cache update and returns newly created dataset
+- override=cached -> returns the cached dataset without taking any other actions*/
 
 const wikihttp = 'https://www.stowiki.net/wiki/';
 const filepath = 'Special:FilePath/';
 const image_suffix = '_icon.png';
 
 const item_query = wikihttp + 'Special:CargoExport?tables=Infobox&&fields=_pageName%3DPage%2Cname%3Dname%2Crarity%3Drarity%2Ctype%3Dtype%2Cboundto%3Dboundto%2Cboundwhen%3Dboundwhen%2Cwho%3Dwho%2Chead1%3Dhead1%2Chead2%3Dhead2%2Chead3%3Dhead3%2Chead4%3Dhead4%2Chead5%3Dhead5%2Chead6%3Dhead6%2Chead7%3Dhead7%2Chead8%3Dhead8%2Chead9%3Dhead9%2Csubhead1%3Dsubhead1%2Csubhead2%3Dsubhead2%2Csubhead3%3Dsubhead3%2Csubhead4%3Dsubhead4%2Csubhead5%3Dsubhead5%2Csubhead6%3Dsubhead6%2Csubhead7%3Dsubhead7%2Csubhead8%3Dsubhead8%2Csubhead9%3Dsubhead9%2Ctext1%3Dtext1%2Ctext2%3Dtext2%2Ctext3%3Dtext3%2Ctext4%3Dtext4%2Ctext5%3Dtext5%2Ctext6%3Dtext6%2Ctext7%3Dtext7%2Ctext8%3Dtext8%2Ctext9%3Dtext9&limit=5000&format=json';
-// const starship_trait_query = wikihttp + "Special:CargoExport?tables=Mastery&fields=Mastery._pageName,Mastery.trait,Mastery.traitdesc,Mastery.trait2,Mastery.traitdesc2,Mastery.trait3,Mastery.traitdesc3,Mastery.acctrait,Mastery.acctraitdesc&limit=1000&offset=0&format=json";
 const trait_query = wikihttp + "Special:CargoExport?tables=Traits&fields=Traits._pageName%3DPage,Traits.name,Traits.chartype,Traits.environment,Traits.type,Traits.isunique,Traits.master,Traits.description&limit=2500&format=json";
 const starship_trait_query_stowiki = wikihttp + "Special:CargoExport?tables=StarshipTraits&fields=StarshipTraits._pageName,StarshipTraits.name,StarshipTraits.short,StarshipTraits.type,StarshipTraits.detailed,StarshipTraits.obtained,StarshipTraits.basic&limit=2500&format=json";
 
@@ -188,54 +194,6 @@ async function create_data(version) {
             });
         }
     }
-    
-    // cache starship traits
-    /* Specialty here is that traits can come from different ships, so it first creates a list indexed by trait names, adding further obtain information as it goes. 
-    After that it creates an unsorted list with an object for each trait.*/
-    /*let starship_trait_object = {};
-    for (let i = 0; i<starship_trait_json.length; i++) {
-        const current_page = starship_trait_json[i];
-        if ('trait' in current_page && current_page.trait != '' && current_page.trait != null) {
-            if (! Object.keys(starship_trait_object).includes(current_page.trait)) {
-                starship_trait_object[current_page.trait] = {'desc':current_page.traitdesc, 'obtained':[current_page._pageName], 'type':'Starship Trait'};
-            }
-            else {
-                starship_trait_object[current_page.trait]['obtained'].push(current_page._pageName);
-            }
-        }
-        if ('trait2' in current_page && current_page.trait2 != '' && current_page.trait2 != null) {
-            if (! Object.keys(starship_trait_object).includes(current_page.trait2)) {
-                starship_trait_object[current_page.trait2] = {'desc':current_page.traitdesc2, 'obtained':[current_page._pageName], 'type':'Starship Trait'};
-            }
-            else {
-                starship_trait_object[current_page.trait2]['obtained'].push(current_page._pageName);
-            }
-        }
-        if ('trait3' in current_page && current_page.trait3 != '' && current_page.trait3 != null) {
-            if (! Object.keys(starship_trait_object).includes(current_page.trait3)) {
-                starship_trait_object[current_page.trait3] = {'desc':current_page.traitdesc3, 'obtained':[current_page._pageName], 'type':'Starship Trait'};
-            }
-            else {
-                starship_trait_object[current_page.trait3]['obtained'].push(current_page._pageName);
-            }
-        }
-        if ('acctrait' in current_page && current_page.acctrait != '' && current_page.acctrait != null) {
-            if (! Object.keys(starship_trait_object).includes(current_page.acctrait)) {
-                starship_trait_object[current_page.acctrait] = {'desc':current_page.acctraitdesc, 'obtained':[current_page._pageName], 'type':'Starship Trait'};
-            }
-            else {
-                starship_trait_object[current_page.acctrait]['obtained'].push(current_page._pageName);
-            }
-        }
-    }
-
-    let starship_trait_list = Object.keys(starship_trait_object)
-    temp_data.starship_traits = [];
-    for (let j = 0; j<starship_trait_list.length; j++) {
-        let current_trait = starship_trait_object[starship_trait_list[j]]
-        temp_data.starship_traits.push({'name': starship_trait_list[j], 'type':'Starship Trait', 'obtained': current_trait.obtained, 'desc': compensate_wiki_description(current_trait.desc), 'image':wikihttp+filepath+compensate_url(starship_trait_list[j])+image_suffix});
-    }*/
-
 
     //cache personal traits
     temp_data.personal_traits = [];

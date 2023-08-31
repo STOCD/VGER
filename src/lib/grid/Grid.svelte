@@ -174,7 +174,7 @@
   <div id='div1'>
     <!-- inserts a grid card for each item -->
     {#each $filtered as item, index (index)}
-      <GridCard {item} lazy={hasAPI && index > -1}/>
+      <GridCard {item} {index} lazy={hasAPI && index > -1}/>
     {/each}
   </div>
 </section>

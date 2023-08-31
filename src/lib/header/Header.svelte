@@ -1,5 +1,5 @@
 <script>
-  import { activeTab, srcValue, active_settings, current_list, activeCard, settings_env, settings_type, settings_av, settings_ground_slot, settings_space_slot, settings_rarity, mobile, mobile_menu_active, mobile_sidebar_active, settings_search_desc
+  import { activeTab, srcValue, active_settings, current_list, activeCard, settings_env, settings_type, settings_av, settings_ground_slot, settings_space_slot, settings_rarity, mobile, mobile_menu_active, mobile_sidebar_active, settings_search_desc, load_progress
   } from '$lib/stores';
   import HamburgerIcon from './HamburgerIcon.svelte';
   import {slide} from 'svelte/transition';
@@ -15,6 +15,7 @@
     $activeTab = title;
     $current_list = lists[title];
     $active_settings = false;
+    $load_progress = 0;
 
     //close mobile menu and sidebar
     if ($mobile) {
