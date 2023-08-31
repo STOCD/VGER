@@ -26,7 +26,6 @@ const handleClick = () => {
   $activeCard = item;
   $mobile_sidebar_active = true;
   $active_settings = false;
-  console.log(item);
 };
 
 // sets image path # lazy loading
