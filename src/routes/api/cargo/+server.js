@@ -238,14 +238,14 @@ async function create_data(version) {
                         type = 'personal';
                         display_type = 'Personal '+environment.substring(0,1).toUpperCase()+environment.substring(1)+' Trait';
                     }
-                    if ('required' in current_page && current_page['required'].length > 0 && current_page['required'][0] !== '') {
+                    if ('required' in current_page && current_page['required'] != null && current_page['required'].length > 0 && current_page['required'][0] !== '') {
                         availability = current_page['required'].join(', ');
                         availability_type = 'innate';
                     }
-                    else if ('possible' in current_page && current_page['possible'].length > 0 && current_page['possible'][0] === '') {
+                    else if ('possible' in current_page && (current_page['possible'] == null || current_page['possible'].length > 0 && current_page['possible'][0] === '')) {
                         availability_type = 'other';
                     }
-                    else if ('possible' in current_page && current_page['possible'].length > 0 && current_page['possible'][0] !== '') {
+                    else if ('possible' in current_page && current_page['possible'] != null && current_page['possible'].length > 0 && current_page['possible'][0] !== '') {
                         availability = current_page['possible'].join(', ');
                         availability_type = 'species';
                     }
