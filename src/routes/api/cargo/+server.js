@@ -239,14 +239,24 @@ async function create_data(version) {
                         display_type = 'Personal '+environment.substring(0,1).toUpperCase()+environment.substring(1)+' Trait';
                     }
                     if ('required' in current_page && current_page['required'] != null && current_page['required'].length > 0 && current_page['required'][0] !== '') {
-                        availability = current_page['required'].join(', ');
+                        if (Array.isArray(current_page['required'])) {
+                            availability = current_page['required'].join(', ');
+                        }
+                        else {
+                            availability = current_page['required'].replaceAll(', ',',').replaceAll(',', ', ');
+                        }
                         availability_type = 'innate';
                     }
                     else if ('possible' in current_page && (current_page['possible'] == null || current_page['possible'].length > 0 && current_page['possible'][0] === '')) {
                         availability_type = 'other';
                     }
                     else if ('possible' in current_page && current_page['possible'] != null && current_page['possible'].length > 0 && current_page['possible'][0] !== '') {
-                        availability = current_page['possible'].join(', ');
+                        if (Array.isArray(current_page['possible'])) {
+                            availability = current_page['possible'].join(', ');
+                        }
+                        else {
+                            availability = current_page['possible'].replaceAll(', ',',').replaceAll(',', ', ');
+                        }
                         availability_type = 'species';
                     }
                     temp_data.personal_traits.push({'name': current_page['name'], 'type':type, 'environment':environment, 'display_type':display_type, 'desc': compensate_wiki_description(current_page.description), 'availability':availability, 'availability_type':availability_type, 'image':git_image_path+compensate_url(current_page['name'])+image_suffix});
