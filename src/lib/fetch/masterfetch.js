@@ -21,20 +21,22 @@ export function compensate_wiki_description(text) {
     text = text.replaceAll('{{lc: ','').replaceAll('{{lc:','');
     text = text.replaceAll('{{','').replaceAll('}}','');
     text = text.replaceAll('&amp;','&').replaceAll('&#42;','*');
-    let count = 0;
-    while (text.includes('[[') && text.includes('|')) {
-      let start = text.indexOf('[[');
-      let end = text.indexOf('|');
-      text = text.slice(0, start) + text.slice(end+1, text.length-1);
-      count = count + 1;
-      if (count >= 5) {
-        break;
-      }
-    }  
+    text = text.replace(/^\*(?<line>.+?)(?=(\n)|$)/, '<ul><li>$<line></li></ul>');
+    text = text.replaceAll(/(?<=(\n\*\*\*))(?<line>.+?)(?=(\n)|$)/g, '<ul><ul><ul><li>$<line></li></ul></ul></ul>');
+    text = text.replaceAll('\n***', '');
+    text = text.replaceAll(/(?<=(\n\*\*))(?<line>.+?)(?=(\n)|$)/g, '<ul><ul><li>$<line></li></ul></ul>');
+    text = text.replaceAll('\n**', '');
+    text = text.replaceAll(/(?<=(\n\*))(?<line>.+?)(?=(\n)|$)/g, '<ul><li>$<line></li></ul>');
+    text = text.replaceAll('\n*', '');
+    text = text.replaceAll(/\[\[(.*?\|)?(?<display>.*?)\]\]/g, '$<display>');
     text = text.replaceAll('[[','').replaceAll(']]','');
+    text = text.replaceAll(/'''(?<bold>.*?)'''/g, '<b>$<bold></b>');
+    text = text.replaceAll(/''(?<italic>.*?)''/g, '<i>$<italic></i>');
     text = text.replaceAll('&#39;',"'");
     text = text.replaceAll('&quot;','"');
     text = text.replaceAll('&#34;','"');
+    text = text.replaceAll('\n:', '<br>&nbsp;&nbsp;&nbsp;&nbsp;');
+    text = text.replaceAll('\n', '<br>');
     return text;
 }
 

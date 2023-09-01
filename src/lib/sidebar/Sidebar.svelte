@@ -141,7 +141,7 @@
             <p class='item_subhead'>{@html $activeCard.desc.subhead[int]}</p>
           {/if}
           {#if $activeCard.desc.text[int] != ''}
-            <p class='item_text'>{@html compensate_wiki_description($activeCard.desc.text[int]).replaceAll('\n:','<br>&nbsp;&nbsp;&nbsp;&nbsp;')}</p>
+            <p class='item_text'>{@html compensate_wiki_description($activeCard.desc.text[int]).replaceAll('<li>', '<li class="infobox_li">').replaceAll('<ul>', '<ul class="infobox_ul">')}</p>
           {/if}
         {/each}
 

@@ -10,6 +10,7 @@ returned data:
 const wikihttp = 'https://www.stowiki.net/wiki/';
 const filepath = 'Special:FilePath/';
 const image_suffix = '_icon.png';
+const git_image_path = 'https://raw.githubusercontent.com/Shinga13/VGER-test/main/images/';
 
 const item_query = wikihttp + 'Special:CargoExport?tables=Infobox&&fields=_pageName%3DPage%2Cname%3Dname%2Crarity%3Drarity%2Ctype%3Dtype%2Cboundto%3Dboundto%2Cboundwhen%3Dboundwhen%2Cwho%3Dwho%2Chead1%3Dhead1%2Chead2%3Dhead2%2Chead3%3Dhead3%2Chead4%3Dhead4%2Chead5%3Dhead5%2Chead6%3Dhead6%2Chead7%3Dhead7%2Chead8%3Dhead8%2Chead9%3Dhead9%2Csubhead1%3Dsubhead1%2Csubhead2%3Dsubhead2%2Csubhead3%3Dsubhead3%2Csubhead4%3Dsubhead4%2Csubhead5%3Dsubhead5%2Csubhead6%3Dsubhead6%2Csubhead7%3Dsubhead7%2Csubhead8%3Dsubhead8%2Csubhead9%3Dsubhead9%2Ctext1%3Dtext1%2Ctext2%3Dtext2%2Ctext3%3Dtext3%2Ctext4%3Dtext4%2Ctext5%3Dtext5%2Ctext6%3Dtext6%2Ctext7%3Dtext7%2Ctext8%3Dtext8%2Ctext9%3Dtext9&limit=5000&format=json';
 const trait_query = wikihttp + "Special:CargoExport?tables=Traits&fields=Traits._pageName%3DPage,Traits.name,Traits.chartype,Traits.environment,Traits.type,Traits.isunique,Traits.master,Traits.description&limit=2500&format=json";
@@ -161,6 +162,7 @@ function compensate_url(text) {
     text = text.replaceAll("'",'%27');
     text = text.replaceAll('&#39;','%27');
     text = text.replaceAll('&','%26');
+    text = text.replaceAll(':', '%3A')
     text = text.replaceAll(' ','_');
     return text;
 }
@@ -190,7 +192,7 @@ async function create_data(version) {
                 'type': 'Starship Trait',
                 'obtained': obtained,
                 'desc': compensate_wiki_description(current_trait.detailed),
-                'image': wikihttp + filepath + compensate_url(current_trait.name) + image_suffix
+                'image': git_image_path + compensate_url(current_trait.name) + image_suffix
             });
         }
     }
@@ -213,7 +215,7 @@ async function create_data(version) {
                     if (current_page['name'] in specialization_traits) {
                         obtained = [specialization_traits[current_page['name']]];
                     }
-                    temp_data.starship_traits.push({'name': current_page['name'], 'type':'Starship Trait', 'obtained': obtained == null ? '' : obtained, 'desc': compensate_wiki_description(current_page.description), 'image':wikihttp+filepath+compensate_url(current_page['name'])+image_suffix});
+                    temp_data.starship_traits.push({'name': current_page['name'], 'type':'Starship Trait', 'obtained': obtained == null ? '' : obtained, 'desc': compensate_wiki_description(current_page.description), 'image':git_image_path+compensate_url(current_page['name'])+image_suffix});
                 }
                 else {
                     let type = '';
@@ -247,7 +249,7 @@ async function create_data(version) {
                         availability = current_page['possible'].join(', ');
                         availability_type = 'species';
                     }
-                    temp_data.personal_traits.push({'name': current_page['name'], 'type':type, 'environment':environment, 'display_type':display_type, 'desc': compensate_wiki_description(current_page.description), 'availability':availability, 'availability_type':availability_type, 'image':wikihttp+filepath+compensate_url(current_page['name'])+image_suffix});
+                    temp_data.personal_traits.push({'name': current_page['name'], 'type':type, 'environment':environment, 'display_type':display_type, 'desc': compensate_wiki_description(current_page.description), 'availability':availability, 'availability_type':availability_type, 'image':git_image_path+compensate_url(current_page['name'])+image_suffix});
                 }
             }
         }
@@ -288,7 +290,7 @@ async function create_data(version) {
             for (let i = 1; i<10; i++) {
                 description.head[i] = compensate_wiki_description(current_item['head'+i.toString()]);
                 description.subhead[i] = compensate_wiki_description(current_item['subhead'+i.toString()]);
-                description.text[i] = compensate_wiki_description(current_item['text'+i.toString()]);
+                description.text[i] = current_item['text'+i.toString()];
                 description2 = description2 + description.head[i] + description.subhead[i] + description.text[i]
             }
             let current_obj = {
@@ -299,7 +301,7 @@ async function create_data(version) {
                 'desc':description,
                 'desc2':description2,
                 'rarity':current_item.rarity == null ? '' : current_item.rarity.toLowerCase(),
-                'image':wikihttp+filepath+compensate_url(current_name)+image_suffix
+                'image':git_image_path+compensate_url(current_name)+image_suffix
             };
             if (equipment_types_space.includes(current_item.type)) {
                 temp_data.space_equipment.push(current_obj);

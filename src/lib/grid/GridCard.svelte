@@ -3,7 +3,7 @@
 import { activeCard, mobile_sidebar_active, active_settings } from '$lib/stores';
     import ImageLoader from './ImageLoader.svelte';
 export let item;
-export let lazy = false;
+// export let lazy = false;
 export let index;
 
 let path = '';
@@ -15,18 +15,13 @@ If the list that the each block is fed with changes, the each block updates how 
 GridCards are inserted and re-assignes the variables. It does not destroy and re-create 
 the GridCards! The img tags cannot reactively adapt to this, so it has to be done 
 manually through this statement.) */
-$: {
+/*$: {
   if (path != item.image && path != ''){
     path = item.image;
   }
 }
 
-// makes this card the active card
-const handleClick = () => {
-  $activeCard = item;
-  $mobile_sidebar_active = true;
-  $active_settings = false;
-};
+
 
 // sets image path # lazy loading
 function onIntersect(entries) {
@@ -78,7 +73,14 @@ async function fetchAndRetryIfNecessary (callAPIFn) {
     return fetchAndRetryIfNecessary(callAPIFn)
   }
   return response
-}
+}*/
+
+// makes this card the active card
+const handleClick = () => {
+  $activeCard = item;
+  $mobile_sidebar_active = true;
+  $active_settings = false;
+};
 </script>
 
 <!-- One Grid card -->
