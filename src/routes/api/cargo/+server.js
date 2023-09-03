@@ -140,6 +140,7 @@ function compensate_wiki_description(text) {
     text = text.replaceAll(/\[\[(.*?\|)?(?<display>.*?)\]\]/g, '$<display>');
     text = text.replaceAll('[[','').replaceAll(']]','');
     text = text.replaceAll('&#39;',"'");
+    text = text.replaceAll('&#039;',"'");
     text = text.replaceAll('&quot;','"');
     text = text.replaceAll('&#34;','"');
     text = text.replaceAll('\n:', '');
@@ -161,10 +162,16 @@ function compensate_url(text) {
     text = text.replaceAll('&#34;','%22');
     text = text.replaceAll("'",'%27');
     text = text.replaceAll('&#39;','%27');
+    text = text.replaceAll('&#039;', '%27');
     text = text.replaceAll('&','%26');
     text = text.replaceAll(':', '%3A')
     text = text.replaceAll(' ','_');
     return text;
+}
+
+function compensate_name(text) {
+    text = text.replaceAll('&#039;',"'");
+    return text
 }
 
 async function create_data(version) {
@@ -188,7 +195,7 @@ async function create_data(version) {
                 obtained.push(res.groups.source);
             }
             temp_data.starship_traits.push({
-                'name': current_trait.name,
+                'name': compensate_name(current_trait.name),
                 'type': 'Starship Trait',
                 'obtained': obtained,
                 'desc': compensate_wiki_description(current_trait.detailed),
@@ -259,7 +266,7 @@ async function create_data(version) {
                         }
                         availability_type = 'species';
                     }
-                    temp_data.personal_traits.push({'name': current_page['name'], 'type':type, 'environment':environment, 'display_type':display_type, 'desc': compensate_wiki_description(current_page.description), 'availability':availability, 'availability_type':availability_type, 'image':git_image_path+compensate_url(current_page['name'])+image_suffix});
+                    temp_data.personal_traits.push({'name': compensate_name(current_page['name']), 'type':type, 'environment':environment, 'display_type':display_type, 'desc': compensate_wiki_description(current_page.description), 'availability':availability, 'availability_type':availability_type, 'image':git_image_path+compensate_url(current_page['name'])+image_suffix});
                 }
             }
         }
