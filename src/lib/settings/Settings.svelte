@@ -1,6 +1,6 @@
 <script>
 import { 
-    active_settings, activeTab, settings_env, settings_type, settings_av, 
+    active_settings, activeTab, settings_env, settings_type, settings_av, dev_mode,
     settings_space_slot, settings_ground_slot, settings_rarity, mobile_override, mobile, settings_search_desc
     } from '$lib/stores';
 import {equipment_types_ground, equipment_types_space, rarities} from '$lib/fetch/masterfetch';
@@ -128,6 +128,16 @@ function raritySettingsCallback(item) {
     }
     else {
         $settings_rarity = [...$settings_rarity, item];
+    }
+}
+
+function enableDevModeCallback(e=null) {
+    const prompt = 'Are you sure that you want to enable maintenance mode?\nOnly proceed if you know what you are doing and after consulting the instructions at: https://github.com/Shinga13/VGER/blob/main/maintenance.md'
+    if (e !== null && e.key != 'Enter') {
+        return
+    }
+    if (confirm(prompt)) {
+        $dev_mode = true;
     }
 }
 
@@ -307,6 +317,16 @@ function keyVarToggle(event, variable, state) {
             <input type='radio' class='settings_input' id='mobile_pc' name='mobile'>
             <label class='settings_button' for='mobile_pc' on:click={()=>$mobile_override='pc'} on:keyup={event => keyVarToggle(event, $mobile_override, 'pc')}>Desktop Website</label>
         </div>
+
+        <!-- Dev Mode Setting -- for all tabs -->
+        <hr class='pale'/>
+        <p class='settings_header pale'>Maintenance Mode:</p>
+        <div class='button_group'>
+            <input type='radio' class='settings_input' id='dev_mode_dis' name='mobile' checked>
+            <label class='settings_button pale' id='dev_label_dis' for='dev_mode_dis' on:click={()=>$dev_mode=false} on:keyup={event => keyVarToggle(event, $dev_mode, false)}>Disabled</label>
+            <input type='radio' class='settings_input' id='dev_mode_en' name='mobile'>
+            <label class='settings_button pale' id='dev_label_en' for='dev_mode_en' on:click={()=>enableDevModeCallback()} on:keyup={event => enableDevModeCallback(event)}>Enabled</label>
+        </div>
         
     </div>
 
@@ -321,14 +341,13 @@ function keyVarToggle(event, variable, state) {
                 Check out links below!
             </p>
             {#each links as link, i}
-                <p style="font-size: 70%;" class='link_list' class:mobile_margin='{$mobile}'
-                        on:mouseover={event => showLinkIcon(event, 'settings_link_icon'+i)} on:mouseleave={event => hideLinkIcon(event, 'settings_link_icon'+i)} 
-                        on:click={event => window.open(link.link)} on:keyup={event => keyUp(event, window.open, [link.link])}
+                <a style="font-size: 70%;" class='link_list' class:mobile_margin='{$mobile}' href={link.link} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
+                        on:mouseover={event => showLinkIcon(event, 'settings_link_icon'+i)} on:mouseleave={event => hideLinkIcon(event, 'settings_link_icon'+i)}
                         on:focus={event => showLinkIcon(event, 'settings_link_icon'+i)} on:blur={event => hideLinkIcon(event, 'settings_link_icon'+i)}>
                     <i class='fa fa-angle-right'/>
-                    <span class='hover_underline' >{link.name}</span>
-                    <i class='fa fa-link link_icon' id={'settings_link_icon'+i} />
-                </p>
+                    <span class='hover_underline' class:mobile_underline='{$mobile}'>{link.name}</span>
+                    <i class='fa fa-link link_icon' id={'settings_link_icon'+i} class:show_link_icon='{$mobile}'/>
+                </a>
             {/each}
         </div>
         <img class='footer_img' src={'stobuildslogo.png'} alt='STOBuilds'> <!--#~# 'src/icons/stobuildslogo.png' for dev | 'stobuildslogo.png' for build -->
@@ -337,6 +356,24 @@ function keyVarToggle(event, variable, state) {
 </div>
 
 <style>
+    .pale {
+        opacity: 20%;
+    }
+    .settings_input:checked+#dev_label_dis {
+        color: var(--light-text) !important;
+        border-color: var(--light-text) !important;
+        background-color: rgba(0,0,0,0) !important;
+    }
+    #dev_label_en {
+        color: rgb(255, 0, 0) !important;
+        border-color: rgb(255, 0, 0) !important;
+        background-color: rgba(255, 0, 0, .2) !important;
+    }
+    .settings_input:checked+#dev_label_en {
+        color: rgb(255, 255, 255) !important;
+        border-color: rgb(255, 255, 255) !important;
+        background-color: rgba(255, 0, 0, 1) !important;
+    }
     .settings_div {
         background-color: var(--dark-background-hover);
         position: absolute;
@@ -467,5 +504,16 @@ function keyVarToggle(event, variable, state) {
     hr {
         margin-top: calc(3*var(--gutter));
         border-color: var(--gray-text);
+    }
+    .show_link_icon {
+    visibility: visible !important;
+    }
+    a {
+    text-decoration: none;
+    display: block;
+    color: var(--light-text);
+    }
+    .mobile_underline {
+        text-decoration: underline;
     }
 </style>

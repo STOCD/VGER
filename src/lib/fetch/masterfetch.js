@@ -16,12 +16,20 @@ export const image_suffix = '_icon.png';
 export function compensate_wiki_description(text) {
     if (text == '') {return text}
     else if (text == null) {return ''}
+    if (text[0] == ':') {
+        text = text.slice(1);
+    }
+    if (text[0] == ' ') {
+        text = text.slice(1);
+    }
     text = text.replaceAll('&lt;', '<').replaceAll('&gt;','>');
     text = text.replaceAll('{{ucfirst: ','').replaceAll('{{ucfirst:','');
     text = text.replaceAll('{{lc: ','').replaceAll('{{lc:','');
     text = text.replaceAll('{{','').replaceAll('}}','');
     text = text.replaceAll('&amp;','&').replaceAll('&#42;','*');
     text = text.replace(/^\*(?<line>.+?)(?=(\n)|$)/, '<ul><li>$<line></li></ul>');
+    text = text.replaceAll(/::+?/g, ':');
+    text = text.replaceAll('\n:*', '\n*');
     text = text.replaceAll(/(?<=(\n\*\*\*))(?<line>.+?)(?=(\n)|$)/g, '<ul><ul><ul><li>$<line></li></ul></ul></ul>');
     text = text.replaceAll('\n***', '');
     text = text.replaceAll(/(?<=(\n\*\*))(?<line>.+?)(?=(\n)|$)/g, '<ul><ul><li>$<line></li></ul></ul>');
@@ -30,12 +38,13 @@ export function compensate_wiki_description(text) {
     text = text.replaceAll('\n*', '');
     text = text.replaceAll(/\[\[(.*?\|)?(?<display>.*?)\]\]/g, '$<display>');
     text = text.replaceAll('[[','').replaceAll(']]','');
+    text = text.replaceAll('&#39;',"'");
+    text = text.replaceAll('&#039;',"'");
     text = text.replaceAll(/'''(?<bold>.*?)'''/g, '<b>$<bold></b>');
     text = text.replaceAll(/''(?<italic>.*?)''/g, '<i>$<italic></i>');
-    text = text.replaceAll('&#39;',"'");
     text = text.replaceAll('&quot;','"');
     text = text.replaceAll('&#34;','"');
-    text = text.replaceAll('\n:', '<br>&nbsp;&nbsp;&nbsp;&nbsp;');
+    text = text.replaceAll('\n:', '<br>');
     text = text.replaceAll('\n', '<br>');
     return text;
 }
@@ -44,12 +53,19 @@ export function compensate_wiki_description(text) {
 export function compensate_url(text) {
     text = text.replaceAll(' ','_');
     text = text.replaceAll('/','_');
+    text = text.replaceAll('&amp;','&');
+    text = text.replaceAll('&#38;','&');
     text = text.replaceAll('%C2%A0','_');
     text = text.replaceAll('%26%2339%3B','%27');
     text = text.replaceAll('%26%2334%3B','%22');
     text = text.replaceAll('"','%22');
     text = text.replaceAll('&quot;','%22');
+    text = text.replaceAll('&#34;','%22');
     text = text.replaceAll("'",'%27');
+    text = text.replaceAll('&#39;','%27');
+    text = text.replaceAll('&#039;', '%27');
+    text = text.replaceAll('&','%26');
+    text = text.replaceAll(':', '%3A');
     text = text.replaceAll(' ','_');
     return text;
 }

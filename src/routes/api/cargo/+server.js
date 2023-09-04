@@ -7,6 +7,8 @@ returned data:
 - override=fresh -> forces cache update and returns newly created dataset
 - override=cached -> returns the cached dataset without taking any other actions*/
 
+import {compensate_wiki_description, compensate_url} from '$lib/fetch/masterfetch'
+
 const repo_name = import.meta.env.VITE_GITHUB_REPO;
 const owner_name = import.meta.env.VITE_GITHUB_OWNER;
 
@@ -124,54 +126,6 @@ async function data_iteration(version, silent=true) {
     }
 }
 
-//cleans item descriptions from wiki-specific format tags and replaces html tags
-function compensate_wiki_description(text) {
-    if (text == '') {return text}
-    else if (text == null) {return ''}
-    text = text.replaceAll('&lt;', '<').replaceAll('&gt;','>');
-    text = text.replaceAll('{{ucfirst: ','').replaceAll('{{ucfirst:','');
-    text = text.replaceAll('{{lc: ','').replaceAll('{{lc:','');
-    text = text.replaceAll('{{','').replaceAll('}}','');
-    text = text.replaceAll('&amp;','&').replaceAll('&#42;','*');
-    text = text.replace(/^\*(?<line>.+?)(?=(\n)|$)/, '<ul><li>$<line></li></ul>');
-    text = text.replaceAll(/(?<=(\n\*\*\*))(?<line>.+?)(?=(\n)|$)/g, '<ul><ul><ul><li>$<line></li></ul></ul></ul>');
-    text = text.replaceAll('\n***', '');
-    text = text.replaceAll(/(?<=(\n\*\*))(?<line>.+?)(?=(\n)|$)/g, '<ul><ul><li>$<line></li></ul></ul>');
-    text = text.replaceAll('\n**', '');
-    text = text.replaceAll(/(?<=(\n\*))(?<line>.+?)(?=(\n)|$)/g, '<ul><li>$<line></li></ul>');
-    text = text.replaceAll('\n*', '');
-    text = text.replaceAll(/\[\[(.*?\|)?(?<display>.*?)\]\]/g, '$<display>');
-    text = text.replaceAll('[[','').replaceAll(']]','');
-    text = text.replaceAll('&#39;',"'");
-    text = text.replaceAll('&#039;',"'");
-    text = text.replaceAll('&quot;','"');
-    text = text.replaceAll('&#34;','"');
-    text = text.replaceAll('\n:', '');
-    text = text.replaceAll('\n', '<br>');
-    return text;
-}
-
-//replaces non url-safe characters with their url equivalents
-function compensate_url(text) {
-    text = text.replaceAll(' ','_');
-    text = text.replaceAll('/','_');
-    text = text.replaceAll('&amp;','&');
-    text = text.replaceAll('&#38;','&');
-    text = text.replaceAll('%C2%A0','_');
-    text = text.replaceAll('%26%2339%3B','%27');
-    text = text.replaceAll('%26%2334%3B','%22');
-    text = text.replaceAll('"','%22');
-    text = text.replaceAll('&quot;','%22');
-    text = text.replaceAll('&#34;','%22');
-    text = text.replaceAll("'",'%27');
-    text = text.replaceAll('&#39;','%27');
-    text = text.replaceAll('&#039;', '%27');
-    text = text.replaceAll('&','%26');
-    text = text.replaceAll(':', '%3A')
-    text = text.replaceAll(' ','_');
-    return text;
-}
-
 function compensate_name(text) {
     text = text.replaceAll('&#039;',"'");
     return text
@@ -194,7 +148,8 @@ async function create_data(version) {
         const current_trait = starship_trait_json[k];
         if ('name' in current_trait && current_trait.name != '' && current_trait.name != null) {
             let obtained = [];
-            for (const res of current_trait.obtained.matchAll(pattern)) {
+            const obtained_string = compensate_name(current_trait.obtained);
+            for (const res of obtained_string.matchAll(pattern)) {
                 obtained.push(res.groups.source);
             }
             temp_data.starship_traits.push({

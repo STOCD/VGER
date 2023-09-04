@@ -42,4 +42,6 @@ export const mobile_description = writable('');
 
 export const load_progress = writable(0);
 
+export const dev_mode = writable(false);
+
 export const wiki_url = 'https://stowiki.net/wiki/';

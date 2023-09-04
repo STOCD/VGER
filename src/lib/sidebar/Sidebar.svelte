@@ -1,5 +1,5 @@
 <script>
-  import { activeCard, activeTab, wiki_url, mobile, mobile_sidebar_active} from '$lib/stores';
+  import { activeCard, activeTab, wiki_url, mobile, mobile_sidebar_active, dev_mode, current_list} from '$lib/stores';
   import { compensate_wiki_description, rarities } from '$lib/fetch/masterfetch';
   
   // shows chain icon
@@ -12,13 +12,13 @@
     document.getElementById(id).style.visibility = 'hidden';
   }
 
-  // opens wiki page on click
-  function openLink(e, type, name) {
+  // gets wiki page link
+  function getLink(type, name) {
     if (type == 'trait') {
-      window.open(wiki_url+'Trait:_'+name.replaceAll(' ','_'));
+      return wiki_url+'Trait:_'+name.replaceAll(' ','_')
     }
     else if (type == 'none') {
-      window.open(wiki_url+name.replaceAll(' ','_'));
+      return wiki_url+name.replaceAll(' ','_')
     }
   }
 
@@ -31,15 +31,21 @@
     }
     return rarity;
   }
-
-  // key events ...
-  function keyUp(event, func, params) {
-    if (event.key == 'Enter') {
-      func(...params);
-    }
+  
+  function comp_equip_desc(text) {
+    if (text === null) {return ''}
+    text = text.replaceAll('\n:', '<br>&nbsp;&nbsp;&nbsp;&nbsp;');
+    text = compensate_wiki_description(text)
+    text = text.replaceAll('<li>', '<li class="infobox_li">');
+    text = text.replaceAll('<ul>', '<ul class="infobox_ul">');
+    return text;
   }
 
-
+  function refresh_image(image) {
+    const this_type = $current_list;
+    const this_name = image.split('/').pop();
+    fetch(`api/images?image=${this_name}&type=${this_type}`, {method: 'PUT'}).then(res => alert(`Image refresh status: ${res.status}`))
+  }
 </script>
 
 {#if $activeCard}
@@ -50,23 +56,21 @@
 
     <!-- Name of currently selected item with link -- Traits -->
     {#if $activeTab == 'Starship Traits' || $activeTab == 'Personal Traits'}
-      <h2 class='item_name' class:mobile_item_name='{$mobile}'
-          on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')} 
-          on:click={event => openLink(event,'trait', $activeCard.name)} on:keyup={event => keyUp(event, openLink, [event, 'trait', $activeCard.name])}
+      <a class='item_name' class:mobile_underline='{$mobile}' href={getLink('trait', $activeCard.name)} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
+          on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')}
           on:focus={event => showLinkIcon(event, 'link_icon_header')} on:blur={event => hideLinkIcon(event, 'link_icon_header')}>
         <span class='hover_underline'>{$activeCard.name}</span>
-        <i class='fa fa-link link_icon' id='link_icon_header'/>
-      </h2>
+        <i class='fa fa-link link_icon' id='link_icon_header' class:show_link_icon='{$mobile}'/>
+      </a>
     
     <!-- Name of currently selected item with link -- Equipment -->
     {:else if $activeTab == 'Space Equipment' || $activeTab == 'Ground Equipment'}
-      <h2 class='item_name' class:mobile_item_name='{$mobile}'
-          on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')} 
-          on:click={event => window.open($activeCard.url)} on:keyup={event => keyUp(event, window.open, $activeCard.url)}
+      <a class='item_name' class:mobile_underline='{$mobile}' href={getLink('none', $activeCard.name)} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
+          on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')}
           on:focus={event => showLinkIcon(event, 'link_icon_header')} on:blur={event => hideLinkIcon(event, 'link_icon_header')}>
         <span class='hover_underline'>{$activeCard.name}</span>
-        <i class='fa fa-link link_icon' id='link_icon_header'/>
-      </h2>
+        <i class='fa fa-link link_icon' id='link_icon_header' class:show_link_icon='{$mobile}'/>
+      </a>
     {/if}
 
     <!-- Individual Sections for the tabs ahead -->
@@ -81,13 +85,14 @@
       <h3 class='aside_head'>Obtained from:</h3>
       <ul class='item_obtained'>
         {#each $activeCard.obtained as method, i}
-          <li style="font-size: 100%;" class:mobile_margin='{$mobile}'
-              on:mouseover={event => showLinkIcon(event, 'link_icon_'+i)} on:mouseleave={event => hideLinkIcon(event, 'link_icon_'+i)} 
-              on:click={event => openLink(event, 'none', method)} on:keyup={event => keyUp(event, openLink, [event, 'none', method])}
+          <li style="font-size: 100%;" class:mobile_margin='{$mobile}'>
+            <a href={getLink('none', method)} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
+              on:mouseover={event => showLinkIcon(event, 'link_icon_'+i)} on:mouseleave={event => hideLinkIcon(event, 'link_icon_'+i)}
               on:focus={event => showLinkIcon(event, 'link_icon_'+i)} on:blur={event => hideLinkIcon(event, 'link_icon_'+i)}>
-            <i class='fa fa-angle-right'/>
-            <span class='hover_underline' class:mobile_underline='{$mobile}'>{method}</span>
-            <i class='fa fa-link link_icon' id={'link_icon_'+i} />
+              <i class='fa fa-angle-right'/>
+              <span class='hover_underline' class:mobile_underline='{$mobile}'>{method}</span>
+              <i class='fa fa-link link_icon' id={'link_icon_'+i} class:show_link_icon='{$mobile}'/>
+            </a>
           </li>
         {/each}
       </ul>
@@ -134,20 +139,26 @@
       <!-- Description -->
       <h3 class='aside_head'>Description:</h3>
       {#each [1,2,3,4,5,6,7,8,9] as int}
-          {#if $activeCard.desc.head[int] != ''}
+          {#if $activeCard.desc.head[int] != '' && $activeCard.desc.head[int] != null}
             <p class='item_head'>{@html $activeCard.desc.head[int]}</p>
           {/if}
-          {#if $activeCard.desc.subhead[int] != ''}
+          {#if $activeCard.desc.subhead[int] != '' && $activeCard.desc.subhead[int] != null}
             <p class='item_subhead'>{@html $activeCard.desc.subhead[int]}</p>
           {/if}
-          {#if $activeCard.desc.text[int] != ''}
-            <p class='item_text'>{@html compensate_wiki_description($activeCard.desc.text[int]).replaceAll('<li>', '<li class="infobox_li">').replaceAll('<ul>', '<ul class="infobox_ul">')}</p>
+          {#if $activeCard.desc.text[int] != '' && $activeCard.desc.text[int] != null}
+            <p class='item_text'>{@html comp_equip_desc($activeCard.desc.text[int])}</p>
           {/if}
         {/each}
 
     {/if}
 
   </div>
+
+  {#if $dev_mode}
+    <div class='close_div'>
+      <button id='refr_image' class='close_button' on:click={()=>refresh_image($activeCard.image)}>Refresh Image</button>
+    </div>
+  {/if}
 
   <!-- Close Button for Mobile Page-->
   {#if $mobile}
@@ -159,6 +170,18 @@
 {/if}
 
 <style>
+#refr_image {
+  background-color: rgb(255, 0, 0) !important;
+  color: rgb(255, 255, 255) !important;
+  border-color: rgb(255, 255, 255) !important;
+}
+.show_link_icon {
+  visibility: visible !important;
+}
+a {
+  text-decoration: none;
+  color: var(--light-text);
+}
 .link_icon {
 margin: calc(.5*var(--border));
 padding-left: var(--border);
@@ -210,7 +233,9 @@ margin: 0 0 var(--gutter) var(--gutter);
 float: right;
 }
 .item_name {
+display: block;
 font-size: 170%;
+font-weight: bold;
 margin: 0;
 color: var(--light-text);
 }
@@ -282,9 +307,6 @@ color: var(--light-text);
   margin-bottom: var(--gutter);
 }
 .mobile_underline {
-  text-decoration: underline;
-}
-.mobile_item_name {
   text-decoration: underline;
 }
 </style>
