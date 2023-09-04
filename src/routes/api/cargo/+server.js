@@ -269,7 +269,7 @@ async function create_data(version) {
                 description2 = description2 + description.head[i] + description.subhead[i] + description.text[i]
             }
             let current_obj = {
-                'name':compensate_wiki_description(current_name.replaceAll('"',"''").replaceAll('&amp;','&').replaceAll('&#34;',"''").replaceAll('&quot;',"''").replaceAll(':','')), 
+                'name':compensate_wiki_description(current_name.replaceAll(':','')), 
                 'url':wikihttp+compensate_url(current_item.Page)+'#'+compensate_url(current_name), 
                 'type':current_item.type, 
                 'display_type':display_type,
