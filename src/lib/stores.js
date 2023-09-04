@@ -40,18 +40,8 @@ export const mobile_sidebar_active = writable(false);
 
 export const mobile_description = writable('');
 
-export const wiki_url = 'https://www.stowiki.net/wiki/';
+export const load_progress = writable(0);
 
-//export const icon_path = '/src/icons/';     // for dev
+export const dev_mode = writable(false);
 
-//export const icon_path = '/icons/';     // for build
-
-/* Deprecated content ahead! The following code was used before the automization.
-//export const image_path = '/images/'; // for build
-
-export const image_path = '/src/images/'; // for dev
-
-import acr from '../data/acronyms.json';
-
-export const acronyms = acr.content;
-*/
+export const wiki_url = 'https://stowiki.net/wiki/';
