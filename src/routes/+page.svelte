@@ -28,10 +28,6 @@
     // set viewport height
     vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`)
-
-    // start data fetch for future visitors
-    //fetch('/api', {method:'POST', body:JSON.stringify({pro:'content'})})
-
   });
 
   // makes sure the app is always in the right mode: Desktop / Mobile
@@ -47,6 +43,28 @@
     }
   }
 </script>
+
+<style>
+  main {
+    display: flex;
+    height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter)); /* minus the height of the rest of the UI -- the term 100vw*(143/1920) calculates the height occupied by the banner image */
+    height: calc(var(--vh, 1vh) * 100 - 100vw*(143/1920) - 5*var(--gutter));
+    width: 100%;
+    margin: 0;
+    padding: var(--gutter);
+    background-color: var(--dark-background);
+    overflow: hidden;
+    border-radius: 0 0 var(--gutter) var(--gutter);
+  }
+  aside {
+  width: 30%;
+  padding: 1rem;
+  background-color: var(--dark-background);
+  border: calc(.5*var(--gutter)) solid var(--light-background);
+  border-radius: var(--gutter);
+  overflow-y: auto;
+}
+</style>
 
 <svelte:head>
 
@@ -68,7 +86,6 @@
 {/if}
 
 <main>
-
   <!-- slots the current module -- is done individually for every module to force reload -->
   {#if $activeTab == 'Acronyms'}
     <Acronyms {acr} />
@@ -101,27 +118,4 @@
       </aside>
     {/if}
   {/if}
-
 </main>
-
-<style>
-  main {
-    display: flex;
-    height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter)); /* minus the height of the rest of the UI -- the term 100vw*(143/1920) calculates the height occupied by the banner image */
-    height: calc(var(--vh, 1vh) * 100 - 100vw*(143/1920) - 5*var(--gutter));
-    width: 100%;
-    margin: 0;
-    padding: var(--gutter);
-    background-color: var(--dark-background);
-    overflow: hidden;
-    border-radius: 0 0 var(--gutter) var(--gutter);
-  }
-  aside {
-  width: 30%;
-  padding: 1rem;
-  background-color: var(--dark-background);
-  border: calc(.5*var(--gutter)) solid var(--light-background);
-  border-radius: var(--gutter);
-  overflow-y: auto;
-}
-</style>

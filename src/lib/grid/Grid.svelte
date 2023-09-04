@@ -2,13 +2,9 @@
   import GridCard from "./GridCard.svelte";
   import {srcValue, filtered, current_list, activeTab, settings_env, settings_type, settings_av, settings_ground_slot, settings_space_slot, settings_rarity, mobile, settings_search_desc} from '$lib/stores';
   import {matchSorter} from 'match-sorter';
-  import { onMount } from 'svelte';
 
   export let card_data;
   const data = card_data;
-
-  let hasAPI = true;
-  onMount(()=> {hasAPI = 'IntersectionObserver' in window;})
 
   // update filter and search on change of any filter store variable
   srcValue.subscribe( () => update_filter() );
@@ -174,7 +170,7 @@
   <div id='div1'>
     <!-- inserts a grid card for each item -->
     {#each $filtered as item, index (index)}
-      <GridCard {item} {index} lazy={hasAPI && index > -1}/>
+      <GridCard {item} {index}/>
     {/each}
   </div>
 </section>

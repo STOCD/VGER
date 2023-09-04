@@ -3,6 +3,10 @@ an item on the wiki returns the link to the respective image. A PUT request with
 item on the wiki as well as the 'type' parameter specifying the item type will retrieve the image and save it to
 Github as well as return a link to the image*/
 
+const repo_name = import.meta.env.VITE_GITHUB_REPO;
+const owner_name = import.meta.env.VITE_GITHUB_OWNER;
+const wiki_images = 'https://stowiki.net/wiki/Special:FilePath/';
+
 export async function PUT({url}) {
     const param_image = url.searchParams.get('image');
     const param_type = url.searchParams.get('type');
@@ -19,8 +23,6 @@ export async function GET({url}) {
     return new Response(`${wiki_images}${param_image}`, {status: 200})
 }
 
-const wiki_images = 'https://stowiki.net/wiki/Special:FilePath/';
-
 async function fetch_image(name) {
     const response = await fetch(wiki_images + name);
     const image_data = await response.arrayBuffer();
@@ -29,7 +31,7 @@ async function fetch_image(name) {
 
 async function store_image(type, image_data, name, force = false) {
     const auth = get_autorization_token(type);
-    const url = `https://api.github.com/repos/Shinga13/VGER-test/contents/images/${name}`;
+    const url = `https://api.github.com/repos/${owner_name}/${repo_name}/contents/images/${name}`;
     const encoded_data = Buffer.from(image_data).toString('base64');
     const sha_response = await fetch(url, {
         method: 'GET',
@@ -40,8 +42,8 @@ async function store_image(type, image_data, name, force = false) {
         const response = await fetch(url, {
             method: 'PUT',
             headers: {'Authorization': `token ${auth}`},
-            owner: 'Shinga13',
-            repo: 'VGER-test',
+            owner: owner_name,
+            repo: repo_name,
             path: `images/${name}`,
             body: JSON.stringify(
                 {

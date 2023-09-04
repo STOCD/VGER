@@ -1,9 +1,24 @@
+// redirects to new api
+export function GET({url, setHeaders}) {
+    let new_url = url;
+    new_url.pathname = '/api/cargo';
+    setHeaders({
+        'location': new_url.toString()
+    })
+    return new Response(301, {status: 301})
+}
+
+// ------------------------------------------------------------------------------------------------
+// Deprecated content ahead!
+// This is only kept for legacy purposes and has been replaced by the api availabe at "/api/cargo"
+// ------------------------------------------------------------------------------------------------
+
 /* This file implements the api that fetches the cargo tables from the wiki, extracts the required data and refines it. 
 If this api receives a GET request it returns the saved date or debug information: ?t=1 returns the date the data was 
 fetched, ?t=2 returns the cargo query links, every other GET request returns the refined data.
 If this api receives a POST request it will fetch and save the data if the last fetch happened more than 24 h ago.
 */
-
+/*
 // variable that stores the refined data
 let vger_data = {}
 
@@ -214,7 +229,7 @@ async function create_data() {
         temp_data.starship_traits.push({'name': starship_trait_list[j], 'type':'Starship Trait', 'obtained': current_trait.obtained, 'desc': compensate_wiki_description(current_trait.desc), 'image':wikihttp+filepath+compensate_url(starship_trait_list[j])+image_suffix});
     }*/
 
-
+    /*
     //cache personal traits
     temp_data.personal_traits = [];
     let specialization_traits = {
@@ -334,3 +349,4 @@ vger_data = temp_data;
 
 //console.log({'Starship Traits':data.starship_traits.length, 'Personal Traits':data.personal_traits.length, 'Ground Equipment': data.ground_equipment.length, 'Space Equipment': data.space_equipment.length})
 }
+*/
