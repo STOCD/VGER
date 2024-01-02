@@ -10,7 +10,6 @@ let currentLink = null;
 // bind search string to filter module
 srcValue.subscribe( () => {
     if ($activeTab == 'Acronyms') {
-        console.log(acronyms)
         filtered.set(matchSorter(acronyms, $srcValue, {keys : ['acr', 'term', 'desc']}));
     if (document) {
         let div1 = document.getElementById('div1')
