@@ -5,11 +5,13 @@ import {matchSorter} from 'match-sorter';
 
 export let acr;
 const acronyms = acr;
+let currentLink = null;
 
 // bind search string to filter module
 srcValue.subscribe( () => {
     if ($activeTab == 'Acronyms') {
-    filtered.set(matchSorter(acronyms, $srcValue, {keys : ['acr', 'term', 'desc']}));
+        console.log(acronyms)
+        filtered.set(matchSorter(acronyms, $srcValue, {keys : ['acr', 'term', 'desc']}));
     if (document) {
         let div1 = document.getElementById('div1')
         if (div1 != null) {
@@ -18,8 +20,23 @@ srcValue.subscribe( () => {
 }
 });
 
+// handles click on row
+function rowClickAction(title=null, text=null, link=null) {
+    currentLink = link
+    if ($mobile) {
+        showDescription(title, text, link)
+    }
+    else {
+        openURL()
+    }
+}
+
+function openURL() {
+    open(currentLink, '_blank', 'noopener,noreferrer')
+}
+
 //shows description section for mobile
-function showDescription(title,text) {
+function showDescription(title, text, link) {
     if ($mobile) {
         $mobile_description = title + ': '+text;
         document.getElementById('description').style.visibility = 'visible';
@@ -39,8 +56,11 @@ function hideDescription() {
     <p class='text'>
         {$mobile_description}
     </p>
-    <div class='close_div'>
-        <button class='close_button' on:click={()=>hideDescription()}>Close</button>
+    <div class='desc_div' style="margin-bottom: var(--gutter);">
+        <button class='desc_button' on:click={()=>openURL()}>Open Wiki</button>
+    </div>
+    <div class='desc_div'>
+        <button class='desc_button' on:click={()=>hideDescription()}>Close</button>
     </div>
 </div>
 
@@ -61,7 +81,7 @@ function hideDescription() {
             {/if}
         </thead>
         {#each $filtered as it}
-            <tr on:click={()=>showDescription(it.term, it.desc)}>
+            <tr on:click={()=>rowClickAction(it.term, it.desc, it.link)}>
                 <td>
                     {it.acr}
                 </td>
@@ -93,6 +113,7 @@ function hideDescription() {
     }
     tr,td {
         border-radius: var(--gutter);
+        cursor: pointer;
     }
     td {
         color: var(--light-text);
@@ -156,7 +177,7 @@ function hideDescription() {
         transition: opacity .5s;
         z-index: 5;
     }
-    .close_button {
+    .desc_button {
         background-color: rgba(0,0,0,0);
         border: calc(.5*var(--border)) solid var(--gray-text);
         border-radius: calc(.5*var(--gutter));
@@ -166,7 +187,7 @@ function hideDescription() {
         height: calc(3.5*var(--gutter));
         color: var(--gray-text);
     }
-    .close_div {
+    .desc_div {
         width: 100%;
         display: flex;
         justify-content: center;
