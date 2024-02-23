@@ -17,7 +17,7 @@ export async function PUT({url}) {
     }
     const image_data = await fetch_image(param_image);
     const put_status = await store_image(param_type, image_data, param_image, force_upload);
-    return new Response(`${wiki_images}${param_image}`, {status: put_status})
+    return new Response(`${wiki_images}${param_image}`, {body: put_status})
 }
 
 export async function GET({url}) {
