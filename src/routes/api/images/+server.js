@@ -56,7 +56,7 @@ async function store_image(type, image_data, name, force = false) {
             )
         });
         const stat = await response.json()
-        return stat.status
+        return stat
     }
     return 200
 }
