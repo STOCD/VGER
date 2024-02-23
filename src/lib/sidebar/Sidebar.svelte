@@ -44,7 +44,8 @@
   function refresh_image(image) {
     const this_type = $current_list;
     const this_name = image.split('/').pop();
-    fetch(`api/images?image=${this_name}&type=${this_type}`, {method: 'PUT'}).then(res => alert(`Image refresh status: ${res.status}`))
+    const one = '1';
+    fetch(`api/images?image=${this_name}&type=${this_type}&force=${one}`, {method: 'PUT'}).then(res => alert(`Image refresh status: ${res.status}`))
   }
 </script>
 

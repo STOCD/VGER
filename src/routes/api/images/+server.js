@@ -10,11 +10,13 @@ const wiki_images = 'https://stowiki.net/wiki/Special:FilePath/';
 export async function PUT({url}) {
     const param_image = url.searchParams.get('image');
     const param_type = url.searchParams.get('type');
+    const param_force = url.searchParams.get('force');
+    force_upload = param_force !== '1' ? false : true;
     if (param_image === null || param_image === '' || param_type === null || param_type === '') {
         return new Response('Invalid parameters!', {status: 400})
     }
     const image_data = await fetch_image(param_image);
-    const put_status = await store_image(param_type, image_data, param_image);
+    const put_status = await store_image(param_type, image_data, param_image, force_upload);
     return new Response(`${wiki_images}${param_image}`, {status: put_status})
 }
 
