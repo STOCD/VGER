@@ -6,6 +6,10 @@ export const equipment_types_space = [
 export const equipment_types_ground = [
     'Kit', 'Body Armor', 'EV Suit', 'Personal Shield', 'Ground Weapon', 'Ground Device', 'Kit Module'
 ];
+export const costs = [
+    '3k Zen', "Zen Bundle / Mudd's Market", 'Promo', 'Lockbox', 'Phoenix', 'Event', 'Lifetime', 
+    'Mission / Exchange / Specialization', 'Lobi Crystal'
+]
 export const rarities = ['Epic','Ultra Rare','Very Rare','Rare','Uncommon','Common'];
 
 export const wikihttp = 'https://sto.fandom.com/wiki';

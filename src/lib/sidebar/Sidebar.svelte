@@ -1,7 +1,7 @@
 <script>
   import { activeCard, activeTab, wiki_url, mobile, mobile_sidebar_active, dev_mode, current_list} from '$lib/stores';
   import { compensate_wiki_description, rarities } from '$lib/fetch/masterfetch';
-  
+
   // shows chain icon
   function showLinkIcon(e, id) {
     document.getElementById(id).style.visibility = 'visible';
@@ -44,8 +44,7 @@
   function refresh_image(image) {
     const this_type = $current_list;
     const this_name = image.split('/').pop();
-    const one = '1';
-    fetch(`api/images?image=${this_name}&type=${this_type}&force=${one}`, {method: 'PUT'}).then(res => alert(`Image refresh status: ${res.status}`))
+    fetch(`api/images?image=${this_name}&type=${this_type}&force=${'1'}`, {method: 'PUT'}).then(res => alert(`Image refresh status: ${res.status}`))
   }
 </script>
 
@@ -97,6 +96,43 @@
           </li>
         {/each}
       </ul>
+
+      <!-- Cost -->
+      {#if $activeCard.cost.length > 0}
+      <h3 class='aside_head'>Cost:</h3>
+      <ul class='item_obtained'>
+        {#each $activeCard.cost as cost_item}{@const [current_amount, current_unit] = cost_item.split(';')}
+          <li style="font-size: 100%;">
+            <i class='fa fa-angle-right'/>
+            {#if current_unit == 'Zen'}
+              <span title='Zen'>{current_amount} <img class='unit_image' src='zen.png' alt='Zen'></span>
+            {:else if current_unit == 'LB'}
+              <span title='Lockbox'>{current_amount} <img class='unit_image' src='lb.png' alt='Lockbox'></span>
+            {:else if current_unit == 'APP'}
+              <span title='Event'>{current_amount} <img class='unit_image' src='event.png' alt='Event'></span>
+            {:else if current_unit == 'PPP5'}
+              <span title='Epic Phoenix Prize Pack Token'>
+                {current_amount} <img class='unit_image' src='ppp5.png' alt='Epic Phoenix Prize Pack Token'>
+              </span>
+            {:else if current_unit == 'Veteran'}
+              <span title='Lifetime Subscription'>
+                {current_amount} <img class='unit_image' src='lifetime.png' alt='Lifetime Subscription'>
+              </span>
+            {:else if current_unit == 'R&D'}
+              <span title='Promotional T6 Ship Choice Pack'>
+                {current_amount} <img class='unit_image' src='promo.png' alt='Promotional T6 Ship Choice Pack'>
+              </span>
+            {:else if current_unit == 'LC'}
+              <span title='Lobi Crystal'>
+                {current_amount} <img class='unit_image' src='lobi_crystal.png' alt='Lobi Crystal'>
+              </span>
+            {:else}
+              {current_amount}
+            {/if}
+          </li>
+        {/each}
+      </ul>
+      {/if}
 
       <!-- Description -->
       <h3 class='aside_head'>Description:</h3>
@@ -184,98 +220,103 @@ a {
   color: var(--light-text);
 }
 .link_icon {
-margin: calc(.5*var(--border));
-padding-left: var(--border);
-color: var(--gray-text);
-display: inline;
-font-size: 80%;
-text-decoration: none !important;
-text-decoration-color: transparent !important;
-visibility: hidden;
-cursor: pointer;
-position: absolute;
-border-radius: 20%;
-background-color: var(--dark-background);
-padding: var(--border);
+  margin: calc(.5*var(--border));
+  padding-left: var(--border);
+  color: var(--gray-text);
+  display: inline;
+  font-size: 80%;
+  text-decoration: none !important;
+  text-decoration-color: transparent !important;
+  visibility: hidden;
+  cursor: pointer;
+  position: absolute;
+  border-radius: 20%;
+  background-color: var(--dark-background);
+  padding: var(--border);
 }
 #link_icon_header {
-margin: calc(.5*var(--gutter)) !important;
+  margin: calc(.5*var(--gutter)) !important;
 }
 ul {
-list-style: disc;
-margin: 0;
-padding: 0;
+  list-style: disc;
+  margin: 0;
+  padding: 0;
 }
 .item_obtained li {
-list-style: none;
-margin-left: calc(1.5*var(--gutter));
-color: var(--light-text);
+  list-style: none;
+  margin-left: calc(1.5*var(--gutter));
+  color: var(--light-text);
 }
 :global(.infobox_li) {
-list-style: disc;
+  list-style: disc;
 }
 :global(.infobox_ul) {
-margin-top: var(--gutter);
-margin-bottom: var(--gutter);
-margin-left: calc(2.5*var(--gutter));
-padding: 0;
+  margin-top: var(--gutter);
+  margin-bottom: var(--gutter);
+  margin-left: calc(2.5*var(--gutter));
+  padding: 0;
 }
 .aside_text {
-font-size: medium;
-padding-left: 0;
-color: var(--light-text);
+  font-size: medium;
+  padding-left: 0;
+  color: var(--light-text);
 }
 .aside_image {
-width: var(--aside-image-width);
-display: block;
-border: calc(0.25*var(--gutter)) solid var(--science-blue);
-border-radius: var(--gutter);
-margin: 0 0 var(--gutter) var(--gutter);
-float: right;
+  width: var(--aside-image-width);
+  display: block;
+  border: calc(0.25*var(--gutter)) solid var(--science-blue);
+  border-radius: var(--gutter);
+  margin: 0 0 var(--gutter) var(--gutter);
+  float: right;
 }
 .item_name {
-display: block;
-font-size: 170%;
-font-weight: bold;
-margin: 0;
-color: var(--light-text);
+  display: block;
+  font-size: 170%;
+  font-weight: bold;
+  margin: 0;
+  color: var(--light-text);
 }
 .hover_underline:hover {
-text-decoration: underline;
-cursor: pointer;
+  text-decoration: underline;
+  cursor: pointer;
 }
 .item_type {
-color: var(--gray-text);
-margin: 0;
-font-style: italic;
-font-size: 90%;
+  color: var(--gray-text);
+  margin: 0;
+  font-style: italic;
+  font-size: 90%;
 }
 .aside_head {
-margin: calc(3*var(--gutter)) 0 var(--gutter) 0;
-color: var(--light-text);
+  margin: calc(3*var(--gutter)) 0 var(--gutter) 0;
+  color: var(--light-text);
 }
 .fa-angle-right {
-margin-right: var(--border);
+  margin-right: var(--border);
 }
 .item_head {
-font-size: 105%;
-font-weight: 500;
-padding-left: 0;
-margin: calc(.5*var(--gutter)) 0 0 0;
-color: #42afca;
+  font-size: 105%;
+  font-weight: 500;
+  padding-left: 0;
+  margin: calc(.5*var(--gutter)) 0 0 0;
+  color: #42afca;
 }
 .item_subhead {
-font-size: 90%;
-font-style: italic;
-padding-left: 0;
-margin: 0;
-color: yellow;
+  font-size: 90%;
+  font-style: italic;
+  padding-left: 0;
+  margin: 0;
+  color: yellow;
 }
 .item_text {
-font-size: 85%;
-padding-left: 0;
-margin: 0;
-color: var(--light-text);
+  font-size: 85%;
+  padding-left: 0;
+  margin: 0;
+  color: var(--light-text);
+}
+.unit_image {
+  border: none;
+  height: calc(2 * var(--gutter));
+  vertical-align: text-top;
 }
 .close_button {
   background-color: rgba(0,0,0,0);

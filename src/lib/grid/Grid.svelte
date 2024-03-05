@@ -1,6 +1,6 @@
 <script>
   import GridCard from "./GridCard.svelte";
-  import {srcValue, filtered, current_list, activeTab, settings_env, settings_type, settings_av, settings_ground_slot, settings_space_slot, settings_rarity, mobile, settings_search_desc} from '$lib/stores';
+  import {srcValue, filtered, current_list, activeTab, settings_cost, settings_env, settings_type, settings_av, settings_ground_slot, settings_space_slot, settings_rarity, mobile, settings_search_desc} from '$lib/stores';
   import {matchSorter} from 'match-sorter';
 
   export let card_data;
@@ -8,6 +8,7 @@
 
   // update filter and search on change of any filter store variable
   srcValue.subscribe( () => update_filter() );
+  settings_cost.subscribe( () => update_filter());
   settings_env.subscribe( () => update_filter() );
   settings_type.subscribe( () => update_filter() );
   settings_av.subscribe( () => update_filter() );
@@ -73,9 +74,19 @@
 
     // Starship Traits
     else if ($activeTab == 'Starship Traits') {
+      // cost filter
+      let cost_filtered = [];
+      if ($settings_cost.length == 0){
+        cost_filtered = data[$current_list];
+      }
+      else {
+        for (let j = 0; j < $settings_cost.length; j++) {
+          cost_filtered.push(...matchSorter(data[$current_list], $settings_cost[j], {keys: ['cost_filter'], threshold: matchSorter.rankings.EQUAL}));
+        }
+      }
 
       // search filter
-      let search_filtered = matchSorter(data[$current_list], $srcValue, {keys: [{threshold: matchSorter.rankings.ACRONYM, key: 'name'}, {threshold: matchSorter.rankings.CONTAINS, key:'obtained'}, {threshold: matchSorter.rankings.CONTAINS, key:'desc'}] });
+      let search_filtered = matchSorter(cost_filtered, $srcValue, {keys: [{threshold: matchSorter.rankings.ACRONYM, key: 'name'}, {threshold: matchSorter.rankings.CONTAINS, key:'obtained'}, {threshold: matchSorter.rankings.CONTAINS, key:'desc'}] });
       filtered.set(search_filtered);
 
       // scroll to the top
