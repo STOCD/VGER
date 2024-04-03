@@ -17,9 +17,10 @@ const filepath = 'Special:FilePath/';
 const image_suffix = '_icon.png';
 const git_image_path = `https://raw.githubusercontent.com/${owner_name}/${repo_name}/main/images/`;
 
-const item_query = wikihttp + 'Special:CargoExport?tables=Infobox&&fields=_pageName%3DPage%2Cname%3Dname%2Crarity%3Drarity%2Ctype%3Dtype%2Cboundto%3Dboundto%2Cboundwhen%3Dboundwhen%2Cwho%3Dwho%2Chead1%3Dhead1%2Chead2%3Dhead2%2Chead3%3Dhead3%2Chead4%3Dhead4%2Chead5%3Dhead5%2Chead6%3Dhead6%2Chead7%3Dhead7%2Chead8%3Dhead8%2Chead9%3Dhead9%2Csubhead1%3Dsubhead1%2Csubhead2%3Dsubhead2%2Csubhead3%3Dsubhead3%2Csubhead4%3Dsubhead4%2Csubhead5%3Dsubhead5%2Csubhead6%3Dsubhead6%2Csubhead7%3Dsubhead7%2Csubhead8%3Dsubhead8%2Csubhead9%3Dsubhead9%2Ctext1%3Dtext1%2Ctext2%3Dtext2%2Ctext3%3Dtext3%2Ctext4%3Dtext4%2Ctext5%3Dtext5%2Ctext6%3Dtext6%2Ctext7%3Dtext7%2Ctext8%3Dtext8%2Ctext9%3Dtext9&limit=5000&format=json';
+const item_query = wikihttp + 'Special:CargoExport?tables=Infobox&fields=_pageName%3DPage%2Cname%3Dname%2Crarity%3Drarity%2Ctype%3Dtype%2Cboundto%3Dboundto%2Cboundwhen%3Dboundwhen%2Cwho%3Dwho%2Chead1%3Dhead1%2Chead2%3Dhead2%2Chead3%3Dhead3%2Chead4%3Dhead4%2Chead5%3Dhead5%2Chead6%3Dhead6%2Chead7%3Dhead7%2Chead8%3Dhead8%2Chead9%3Dhead9%2Csubhead1%3Dsubhead1%2Csubhead2%3Dsubhead2%2Csubhead3%3Dsubhead3%2Csubhead4%3Dsubhead4%2Csubhead5%3Dsubhead5%2Csubhead6%3Dsubhead6%2Csubhead7%3Dsubhead7%2Csubhead8%3Dsubhead8%2Csubhead9%3Dsubhead9%2Ctext1%3Dtext1%2Ctext2%3Dtext2%2Ctext3%3Dtext3%2Ctext4%3Dtext4%2Ctext5%3Dtext5%2Ctext6%3Dtext6%2Ctext7%3Dtext7%2Ctext8%3Dtext8%2Ctext9%3Dtext9&limit=5000&format=json';
 const trait_query = wikihttp + "Special:CargoExport?tables=Traits&fields=Traits._pageName%3DPage,Traits.name,Traits.chartype,Traits.environment,Traits.type,Traits.required,Traits.possible,Traits.description&limit=2500&format=json";
 const starship_trait_query_stowiki = wikihttp + "Special:CargoExport?tables=StarshipTraits&fields=StarshipTraits._pageName,StarshipTraits.name,StarshipTraits.short,StarshipTraits.type,StarshipTraits.detailed,StarshipTraits.obtained,StarshipTraits.basic&limit=2500&format=json";
+const starship_query = wikihttp + 'Special:CargoExport?tables=Ships&fields=Ships._pageName,Ships.cost&limit=2500&format=json'
 
 const vger_data_url = `https://raw.githubusercontent.com/${owner_name}/${repo_name}/main/vger_data.json`;
 const vger_data_put_url = `https://api.github.com/repos/${owner_name}/${repo_name}/contents/vger_data.json`;
@@ -136,26 +137,86 @@ async function create_data(version) {
     let temp_data = {
         version: version
     };
-
+    
+    
     // requests and saves cargo tables
     const [starship_trait_json,] = await fetch_json(starship_trait_query_stowiki);
     const [trait_json,] = await fetch_json(trait_query);
     const [equipment_json,] = await fetch_json(item_query);
-
+    const [ships_json,] = await fetch_json(starship_query);
+    let ship_dict = {}
+    for (const ship_object of ships_json) {
+        ship_dict[ship_object._pageName.replaceAll('&#039;', "'")] = ship_object.cost;
+    }
+    
     temp_data.starship_traits = [];
     const pattern = /\[\[(?!File:)(?<source>[a-zA-Z0-9\(\) ':-]*?)(\|.*?)?\]\]/g;
+    const units = ['LB', 'LC', 'R&D', 'Veteran', 'APP', 'PPP5'];
     for (let k = 0; k<starship_trait_json.length; k++) {
         const current_trait = starship_trait_json[k];
         if ('name' in current_trait && current_trait.name != '' && current_trait.name != null) {
             let obtained = [];
+            let costs = [];
+            let cost_filter = [];
             const obtained_string = compensate_name(current_trait.obtained);
             for (const res of obtained_string.matchAll(pattern)) {
-                obtained.push(res.groups.source);
+                const ship = res.groups.source;
+                obtained.push(ship)
+                if (ship in ship_dict) {
+                    for (const ship_cost of ship_dict[ship]) {
+                        const ship_cost_list = ship_cost.split('/').map(item => item.trim())
+                        ship_cost_list.map(item => {
+                            item = item.replaceAll('&amp;', '&')
+                            if (!costs.includes(item)) {
+                                costs.push(item);
+                            }
+                            const [amount, unit] = item.split(';')
+                            if (unit === 'Zen') {
+                                if (amount === '3000') {
+                                    if (!cost_filter.includes('3k Zen')) {
+                                        cost_filter.push('3k Zen');
+                                    }
+                                }
+                                else if (!cost_filter.includes("Zen Bundle / Mudd's Market")) {
+                                    cost_filter.push("Zen Bundle / Mudd's Market");
+                                }
+                            }
+                            else if (unit === 'R&D' && !cost_filter.includes('Promo')) {
+                                cost_filter.push('Promo');
+                            }
+                            else if (unit === 'LB' && !cost_filter.includes('Lockbox')) {
+                                cost_filter.push('Lockbox');
+                            }
+                            else if (unit === 'LC' && !cost_filter.includes('Lobi Crystal')) {
+                                cost_filter.push('Lobi Crystal');
+                            }
+                            else if (unit === 'APP' && !cost_filter.includes('Event')) {
+                                cost_filter.push('Event');
+                            }
+                            else if (unit === 'PPP5' && !cost_filter.includes('Phoenix')) {
+                                cost_filter.push('Phoenix');
+                            }
+                            else if (unit === 'Veteran' && !cost_filter.includes('Lifetime')) {
+                                cost_filter.push('Lifetime')
+                            }
+                            else if (!['Zen', 'R&D', 'LB', 'LC', 'APP', 'PPP5', 'Veteran'].includes(unit)){
+                                cost_filter.push('Mission / Exchange / Specialization')
+                            }
+                        });
+                    }
+                }
+                else if (!cost_filter.includes('Mission / Exchange / Specialization')){
+                    console.log(current_trait.name)
+                    cost_filter.push('Mission / Exchange / Specialization')
+                }
             }
+            console.log([current_trait.name, cost_filter])
             temp_data.starship_traits.push({
                 'name': compensate_name(current_trait.name),
                 'type': 'Starship Trait',
                 'obtained': obtained,
+                'cost': costs,
+                'cost_filter': cost_filter,
                 'desc': compensate_wiki_description(current_trait.detailed),
                 'image': git_image_path + compensate_url(current_trait.name) + image_suffix
             });
@@ -175,61 +236,51 @@ async function create_data(version) {
         let current_page = trait_json[i2];
         if ('chartype' in current_page && current_page['chartype'] == 'char') {
             if ('name' in current_page && current_page['name'] != '' && current_page['name'] != null) {
-                if ('type' in current_page && current_page['type'] != null && current_page['type'].toLowerCase() == 'starship') {
-                    let obtained = ['Infinity Prize Pack: Starship Trait'];
-                    if (current_page['name'] in specialization_traits) {
-                        obtained = [specialization_traits[current_page['name']]];
-                    }
-                    temp_data.starship_traits.push({'name': current_page['name'], 'type':'Starship Trait', 'obtained': obtained == null ? '' : obtained, 'desc': compensate_wiki_description(current_page.description), 'image':git_image_path+compensate_url(current_page['name'])+image_suffix});
+                let type = '';
+                let environment = 'space';
+                let display_type = '';
+                let availability = '';
+                let availability_type = '';
+                if ('environment' in current_page) {
+                    environment = current_page['environment'];
+                }
+                if ('type' in current_page && current_page['type'] != null && current_page['type'].toLowerCase() == 'reputation')  {
+                    type = 'reputation';
+                    display_type = environment.substring(0,1).toUpperCase()+environment.substring(1)+' Reputation Trait';
+                }
+                else if ('type' in current_page && current_page['type'] != null && current_page['type'].toLowerCase() == 'activereputation') {
+                    type = 'activereputation';
+                    display_type = 'Active '+environment.substring(0,1).toUpperCase()+environment.substring(1)+' Reputation Trait';
                 }
                 else {
-                    let type = '';
-                    let environment = 'space';
-                    let display_type = '';
-                    let availability = '';
-                    let availability_type = '';
-                    if ('environment' in current_page) {
-                        environment = current_page['environment'];
-                    }
-                    if ('type' in current_page && current_page['type'] != null && current_page['type'].toLowerCase() == 'reputation')  {
-                        type = 'reputation';
-                        display_type = environment.substring(0,1).toUpperCase()+environment.substring(1)+' Reputation Trait';
-                    }
-                    else if ('type' in current_page && current_page['type'] != null && current_page['type'].toLowerCase() == 'activereputation') {
-                        type = 'activereputation';
-                        display_type = 'Active '+environment.substring(0,1).toUpperCase()+environment.substring(1)+' Reputation Trait';
+                    type = 'personal';
+                    display_type = 'Personal '+environment.substring(0,1).toUpperCase()+environment.substring(1)+' Trait';
+                }
+                if ('required' in current_page && current_page['required'] != null && current_page['required'].length > 0 && current_page['required'][0] !== '') {
+                    if (Array.isArray(current_page['required'])) {
+                        availability = current_page['required'].join(', ');
                     }
                     else {
-                        type = 'personal';
-                        display_type = 'Personal '+environment.substring(0,1).toUpperCase()+environment.substring(1)+' Trait';
+                        availability = current_page['required'].replaceAll(', ',',').replaceAll(',', ', ');
                     }
-                    if ('required' in current_page && current_page['required'] != null && current_page['required'].length > 0 && current_page['required'][0] !== '') {
-                        if (Array.isArray(current_page['required'])) {
-                            availability = current_page['required'].join(', ');
-                        }
-                        else {
-                            availability = current_page['required'].replaceAll(', ',',').replaceAll(',', ', ');
-                        }
-                        availability_type = 'innate';
-                    }
-                    else if ('possible' in current_page && (current_page['possible'] == null || current_page['possible'].length > 0 && current_page['possible'][0] === '')) {
-                        availability_type = 'other';
-                    }
-                    else if ('possible' in current_page && current_page['possible'] != null && current_page['possible'].length > 0 && current_page['possible'][0] !== '') {
-                        if (Array.isArray(current_page['possible'])) {
-                            availability = current_page['possible'].join(', ');
-                        }
-                        else {
-                            availability = current_page['possible'].replaceAll(', ',',').replaceAll(',', ', ');
-                        }
-                        availability_type = 'species';
-                    }
-                    temp_data.personal_traits.push({'name': compensate_name(current_page['name']), 'type':type, 'environment':environment, 'display_type':display_type, 'desc': compensate_wiki_description(current_page.description), 'availability':availability, 'availability_type':availability_type, 'image':git_image_path+compensate_url(current_page['name'])+image_suffix});
+                    availability_type = 'innate';
                 }
+                else if ('possible' in current_page && (current_page['possible'] == null || current_page['possible'].length > 0 && current_page['possible'][0] === '')) {
+                    availability_type = 'other';
+                }
+                else if ('possible' in current_page && current_page['possible'] != null && current_page['possible'].length > 0 && current_page['possible'][0] !== '') {
+                    if (Array.isArray(current_page['possible'])) {
+                        availability = current_page['possible'].join(', ');
+                    }
+                    else {
+                        availability = current_page['possible'].replaceAll(', ',',').replaceAll(',', ', ');
+                    }
+                    availability_type = 'species';
+                }
+                temp_data.personal_traits.push({'name': compensate_name(current_page['name']), 'type':type, 'environment':environment, 'display_type':display_type, 'desc': compensate_wiki_description(current_page.description), 'availability':availability, 'availability_type':availability_type, 'image':git_image_path+compensate_url(current_page['name'])+image_suffix});
             }
         }
     }
-
 
     //cache equipment
     temp_data.space_equipment = [];

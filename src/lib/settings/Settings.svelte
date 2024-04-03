@@ -1,9 +1,9 @@
 <script>
 import { 
     active_settings, activeTab, settings_env, settings_type, settings_av, dev_mode,
-    settings_space_slot, settings_ground_slot, settings_rarity, mobile_override, mobile, settings_search_desc
-    } from '$lib/stores';
-import {equipment_types_ground, equipment_types_space, rarities} from '$lib/fetch/masterfetch';
+    settings_space_slot, settings_ground_slot, settings_rarity, mobile_override, mobile, settings_search_desc,
+    settings_cost} from '$lib/stores';
+import {equipment_types_ground, equipment_types_space, rarities, costs} from '$lib/fetch/masterfetch';
 
 const links = [{name:'Website',link:'https://stobuilds.com/VGER'},{name:'STOCD',link:'https://github.com/STOCD'},{name:'STOBuilds Discord',link:'https://discord.gg/stobuilds'}]
 
@@ -75,6 +75,15 @@ function envSettingsCallback(environment) {
     }
 }
 
+function costSettingsCallback(cost) {
+    if ($settings_cost.includes(cost)) {
+        settings_cost.set($settings_cost.filter(element => element !== cost));
+    }
+    else {
+        settings_cost.set([...$settings_cost, cost]);
+    }
+}
+
 function typeSettingsCallback(type) {
     if ($settings_type.includes(type)) {
         settings_type.set($settings_type.filter(element => element !== type));
@@ -109,17 +118,6 @@ function spaceTypeSettingsCallback(type) {
     else {
         settings_space_slot.set([...$settings_space_slot, type]);
     }
-}
-
-function arraySettingsCallback(item, variable) {
-    console.log(variable)
-    if (variable.includes(item)) {
-        variable = variable.filter(element => element !== item);
-    }
-    else {
-        variable = [...variable, item];
-    }
-    console.log(variable)
 }
 
 function raritySettingsCallback(item) {
@@ -162,8 +160,21 @@ function keyVarToggle(event, variable, state) {
     <!-- Wrapper for Settings -->
     <div class='settings_content' class:mobile_settings_content='{$mobile}'>
 
+        <!-- Settings exclusive for Starship Traits -->
+        {#if $activeTab == 'Starship Traits'}
+            <p class='settings_header'>Cost:</p>
+            <div class='button_group'>
+                {#each costs as cost}
+                    <input type='checkbox' id={'cost='+cost} class='settings_input' name='ground_equipment_type'>
+                    <label class='settings_button' for={'cost='+cost}
+                    on:click={()=>costSettingsCallback(cost)} on:keyup={event => keyUp(event, costSettingsCallback, [cost])}> 
+                        {cost}
+                    </label>
+                {/each}
+            </div>
+
         <!-- Settings exclusive for Personal Traits -->
-        {#if $activeTab == 'Personal Traits'}
+        {:else if $activeTab == 'Personal Traits'}
             <p class='settings_header'>Trait Type:</p>
             <div class='button_group'>
                 <input type='checkbox'  id='type_personal' class ='settings_input' name='type'>
