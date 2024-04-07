@@ -71,9 +71,8 @@
 
 <style>
   main {
-    display: flex;
-    height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter)); /* minus the height of the rest of the UI -- the term 100vw*(143/1920) calculates the height occupied by the banner image */
-    height: calc(var(--vh, 1vh) * 100 - 100vw*(143/1920) - 5*var(--gutter));
+    display: flex;/* minus the height of the rest of the UI -- the term 100vw*(143/1920) calculates the height occupied by the banner image */
+    height: calc(100vh - 100vw * (143/1920) - 5 * var(--gutter));
     width: 100%;
     margin: 0;
     padding: var(--gutter);

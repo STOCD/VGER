@@ -169,7 +169,6 @@
   }
   #search {
     margin: 0 auto;
-    border-right: 1px solid var(--dark-text); 
     height: 70%;
     width: 80%;
     font-size: 1rem;

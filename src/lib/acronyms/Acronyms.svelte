@@ -158,7 +158,7 @@ function hideDescription() {
         font-weight: bold;
         text-align: left;
         padding: var(--gutter) 0 var(--gutter) var(--gutter);
-        box-shadow: 0 var(--border) 0 #fff;
+        box-shadow: 0 var(--border) 0 var(--gray-text);
     }
     .text {
         color: var(--light-text);

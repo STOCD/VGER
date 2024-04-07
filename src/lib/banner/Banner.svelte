@@ -1,8 +1,4 @@
-<script>
-  import banner from '$lib/banner/vgerbanner.png'
-</script>
-
-<img id="topbanner" src={banner} alt="banner">
+<img id="topbanner" src='vgerbanner.webp' alt="banner">
 
 <style>
   #topbanner {

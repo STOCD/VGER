@@ -99,26 +99,26 @@
           <li style="font-size: 100%;">
             <i class='fa fa-angle-right'/>
             {#if current_unit == 'Zen'}
-              <span title='Zen'>{current_amount} <img class='unit_image' src='zen.png' alt='Zen'></span>
+              <span title='Zen'>{current_amount} <img class='unit_image' src='zen.webp' alt='Zen'></span>
             {:else if current_unit == 'LB'}
-              <span title='Lockbox'>{current_amount} <img class='unit_image' src='lb.png' alt='Lockbox'></span>
+              <span title='Lockbox'>{current_amount} <img class='unit_image' src='lb.webp' alt='Lockbox'></span>
             {:else if current_unit == 'APP'}
-              <span title='Event'>{current_amount} <img class='unit_image' src='event.png' alt='Event'></span>
+              <span title='Event'>{current_amount} <img class='unit_image' src='event.webp' alt='Event'></span>
             {:else if current_unit == 'PPP5'}
               <span title='Epic Phoenix Prize Pack Token'>
-                {current_amount} <img class='unit_image' src='ppp5.png' alt='Epic Phoenix Prize Pack Token'>
+                {current_amount} <img class='unit_image' src='ppp5.webp' alt='Epic Phoenix Prize Pack Token'>
               </span>
             {:else if current_unit == 'Veteran'}
               <span title='Lifetime Subscription'>
-                {current_amount} <img class='unit_image' src='lifetime.png' alt='Lifetime Subscription'>
+                {current_amount} <img class='unit_image' src='lifetime.webp' alt='Lifetime Subscription'>
               </span>
             {:else if current_unit == 'R&D'}
               <span title='Promotional T6 Ship Choice Pack'>
-                {current_amount} <img class='unit_image' src='promo.png' alt='Promotional T6 Ship Choice Pack'>
+                {current_amount} <img class='unit_image' src='promo.webp' alt='Promotional T6 Ship Choice Pack'>
               </span>
             {:else if current_unit == 'LC'}
               <span title='Lobi Crystal'>
-                {current_amount} <img class='unit_image' src='lobi_crystal.png' alt='Lobi Crystal'>
+                {current_amount} <img class='unit_image' src='lobi_crystal.webp' alt='Lobi Crystal'>
               </span>
             {:else}
               {current_amount}

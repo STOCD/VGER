@@ -332,7 +332,7 @@ function keyVarToggle(event, variable, state) {
     <!-- Footer present on all tabs at the bottom of the settings sidebar -->
     <div class='seperator'></div>
     <div class='promo_footer'>
-        <img class='footer_img' src={'section31badge.png'} alt='STOCD'> <!--#~# 'src/icons/section31badge.png' for dev | 'section31badge.png' for build -->
+        <img class='footer_img' src={'section31badge.webp'} alt='STOCD'>
         <div class='promo_footer_center'>
             <p class='promo_footer_text'>
                 <span style='color:var(--science-blue); font-weight:bold;'>Visual Glossary for Easy Reference</span><br>
@@ -349,17 +349,16 @@ function keyVarToggle(event, variable, state) {
                 </a>
             {/each}
         </div>
-        <img class='footer_img' src={'stobuildslogo.png'} alt='STOBuilds'> <!--#~# 'src/icons/stobuildslogo.png' for dev | 'stobuildslogo.png' for build -->
+        <img class='footer_img' src={'stobuildslogo.webp'} alt='STOBuilds'>
     </div>
 
 </div>
 
 <style>
     .settings_div {
-        background-color: var(--dark-background-hover);
+        background-color: var(--light-background);
         position: absolute;
-        height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter)); /*viewport height minus top banner height, height of the bottom margin and height of the menu bar*/
-        height: calc(var(--vh, 1vh) * 100 - 100vw*(143/1920) - 5*var(--gutter));
+        height: calc(100vh - 100vw*(134/1920) - 6*var(--gutter) - var(--border)); /*viewport height minus top banner height, height of the bottom margin and height of the menu bar*/
         width: 30vw;
         right: -30.5vw;
         margin-right: var(--gutter);
@@ -373,16 +372,15 @@ function keyVarToggle(event, variable, state) {
         width: calc(100vw - 2*var(--gutter));
         right: -100vw;
         border-left: none;
+        border-radius: 0 0 var(--gutter) var(--gutter);
     }
     .settings_content {
         overflow-y: auto;
-        height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter) - 1.2*var(--aside-image-width)); /*.settings_div height minus .promo_footer height*/
-        height: calc(var(--vh, 1vh) * 100 - 100vw*(143/1920) - 5*var(--gutter) - 1.2*var(--aside-image-width));
+        height: calc(100vh - 100vw*(134/1920) - 5*var(--gutter) - 1.3*var(--aside-image-width)); /*.settings_div height minus .promo_footer height*/
         margin-right: var(--border);
     }
     .mobile_settings_content {
-        height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter) - 1.75*var(--aside-image-width)); /*.settings_div height minus .promo_footer height*/
-        height: calc(var(--vh, 1vh) * 100 - 100vw*(143/1920) - 5*var(--gutter) - 1.8*var(--aside-image-width));
+        height: calc(100vh - 100vw*(134/1920) - 5*var(--gutter) - 1.4*var(--aside-image-width)); /*.settings_div height minus .promo_footer height*/
     }
     .seperator {
         background-color: var(--gray-text);
