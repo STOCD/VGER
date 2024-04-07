@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  vger:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vger-app
+    env_file: .env
+    volumes:
+      - ${VGER_DATA_FOLDER_PATH}:${VITE_DATA_FOLDER_PATH}:rw
+    ports:
+      - "${VGER_PORT}:3000"

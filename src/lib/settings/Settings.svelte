@@ -1,9 +1,9 @@
 <script>
 import { 
-    active_settings, activeTab, settings_env, settings_type, settings_av, dev_mode,
+    active_settings, activeTab, settings_env, settings_type, settings_av,
     settings_space_slot, settings_ground_slot, settings_rarity, mobile_override, mobile, settings_search_desc,
     settings_cost} from '$lib/stores';
-import {equipment_types_ground, equipment_types_space, rarities, costs} from '$lib/fetch/masterfetch';
+import {equipment_types_ground, equipment_types_space, rarities, costs} from '$lib/fetch/constants';
 
 const links = [{name:'Website',link:'https://stobuilds.com/VGER'},{name:'STOCD',link:'https://github.com/STOCD'},{name:'STOBuilds Discord',link:'https://discord.gg/stobuilds'}]
 
@@ -60,10 +60,10 @@ function sizeSettingsCallback(size) {
 
 function envSettingsCallback(environment) {
     if ($settings_env == '') {
-        if (environment == 'space' && document.getElementById('env_space').checked) {
+        if (environment == 'space' && !document.getElementById('env_space').checked) {
             settings_env.set('ground');
         }
-        else if (environment == 'ground' && document.getElementById('env_ground').checked) {
+        else if (environment == 'ground' && !document.getElementById('env_ground').checked) {
             settings_env.set('space');
         }
         else {
@@ -129,16 +129,6 @@ function raritySettingsCallback(item) {
     }
 }
 
-function enableDevModeCallback(e=null) {
-    const prompt = 'Are you sure that you want to enable maintenance mode?\nOnly proceed if you know what you are doing and after consulting the instructions at: https://github.com/Shinga13/VGER/blob/main/maintenance.md'
-    if (e !== null && e.key != 'Enter') {
-        return
-    }
-    if (confirm(prompt)) {
-        $dev_mode = true;
-    }
-}
-
 // functions to implement key events ahead
 
 function keyUp(event, func, params) {
@@ -165,9 +155,9 @@ function keyVarToggle(event, variable, state) {
             <p class='settings_header'>Cost:</p>
             <div class='button_group'>
                 {#each costs as cost}
-                    <input type='checkbox' id={'cost='+cost} class='settings_input' name='ground_equipment_type'>
-                    <label class='settings_button' for={'cost='+cost}
-                    on:click={()=>costSettingsCallback(cost)} on:keyup={event => keyUp(event, costSettingsCallback, [cost])}> 
+                    <input type='checkbox' id={'cost=' + cost} class='settings_input' name='ground_equipment_type'
+                    on:click={()=>costSettingsCallback(cost)} on:keyup={event => keyUp(event, costSettingsCallback, [cost])}>
+                    <label class='settings_button' for={'cost=' + cost}> 
                         {cost}
                     </label>
                 {/each}
@@ -177,52 +167,52 @@ function keyVarToggle(event, variable, state) {
         {:else if $activeTab == 'Personal Traits'}
             <p class='settings_header'>Trait Type:</p>
             <div class='button_group'>
-                <input type='checkbox'  id='type_personal' class ='settings_input' name='type'>
-                <label class='settings_button' for='type_personal' title='Includes Personal Traits when activated'
-                on:click={()=>typeSettingsCallback('personal')} on:keyup={event => keyUp(event, typeSettingsCallback, ['personal'])}>
+                <input type='checkbox'  id='type_personal' class ='settings_input' name='type'
+                on:click={() => typeSettingsCallback('personal')} on:keyup={event => keyUp(event, typeSettingsCallback, ['personal'])}>
+                <label class='settings_button' for='type_personal' title='Includes Personal Traits when activated'>
                     Personal
                 </label>
-                <input type='checkbox' id='type_rep' class='settings_input' name='type'>
-                <label class='settings_button' for='type_rep' title='Includes Reputation Traits when activated'
+                <input type='checkbox' id='type_rep' class='settings_input' name='type'
                 on:click={()=>typeSettingsCallback('rep')} on:keyup={event => keyUp(event, typeSettingsCallback, ['rep'])}>
+                <label class='settings_button' for='type_rep' title='Includes Reputation Traits when activated'>
                     Reputation
                 </label>
-                <input type='checkbox'  id='type_active_rep' class ='settings_input' name='type'>
-                <label class='settings_button' for='type_active_rep' title='Includes Active Reputation Traits when activated'
+                <input type='checkbox'  id='type_active_rep' class ='settings_input' name='type'
                 on:click={()=>typeSettingsCallback('active_rep')} on:keyup={event => keyUp(event, typeSettingsCallback, ['active_rep'])}>
+                <label class='settings_button' for='type_active_rep' title='Includes Active Reputation Traits when activated'>
                     Active Reputation
                 </label>    
             </div>
 
             <p class='settings_header'>Trait Environment:</p>
             <div class='button_group'>
-                <input type='checkbox' id='env_space' class='settings_input' name='env'>
-                <label class='settings_button' for='env_space' title='Includes Space Traits when activated'
-                on:click={()=>envSettingsCallback('space')} on:keyup={event => keyUp(event, envSettingsCallback, ['space'])}>
+                <input type='checkbox' id='env_space' class='settings_input' name='env'
+                on:click={() => envSettingsCallback('space')} on:keyup={event => keyUp(event, envSettingsCallback, ['space'])}>
+                <label class='settings_button' for='env_space' title='Includes Space Traits when activated'>
                     Space
                 </label>
-                <input type='checkbox'  id='env_ground' class ='settings_input' name='env'>
-                <label class='settings_button' for='env_ground'  title='Includes Ground Traits when activated'
-                on:click={()=>envSettingsCallback('ground')} on:keyup={event => keyUp(event, envSettingsCallback, ['ground'])}>
+                <input type='checkbox'  id='env_ground' class ='settings_input' name='env'
+                on:click={() => envSettingsCallback('ground')} on:keyup={event => keyUp(event, envSettingsCallback, ['ground'])}>
+                <label class='settings_button' for='env_ground'  title='Includes Ground Traits when activated'>
                     Ground
                 </label>    
             </div>
 
             <p class='settings_header'>Trait Availability:</p>
             <div class='button_group'>
-                <input type='checkbox'  id='av_innate' class ='settings_input' name='type'>
-                <label class='settings_button' for='av_innate' title='Includes species specific and exclusive Traits when activated -- each species has one of those and it cannot be unslotted'
+                <input type='checkbox'  id='av_innate' class ='settings_input' name='type'
                 on:click={()=>avSettingsCallback('innate')} on:keyup={event => keyUp(event, avSettingsCallback, ['innate'])}>
+                <label class='settings_button' for='av_innate' title='Includes species specific and exclusive Traits when activated -- each species has one of those and it cannot be unslotted'>
                     Innate
                 </label>
-                <input type='checkbox' id='av_species' class='settings_input' name='type'>
-                <label class='settings_button' for='av_species' title='Includes Traits available to the respective species by default'
+                <input type='checkbox' id='av_species' class='settings_input' name='type'
                 on:click={()=>avSettingsCallback('species')} on:keyup={event => keyUp(event, avSettingsCallback, ['species'])}>
+                <label class='settings_button' for='av_species' title='Includes Traits available to the respective species by default'>
                     Species
                 </label>
-                <input type='checkbox'  id='av_rest' class ='settings_input' name='type'>
-                <label class='settings_button' for='av_rest' title='Includes Traits available from Lockboxes, Missions, Recruitment Events and Traits unlocked by default depending on the player characters profession'
+                <input type='checkbox'  id='av_rest' class ='settings_input' name='type'
                 on:click={()=>avSettingsCallback('other')} on:keyup={event => keyUp(event, avSettingsCallback, ['other'])}>
+                <label class='settings_button' for='av_rest' title='Includes Traits available from Lockboxes, Missions, Recruitment Events and Traits unlocked by default depending on the player characters profession'>
                     Obtainable
                 </label>     
             </div>
@@ -241,9 +231,8 @@ function keyVarToggle(event, variable, state) {
             <p class='settings_header'>Equipment Slot:</p>
             <div class='button_group'>
                 {#each equipment_types_ground as type}
-                    <input type='checkbox' id={'ground_type='+type} class='settings_input' name='ground_equipment_type'>
-                    <label class='settings_button' for={'ground_type='+type} title={'Includes '+getDisplayType(type)+' Items'}
-                    on:click={()=>groundTypeSettingsCallback(type)} on:keyup={event => keyUp(event, groundTypeSettingsCallback, [type])}> 
+                    <input type='checkbox' id={'ground_type='+type} class='settings_input' name='ground_equipment_type' on:click={() => groundTypeSettingsCallback(type)} on:keyup={event => keyUp(event, groundTypeSettingsCallback, [type])}>
+                    <label class='settings_button' for={'ground_type=' + type} title={'Includes '+getDisplayType(type)+' Items'}> 
                         {getDisplayType(type)}
                     </label>
                 {/each}
@@ -252,9 +241,9 @@ function keyVarToggle(event, variable, state) {
             <p class='settings_header'>Default Rarity:</p>
             <div class='button_group'>
                 {#each rarities as rarity}
-                    <input type='checkbox' id={'ground_rarity='+rarity} class='settings_input' name='ground_rarity'>
-                    <label class='settings_button' for={'ground_rarity='+rarity} on:click={()=>raritySettingsCallback(rarity)} title={'Includes '+rarity+' Items'}
-                        on:keyup={event => keyUp(event, raritySettingsCallback, [rarity])}>
+                    <input type='checkbox' id={'ground_rarity='+rarity} class='settings_input' name='ground_rarity'
+                    on:keyup={event => keyUp(event, raritySettingsCallback, [rarity])} on:click={() => raritySettingsCallback(rarity)} title={'Includes '+rarity+' Items'}>
+                    <label class='settings_button' for={'ground_rarity='+rarity}>
                         {rarity}
                     </label>
                 {/each}
@@ -262,10 +251,12 @@ function keyVarToggle(event, variable, state) {
 
             <p class='settings_header'>Search Descriptions:</p>
             <div class='button_group'>
-                <input type='radio' class='settings_input' id='ground_desc_false' name='ground_desc' checked>
-                <label class='settings_button' for='ground_desc_false' on:click={()=>$settings_search_desc=false} on:keyup={event => keyVarToggle(event, $settings_search_desc, false)}>Disabled</label>
-                <input type='radio' class='settings_input' id='ground_desc_true' name='ground_desc'>
-                <label class='settings_button' for='ground_desc_true' on:click={()=>$settings_search_desc=true} on:keyup={event => keyVarToggle(event, $settings_search_desc, true)}>Enabled</label>
+                <input type='radio' class='settings_input' id='ground_desc_false' name='ground_desc' checked
+                on:click={()=>$settings_search_desc=false} on:keyup={event => keyVarToggle(event, $settings_search_desc, false)}>
+                <label class='settings_button' for='ground_desc_false'>Disabled</label>
+                <input type='radio' class='settings_input' id='ground_desc_true' name='ground_desc'
+                on:click={()=>$settings_search_desc=true} on:keyup={event => keyVarToggle(event, $settings_search_desc, true)}>
+                <label class='settings_button' for='ground_desc_true'>Enabled</label>
             </div>
 
             <hr/>
@@ -275,9 +266,9 @@ function keyVarToggle(event, variable, state) {
             <p class='settings_header'>Equipment Slot:</p>
             <div class='button_group'>
                 {#each equipment_types_space as type}
-                    <input type='checkbox' id={'space_type='+type} class='settings_input' name='space_equipment_type'>
-                    <label class='settings_button' for={'space_type='+type} title={'Includes '+getDisplayType(type)+' Items'}
-                    on:click={()=>spaceTypeSettingsCallback(type)} on:keyup={event => keyUp(event, spaceTypeSettingsCallback, [type])}> 
+                    <input type='checkbox' id={'space_type='+type} class='settings_input' name='space_equipment_type'
+                    on:click={()=>spaceTypeSettingsCallback(type)} on:keyup={event => keyUp(event, spaceTypeSettingsCallback, [type])}>
+                    <label class='settings_button' for={'space_type='+type} title={'Includes '+getDisplayType(type)+' Items'}> 
                         {getDisplayType(type)}
                     </label>
                 {/each}
@@ -286,9 +277,9 @@ function keyVarToggle(event, variable, state) {
             <p class='settings_header'>Default Rarity:</p>
             <div class='button_group'>
                 {#each rarities as rarity}
-                    <input type='checkbox' id={'space_rarity='+rarity} class='settings_input' name='space_rarity'>
-                    <label class='settings_button' for={'space_rarity='+rarity} title={'Includes '+rarity+' Items'}
-                    on:click={()=>raritySettingsCallback(rarity)} on:keyup={event=>keyUp(event, raritySettingsCallback, [rarity])}> 
+                    <input type='checkbox' id={'space_rarity='+rarity} class='settings_input' name='space_rarity'
+                    on:click={() => raritySettingsCallback(rarity)} on:keyup={event => keyUp(event, raritySettingsCallback, [rarity])}>
+                    <label class='settings_button' for={'space_rarity='+rarity} title={'Includes '+rarity+' Items'}> 
                         {rarity}
                     </label>
                 {/each}
@@ -296,10 +287,12 @@ function keyVarToggle(event, variable, state) {
 
             <p class='settings_header'>Search Descriptions:</p>
             <div class='button_group'>
-                <input type='radio' class='settings_input' id='space_desc_false' name='space_desc' checked>
-                <label class='settings_button' for='space_desc_false' on:click={()=>$settings_search_desc=false} on:keyup={event => keyVarToggle(event, $settings_search_desc, false)}>Disabled</label>
-                <input type='radio' class='settings_input' id='space_desc_true' name='space_desc'>
-                <label class='settings_button' for='space_desc_true' on:click={()=>$settings_search_desc=true} on:keyup={event => keyVarToggle(event, $settings_search_desc, false)}>Enabled</label>
+                <input type='radio' class='settings_input' id='space_desc_false' name='space_desc' checked
+                on:click={() => $settings_search_desc=false} on:keyup={event => keyVarToggle(event, $settings_search_desc, false)}>
+                <label class='settings_button' for='space_desc_false'>Disabled</label>
+                <input type='radio' class='settings_input' id='space_desc_true' name='space_desc'
+                on:click={() => $settings_search_desc=true} on:keyup={event => keyVarToggle(event, $settings_search_desc, false)}>
+                <label class='settings_button' for='space_desc_true'>Enabled</label>
             </div>
         
             <hr/>
@@ -309,36 +302,31 @@ function keyVarToggle(event, variable, state) {
         <!-- Card Size Setting -- for all tabs -->
         <p class='settings_header'>Card size:</p>
         <div class='button_group'>
-            <input type='radio' class='settings_input' id='size_small' name='size'>
-            <label class='settings_button' for='size_small' on:click={()=>sizeSettingsCallback('small')} on:keyup={event => keyUp(event, sizeSettingsCallback, ['small'])}>Small</label>
-            <input type='radio' class='settings_input' id='size_medium'name='size' checked>
-            <label class='settings_button' for='size_medium' on:click={()=>sizeSettingsCallback('medium')} on:keyup={event => keyUp(event, sizeSettingsCallback, ['medium'])}>Medium</label>
-            <input type='radio' class='settings_input'  id='size_large' name='size'>
-            <label class='settings_button' for= 'size_large' on:click={()=>sizeSettingsCallback('large')} on:keyup={event => keyUp(event, sizeSettingsCallback, ['large'])}>Large</label>
+            <input type='radio' class='settings_input' id='size_small' name='size'
+            on:click={()=>sizeSettingsCallback('small')} on:keyup={event => keyUp(event, sizeSettingsCallback, ['small'])}>
+            <label class='settings_button' for='size_small'>Small</label>
+            <input type='radio' class='settings_input' id='size_medium'name='size' checked
+            on:click={()=>sizeSettingsCallback('medium')} on:keyup={event => keyUp(event, sizeSettingsCallback, ['medium'])}>
+            <label class='settings_button' for='size_medium'>Medium</label>
+            <input type='radio' class='settings_input'  id='size_large' name='size'
+            on:click={()=>sizeSettingsCallback('large')} on:keyup={event => keyUp(event, sizeSettingsCallback, ['large'])}>
+            <label class='settings_button' for= 'size_large'>Large</label>
         </div>
 
         <!-- Mobile Page Setting -- for all tabs -->
 
         <p class='settings_header'>Mobile Website:</p>
         <div class='button_group'>
-            <input type='radio' class='settings_input' id='mobile_auto' name='mobile' checked>
-            <label class='settings_button' for='mobile_auto' on:click={()=>$mobile_override='auto'} on:keyup={event => keyVarToggle(event, $mobile_override, 'auto')}>Auto</label>
-            <input type='radio' class='settings_input' id='mobile_mobile' name='mobile'>
-            <label class='settings_button' for='mobile_mobile' on:click={()=>$mobile_override='mobile'} on:keyup={event => keyVarToggle(event, $mobile_override, 'mobile')}>Mobile Website</label>
-            <input type='radio' class='settings_input' id='mobile_pc' name='mobile'>
-            <label class='settings_button' for='mobile_pc' on:click={()=>$mobile_override='pc'} on:keyup={event => keyVarToggle(event, $mobile_override, 'pc')}>Desktop Website</label>
-        </div>
-
-        <!-- Dev Mode Setting -- for all tabs -->
-        <hr class='pale'/>
-        <p class='settings_header pale'>Maintenance Mode:</p>
-        <div class='button_group'>
-            <input type='radio' class='settings_input' id='dev_mode_dis' name='mobile' checked>
-            <label class='settings_button pale' id='dev_label_dis' for='dev_mode_dis' on:click={()=>$dev_mode=false} on:keyup={event => keyVarToggle(event, $dev_mode, false)}>Disabled</label>
-            <input type='radio' class='settings_input' id='dev_mode_en' name='mobile'>
-            <label class='settings_button pale' id='dev_label_en' for='dev_mode_en' on:click={()=>enableDevModeCallback()} on:keyup={event => enableDevModeCallback(event)}>Enabled</label>
-        </div>
-        
+            <input type='radio' class='settings_input' id='mobile_auto' name='mobile' checked
+            on:click={()=>$mobile_override='auto'} on:keyup={event => keyVarToggle(event, $mobile_override, 'auto')}>
+            <label class='settings_button' for='mobile_auto'>Auto</label>
+            <input type='radio' class='settings_input' id='mobile_mobile' name='mobile'
+            on:click={()=>$mobile_override='mobile'} on:keyup={event => keyVarToggle(event, $mobile_override, 'mobile')}>
+            <label class='settings_button' for='mobile_mobile'>Mobile Website</label>
+            <input type='radio' class='settings_input' id='mobile_pc' name='mobile'
+            on:click={()=>$mobile_override='pc'} on:keyup={event => keyVarToggle(event, $mobile_override, 'pc')}>
+            <label class='settings_button' for='mobile_pc'>Desktop Website</label>
+        </div>        
     </div>
 
     <!-- Footer present on all tabs at the bottom of the settings sidebar -->
@@ -367,24 +355,6 @@ function keyVarToggle(event, variable, state) {
 </div>
 
 <style>
-    .pale {
-        opacity: 20%;
-    }
-    .settings_input:checked+#dev_label_dis {
-        color: var(--light-text) !important;
-        border-color: var(--light-text) !important;
-        background-color: rgba(0,0,0,0) !important;
-    }
-    #dev_label_en {
-        color: rgb(255, 0, 0) !important;
-        border-color: rgb(255, 0, 0) !important;
-        background-color: rgba(255, 0, 0, .2) !important;
-    }
-    .settings_input:checked+#dev_label_en {
-        color: rgb(255, 255, 255) !important;
-        border-color: rgb(255, 255, 255) !important;
-        background-color: rgba(255, 0, 0, 1) !important;
-    }
     .settings_div {
         background-color: var(--dark-background-hover);
         position: absolute;
@@ -417,7 +387,7 @@ function keyVarToggle(event, variable, state) {
     .seperator {
         background-color: var(--gray-text);
         height: calc(0.02*var(--aside-image-width));
-        margin: 0 var(--gutter) 0 var(--gutter);
+        margin: 0 var(--gutter) var(--gutter) var(--gutter);
         padding: 0;
     }
     .button_group {
@@ -474,6 +444,7 @@ function keyVarToggle(event, variable, state) {
         font-size: 70%;
         color: var(--light-text);
         margin-bottom: calc(.5*var(--gutter));
+        margin-top: 0;
     }
     .link_icon {
         margin: calc(.5*var(--border));

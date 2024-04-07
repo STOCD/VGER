@@ -2,6 +2,12 @@ import { writable } from 'svelte/store';
 
 export const activeTab = writable('Visual Glossary for Easy Reference');
 
+export const starship_traits_ready = writable(false);
+
+export const equipment_ready = writable(false);
+
+export const personal_traits_ready = writable(false);
+
 export const activeCard = writable('');
 
 export const srcValue = writable('');
@@ -11,8 +17,6 @@ export const filtered = writable([]);
 export const item_iterator = writable({});
 
 export const active_settings = writable(false);
-
-export const current_list = writable('');
 
 export const settings_cost = writable([]);
 
@@ -41,9 +45,3 @@ export const mobile_menu_active = writable(false);
 export const mobile_sidebar_active = writable(false);
 
 export const mobile_description = writable('');
-
-export const load_progress = writable(0);
-
-export const dev_mode = writable(false);
-
-export const wiki_url = 'https://stowiki.net/wiki/';

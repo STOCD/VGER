@@ -1,22 +1,24 @@
 <script>
 
-import {srcValue, filtered, activeTab, mobile, mobile_description} from '$lib/stores';
-import {matchSorter} from 'match-sorter';
+import { srcValue, filtered, activeTab, mobile, mobile_description } from '$lib/stores';
+import { matchSorter } from 'match-sorter';
+import { onMount } from 'svelte';
 
 export let acr;
 const acronyms = acr;
 let currentLink = null;
 
 // bind search string to filter module
-srcValue.subscribe( () => {
-    if ($activeTab == 'Acronyms') {
-        filtered.set(matchSorter(acronyms, $srcValue, {keys : ['acr', 'term', 'desc']}));
-    if (document) {
-        let div1 = document.getElementById('div1')
-        if (div1 != null) {
-            div1.scrollTop = 0;
-    }}
-}
+onMount( () => {
+    srcValue.subscribe( () => {
+        if ($activeTab == 'Acronyms') {
+            filtered.set(matchSorter(acronyms, $srcValue, {keys : ['acr', 'term', 'desc']}));
+            let div1 = document.getElementById('div1')
+            if (div1 != null) {
+                div1.scrollTop = 0;
+            }
+        }
+    });
 });
 
 // handles click on row

@@ -1,6 +1,6 @@
 <script>
-  import { activeCard, activeTab, wiki_url, mobile, mobile_sidebar_active, dev_mode, current_list} from '$lib/stores';
-  import { compensate_wiki_description, rarities } from '$lib/fetch/masterfetch';
+  import { activeCard, activeTab, mobile, mobile_sidebar_active} from '$lib/stores';
+  import { compensate_wiki_description, rarities, wikihttp } from '$lib/fetch/constants';
 
   // shows chain icon
   function showLinkIcon(e, id) {
@@ -15,10 +15,10 @@
   // gets wiki page link
   function getLink(type, name) {
     if (type == 'trait') {
-      return wiki_url+'Trait:_'+name.replaceAll(' ','_')
+      return wikihttp + 'Trait:_' + name.replaceAll(' ','_');
     }
     else if (type == 'none') {
-      return wiki_url+name.replaceAll(' ','_')
+      return wikihttp + name.replaceAll(' ','_');
     }
   }
 
@@ -39,12 +39,6 @@
     text = text.replaceAll('<li>', '<li class="infobox_li">');
     text = text.replaceAll('<ul>', '<ul class="infobox_ul">');
     return text;
-  }
-
-  function refresh_image(image) {
-    const this_type = $current_list;
-    const this_name = image.split('/').pop();
-    fetch(`api/images?image=${this_name}&type=${this_type}&force=${'1'}`, {method: 'PUT'}).then(res => alert(`Image refresh status: ${res.status}`))
   }
 </script>
 
@@ -190,12 +184,6 @@
     {/if}
 
   </div>
-
-  {#if $dev_mode}
-    <div class='close_div'>
-      <button id='refr_image' class='close_button' on:click={()=>refresh_image($activeCard.image)}>Refresh Image</button>
-    </div>
-  {/if}
 
   <!-- Close Button for Mobile Page-->
   {#if $mobile}

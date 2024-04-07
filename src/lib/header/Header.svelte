@@ -1,113 +1,160 @@
 <script>
-  import { activeTab, srcValue, active_settings, current_list, activeCard, settings_env, settings_type, settings_av, settings_ground_slot, settings_space_slot, settings_rarity, mobile, mobile_menu_active, mobile_sidebar_active, settings_search_desc, load_progress
-  } from '$lib/stores';
-  import HamburgerIcon from './HamburgerIcon.svelte';
-  import {slide} from 'svelte/transition';
-
-  const tabs = ['Starship Traits', 'Space Equipment', 'Ground Equipment', 'Personal Traits', 'Acronyms'];
-  const lists = {'Starship Traits':'starship_traits', 'Personal Traits':'personal_traits','Space Equipment':'space_equipment', 'Ground Equipment':'ground_equipment','Knowledgebase':''};
-
-  // swaps modules
-  const handleClick = (title) => {
-    if ($activeTab == title) {
-      return
-    }
-    $activeTab = title;
-    $current_list = lists[title];
-    $active_settings = false;
-    $load_progress = 0;
-
-    //close mobile menu and sidebar
-    if ($mobile) {
-      $mobile_menu_active = false;
-    }
-    if ($mobile) {
-      $mobile_sidebar_active = false;
-    }
-
-    //clear filters to prevent de-synchronization with the respective buttons
-    $srcValue = '';
-    $activeCard = '';
-    $settings_env = '';
-    $settings_type = [];
-    $settings_av = [];
-    $settings_ground_slot = [];
-    $settings_space_slot = [];
-    $settings_rarity = [];
-    $settings_search_desc = false;
-  };
+    import {
+        activeTab, srcValue, active_settings, activeCard, settings_env, settings_type,
+        settings_av, settings_ground_slot, settings_space_slot, settings_rarity, mobile,
+        mobile_menu_active, mobile_sidebar_active, settings_search_desc, starship_traits_ready,
+        equipment_ready, personal_traits_ready
+    } from '$lib/stores';
+    import HamburgerIcon from './HamburgerIcon.svelte';
+    import { slide } from 'svelte/transition';
 
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-  };
+    // swaps modules
+    const handleClick = (title) => {
+        if ($activeTab == title) {
+            return
+        }
 
-  // expands settings menu
-  const toggleSettings = (event) => {
-    active_settings.set(!$active_settings);
-    if ($mobile) {
-      $mobile_menu_active = false;
-    }
-    if ($mobile_sidebar_active) {
-      $mobile_sidebar_active = false;
-    }
-  }
+        $activeTab = title;
+        $active_settings = false;
 
-  // expands mobile menu
-  const toggleMenu = () => {
-    $mobile_menu_active = !$mobile_menu_active;
-    if ($active_settings) {
-      $active_settings = false;
+        //close mobile menu and sidebar
+        if ($mobile) {
+            $mobile_menu_active = false;
+        }
+        if ($mobile) {
+            $mobile_sidebar_active = false;
+        }
+
+        //clear filters to prevent de-synchronization with the respective buttons
+        $srcValue = '';
+        $activeCard = '';
+        $settings_env = '';
+        $settings_type = [];
+        $settings_av = [];
+        $settings_ground_slot = [];
+        $settings_space_slot = [];
+        $settings_rarity = [];
+        $settings_search_desc = false;
+    };
+
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+    };
+
+    // expands settings menu
+    const toggleSettings = (event) => {
+        active_settings.set(!$active_settings);
+        if ($mobile) {
+            $mobile_menu_active = false;
+        }
+        if ($mobile_sidebar_active) {
+            $mobile_sidebar_active = false;
+        }
     }
 
-  }  
-
+    // expands mobile menu
+    const toggleMenu = () => {
+        $mobile_menu_active = !$mobile_menu_active;
+        if ($active_settings) {
+            $active_settings = false;
+        }
+    }
 </script>
 
 {#if !$mobile}
-
-  <!-- DESKTOP -->
-  <header>
-    <nav>
-      <ul class='horizontal_list'>
-        {#each tabs as tab, index (index)}
-          <li class ='desktop_li' class:active={$activeTab === tab}>
-            <button class='desktop_button' on:click={() => handleClick(tab)}>{tab}</button>
-          </li>
-        {/each}
-      </ul>
-    </nav>
-    <form on:submit={handleSubmit}>
-      <label for="search" aria-label="search" class="visually-hidden"> Search </label>
-      <input type="text" id="search" bind:value={$srcValue} placeholder="SEARCH" title='search the current tab'/>
-      <button class="hamburger desktop_button" on:click={toggleSettings} title='Settings and Filters (tab-specific)'><HamburgerIcon /></button>
-    </form>
-  </header>
-  <div class='seperator_background'><div class='seperator'></div></div>
+    <!-- DESKTOP -->
+    <header>
+        <nav>
+            <ul class='horizontal_list'>
+                <li class ='desktop_li'>
+                    <button class='desktop_button' class:bt-active={$activeTab === 'Starship Traits'}
+                            disabled='{!$starship_traits_ready}' on:click={() => handleClick('Starship Traits')}>
+                        Starship Traits
+                    </button>
+                </li>
+                <li class ='desktop_li'>
+                    <button class='desktop_button' class:bt-active={$activeTab === 'Space Equipment'}
+                            disabled='{!$equipment_ready}' on:click={() => handleClick('Space Equipment')}>
+                        Space Equipment
+                    </button>
+                </li>
+                <li class ='desktop_li'>
+                    <button class='desktop_button' class:bt-active={$activeTab === 'Ground Equipment'}
+                            disabled='{!$equipment_ready}' on:click={() => handleClick('Ground Equipment')}>
+                        Ground Equipment
+                    </button>
+                </li>
+                <li class ='desktop_li'>
+                    <button class='desktop_button' class:bt-active={$activeTab === 'Personal Traits'}
+                            disabled='{!$personal_traits_ready}' on:click={() => handleClick('Personal Traits')}>
+                        Personal Traits
+                    </button>
+                </li>
+                <li class ='desktop_li'>
+                    <button class='desktop_button' class:bt-active={$activeTab === 'Acronyms'}
+                            on:click={() => handleClick('Acronyms')}>
+                        Acronyms
+                    </button>
+                </li>
+            </ul>
+        </nav>
+        <form on:submit={handleSubmit}>
+            <label for="search" aria-label="search" class="visually-hidden"> Search </label>
+            <input type="text" id="search" bind:value={$srcValue} placeholder="SEARCH" title='search the current tab'/>
+            <button class="hamburger desktop_button" on:click={toggleSettings} title='Settings and Filters (tab-specific)'><HamburgerIcon /></button>
+        </form>
+    </header>
+    <div class='seperator_background'><div class='seperator'></div></div>
 
 {:else}
+    <!-- MOBILE -->
+    <header>
+        <button id='mobile_menu_button' class='desktop_button' on:click={()=>toggleMenu()}>Menu</button>
+        <form class='mobile_form' on:submit={handleSubmit}>
+            <label for="search" aria-label="search" class="visually-hidden"> Search </label>
+            <input type="text" id="search" bind:value={$srcValue} placeholder="SEARCH" title='search the current tab'/>
+            <button class='hamburger desktop_button' on:click={toggleSettings} title='Settings and Filters (tab-specific)'><HamburgerIcon /></button>
+        </form>
+    </header>
 
-  <!-- MOBILE -->
-  <header>
-    <button id='mobile_menu_button' class='desktop_button' on:click={()=>toggleMenu()}>Menu</button>
-    <form class='mobile_form' on:submit={handleSubmit}>
-      <label for="search" aria-label="search" class="visually-hidden"> Search </label>
-      <input type="text" id="search" bind:value={$srcValue} placeholder="SEARCH" title='search the current tab'/>
-      <button class='hamburger desktop_button' on:click={toggleSettings} title='Settings and Filters (tab-specific)'><HamburgerIcon /></button>
-    </form>
-  </header>
-
-  {#if $mobile_menu_active}
-    <div id='mobile_menu' transition:slide>
-      <ul class='vertical_list'>
-        {#each tabs as tab, index (index)}
-          <li class='mobile_li' class:active={$activeTab === tab}>
-            <button class='mobile_button' on:click={() => handleClick(tab)}>{tab}</button>
-          </li>
-        {/each}
-      </ul>
-    </div>
-  {/if}
+    {#if $mobile_menu_active}
+        <div id='mobile_menu' transition:slide>
+            <ul class='vertical_list'>
+                <li class ='mobile_li'>
+                    <button class='mobile_button' class:bt-active={$activeTab === 'Starship Traits'}
+                            disabled='{!$starship_traits_ready}' on:click={() => handleClick('Starship Traits')}>
+                        Starship Traits
+                    </button>
+                </li>
+                <li class ='mobile_li'>
+                    <button class='mobile_button' class:bt-active={$activeTab === 'Space Equipment'}
+                            disabled='{!$equipment_ready}' on:click={() => handleClick('Space Equipment')}>
+                        Space Equipment
+                    </button>
+                </li>
+                <li class ='mobile_li'>
+                    <button class='mobile_button' class:bt-active={$activeTab === 'Ground Equipment'}
+                            disabled='{!$equipment_ready}' on:click={() => handleClick('Ground Equipment')}>
+                        Ground Equipment
+                    </button>
+                </li>
+                <li class ='mobile_li'>
+                    <button class='mobile_button' class:bt-active={$activeTab === 'Personal Traits'}
+                            disabled='{!$personal_traits_ready}' on:click={() => handleClick('Personal Traits')}>
+                        Personal Traits
+                    </button>
+                </li>
+                <li class ='mobile_li'>
+                    <button class='mobile_button' class:bt-active={$activeTab === 'Acronyms'}
+                            on:click={() => handleClick('Acronyms')}>
+                        Acronyms
+                    </button>
+                </li>
+            </ul>
+        </div>
+    {/if}
 
 {/if}
 
@@ -156,6 +203,9 @@
     margin: 0;
     list-style: none;
   }
+  .bt-active {
+text-decoration: underline !important;
+  }
   .mobile_li,
   .desktop_li,
   .desktop_button {
@@ -172,6 +222,7 @@
     border: calc(.1*var(--gutter)) solid var(--dark-background);
     margin-bottom: var(--border);
     border-radius: var(--gutter);
+    text-decoration: none;
     text-transform: uppercase;
     font-weight: bold;
     font-size: 85%;
@@ -180,6 +231,7 @@
     background-color: var(--dark-background);
     color: var(--light-text);
     border: none;
+    text-decoration: none;
     text-transform: uppercase;
     font-weight: bold;
     width: 100%;

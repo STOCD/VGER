@@ -1,47 +1,72 @@
 <script>
-  import { onMount } from 'svelte';
-  import { activeTab, current_list, mobile, mobile_auto, mobile_override} from '$lib/stores';
-  import Header from '$lib/header/Header.svelte';
-  import Grid from '$lib/grid/Grid.svelte';
-  import Acronyms from '$lib/acronyms/Acronyms.svelte';
-  import Sidebar from '$lib/sidebar/Sidebar.svelte';
-  import Settings from '$lib/settings/Settings.svelte';
-  import MobileSidebar from '$lib/sidebar/MobileSidebar.svelte';
+    import { onMount } from 'svelte';
+    import { 
+        activeTab, mobile, mobile_auto, mobile_override, starship_traits_ready,
+        equipment_ready, personal_traits_ready
+    } from '$lib/stores';
+    import Header from '$lib/header/Header.svelte';
+    import Grid from '$lib/grid/Grid.svelte';
+    import Acronyms from '$lib/acronyms/Acronyms.svelte';
+    import Sidebar from '$lib/sidebar/Sidebar.svelte';
+    import Settings from '$lib/settings/Settings.svelte';
+    import MobileSidebar from '$lib/sidebar/MobileSidebar.svelte';
 
-  // recieves data from load function
-  export let data;
+    // recieves data from load function
+    export let data;
+    const acr = data.acronyms;
+    let starship_trait_data = [];
+    let space_equipment_data = [];
+    let ground_equipment_data = [];
+    let personal_trait_data = [];
 
-  const card_data = data[0];
-  const acr = data[1].content;
- 
-  // viewport height
-  let vh = 0;
+    // viewport height
+    let vh = 0;
 
-  //default tab
-  $current_list = 'starship_traits';
-  $activeTab = 'Starship Traits';
-  
-  onMount(() => {
+    //default tab
+    $activeTab = 'Acronyms';
+
+    onMount(() => {
     // test whether user is on mobile device
     $mobile_auto = navigator.userAgent.toLowerCase().indexOf('mobi') != -1;
 
     // set viewport height
     vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`)
-  });
 
-  // makes sure the app is always in the right mode: Desktop / Mobile
-  $: {
+    fetch('api/starshiptraits').then(response => response.json()).then(
+        obj => {
+            starship_trait_data = obj.starship_traits;
+            $starship_traits_ready = true;
+        }
+    ).catch(err => console.log(err));
+    fetch('api/traits').then(response => response.json()).then(
+        obj => {
+            personal_trait_data = obj.personal_traits;
+            $personal_traits_ready = true;
+        }
+    ).catch(err => console.log(err));
+    fetch('api/equipment').then(response => response.json()).then(
+        obj => {
+            space_equipment_data = obj.space_equipment;
+            ground_equipment_data = obj.ground_equipment;
+            $equipment_ready = true;
+        }
+    ).catch(err => console.log(err));
+
+    });
+
+    // makes sure the app is always in the right mode: Desktop / Mobile
+    $: {
     if ($mobile_override === 'auto') {
-      $mobile = $mobile_auto;
+        $mobile = $mobile_auto;
     }
     else {
-      let new_mobile = $mobile_override == 'pc' ? false : true;
-      if (new_mobile != $mobile) {
-        $mobile = new_mobile;
-      }
+        let new_mobile = $mobile_override == 'pc' ? false : true;
+        if (new_mobile != $mobile) {
+            $mobile = new_mobile;
+        }
     }
-  }
+    }
 </script>
 
 <style>
@@ -90,28 +115,28 @@
   {#if $activeTab == 'Acronyms'}
     <Acronyms {acr} />
   {:else if $activeTab == 'Starship Traits'}
-    <Grid {card_data}/>
+    <Grid data={starship_trait_data}/>
     {#if !$mobile}
       <aside>
         <Sidebar/>
       </aside>
     {/if}
   {:else if $activeTab == 'Personal Traits'}
-    <Grid {card_data}/>
+    <Grid data={personal_trait_data}/>
     {#if !$mobile}
       <aside>
         <Sidebar/>
       </aside>
     {/if}
   {:else if $activeTab == 'Space Equipment'}
-    <Grid {card_data}/>
+    <Grid data={space_equipment_data}/>
     {#if !$mobile}
       <aside>
         <Sidebar/>
       </aside>
     {/if}
   {:else if $activeTab == 'Ground Equipment'}
-    <Grid {card_data}/>
+    <Grid data={ground_equipment_data}/>
     {#if !$mobile}
       <aside>
         <Sidebar/>
