@@ -1,3 +1,5 @@
+# This branch is a copy of the main branch with changed adapter settings to allow for a direct deployment to netlify. So not merge this branch.
+
 # VGER
 ## About
 
