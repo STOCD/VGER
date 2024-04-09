@@ -1,43 +1,77 @@
 # VGER
-A web based STO visual glossary. <br>
+## About
+
+VGER (**V**isual **G**lossary for **E**asy **R**eference) is a web-based glossary for Star Trek Online.<br>
 APP: https://vger.netlify.app <br>
 Website: https://stobuilds.com/VGER <br>
-<i>At a point in the future I might add a file that describes the structure of the project</i>
-
-## Running locally
-
-```bash
-git clone git@github.com:STOCD/VGER.git
-cd VGER
-npm install
-npm run dev # localhost:5173
-```
-Instead of gloning the repository you can also download it as zip and unpack it.
-
-## Building
-
-```bash
-npm run build
-npm run preview # localhost:4173
-```
-VGER is directly deployed from the main branch to netlify. Building does not have to be done manually; netlify does that for us.
 
 ## Functionality
-VGER consists of five modules: Four Visual Glossary modules for Starship and Ground Traits as well as for  Space and Ground Equipment. Number five is an acronym list for STO-specific acronyms. Each of the visual Glossary sections shows you an image grid with all items of the respective category. Because that's still too much to find a specific item in, I highly encourage to use the filters on the settings menu. You can open it with the hamburger button (three horizontal bars on top of each other) on the rightmost edge of the menu bar. For each module there are some filters you can apply; wherever it makes sense you can even apply multiple filters of the same category. Not applying any filter shows the whole list. 
+VGER consists of five modules: Four Visual Glossary modules for Starship and Personal Traits as well as for  Space and Ground Equipment. Number five is an acronym list for STO-specific acronyms. Each of the visual Glossary sections shows you an image grid with all items of the respective category. Because that's still too much to find a specific item in, it is highly encouraged to use the filters on the settings menu, which is opened with the hamburger button (three horizontal bars on top of each other) on the rightmost edge of the menu bar. For each module there are several filters available; it is possible to mix and match the filters. Not applying any filter shows the entire list. 
 
-You can click on any of the cards to open the infobox, that shows about the same information you see when hovering over the item ingame. On VGER the title of any infobox is also a link to the respective wiki page, where you can find more detailed information. A starship traits infobox also shows a list of the ships it is obtained from, which can also be clicked to open the wiki page of that ship.
-Another important feature is the search bar. It works in any of the modules and allows you to search for a specific item. In the starship traits section it also automatically searches for the ship names, so typing in a ship's name shows you the trait it comes with. In the other modules it just searches the titles by default, but you can enable searching the descriptions in the settings. This is especially useful if you want to find every console there is that provides a specific stat.
-One thing that is not included is a module for Bridge Officer Abilities. While there are quite a lot of them, the wiki has a much better way of presenting them than VGER. On the Boff and kit abilities page there are tables for each profession and specialization with the specific ability's image, at which ranks it is available and how it is obtained. On that page you can also find kit abilities, but those are also represented on VGER through the Kit modules that grant them.
+Clicking on any of the cards opens the infobox, that shows about the same information you see when hovering over the item ingame. On VGER the title of any infobox is also a link to the respective wiki page, where you can find more detailed information. A starship traits infobox also shows a the cost of the trait as well as a list of the ships it is obtained from, which can also be clicked to open the wiki page of that ship.
 
-## Automation & API
-Constantly there are items added to the game. Manually adding them to VGER would be a tedious task. Luckily there is a source that provides all the data I need, and people that keep it up to date. The STO Wiki. With that in mind, couldn't you just automatically pull the data from the wiki? I can; that's what this final version is all about.
-### The Data
-Sould I put in a paragraph to explain a backend that nobody cares about? I guess I have to commend myself a bit with this, given that this is the most important feature from my point of view.
-The STO Wiki implements a fandom distributed interface called 'Cargo Tables'. This does nothing else than creating a table including all the templates of one kind there are on the wiki. For example there is an Infobox template, that has a number of fields. If you use it to create an infobox, the data you inserted will also show up in the Cargo Table: Infoboxes. The wiki has a lot of such cargo tables, but only three are interesting to me. I (in fact anybody) can download those directly from the wiki, formatted as json file. For VGER they are downloaded by an API (Application Programming Interface) that runs on the same server as VGER. It then extracts the data VGER needs from the tables and formats them in a way that is most efficient for VGER. Whenever somebody opens the url, it requests the data from this API and opens the app. Once the app completely loaded, it sends an asynchronous request to update the data on the API in case there were new items added. Only once every 24h it actually refreshes the data to reduce superfluous network traffic. The initial data request takes anywhere between 0.5 and 3 seconds. In the future I will tweak this a bit to improve the overall performance.
-If you're interested in the data, you can call the API yourself to see the data:<br>
-https://vger.netlify.app/api - For the refined dataset<br>
-https://vger.netlify.app/api?t=1 - For the time of the last data refresh<br>
-https://vger.netlify.app/api?t=2 - For the used Cargo Queries<br>
-### The images
-Bread and Butter of VGER.
-Sometimes there might be some images missing. This usually happens due to inconsistent naming between the image files and the infoboxes on the wiki (and in case of the Winter Wonderland items because quotes are not allowed charcters in filenames). If that's the case you can contact me on the STOBuilds Discord in the #vger-support channel (link at the top). 
+The search bar works for all five modules, but in slightly different ways. In the Acronym module it searches the acronym, term and description fields. In the Starship and Personal Traits module it searches titles and descriptions likewise. Searching for a starship also shows the trait(s) it comes with. The Equipment modules are only title-searched by default, but searching descriptions can be enabled in the settings. *On all five modules, searching for an acronym will also show the respective item.*
+
+# Environment variables
+
+Following environment variables should be set:
+```
+# Docker config
+VGER_DATA_FOLDER_PATH=./vger_data
+VGER_PORT=47
+VGER_VERSION=2.0.0
+
+# app config
+VITE_DATA_FOLDER_PATH=/vger_data
+```
+*The shown values are example values that work, but might not yield the desired result.*
+
+- `VGER_DATA_FOLDER_PATH` sets the path of the cache folder on the host (when deploying with docker)
+- `VGER_PORT` sets the port that the app will be accessible through from the outside (when deploying with docker)
+- `VGER_VERSION` is used to tag the docker image (when deploying with docker)
+- `VITE_DATA_FOLDER_PATH` sets the path that the app uses to cache the data when deploying with docker this path is inside the container
+    - for development it is recommended to use `./vger_data` to keep data and app close
+    - for deployment with docker this is the path to the cache folder *inside* the container and it must be an absolute path
+
+# Development
+
+Make sure to install an adequate version of Node.js first (^v20.[...].[...]). Download or clone the repository. Run the following commands:
+- Installation: `npm install`
+- Running the development server: `npm run dev` -> open the specified location in your browser to see the current result
+The development server is reactive, meaning it will instantly update any saved changes to the apps source code while running.
+
+# Deploying
+## Building & Preview
+
+To build the app, first make sure to set the correct adapter in `svelte.config.js`. Change the adapter name in the first line to `adapter-node` when deploying via Docker or to `adapter-netlify` when deploying to netlify.
+- run `npm run build` to build the app
+- run `npm run preview` and open the specified location in your browser to see a local preview of your built app
+
+## Docker
+
+- download or clone the repository to the host machine
+- change the adapter to `adapter-node`
+- create an enviroment variables file and populate it
+    - make sure the specified data folder exists
+
+- run `docker-compose up -d` to build and launch the app
+- run `docker-compose down` to stop and delete the app
+- run `docker-compose start -d` to launch the app in case it has already been built
+- run `docker-compose stop` to stop the running app without deleting it
+
+## Netlify
+*Currently, VGER is being deployed to netlify from the `netlify-deploy` branch.*
+- change the adapter to `adapter-netlify`
+- create a new site on the netlify website
+- set the environment variables in the netlify dashboard
+- select the correct node version in the netlify dahboard
+- select the repository and branch to pull from
+    - if the build doesn't work by default, make sure that the build command is `npm run build` and the publish directory `build`.
+
+# API
+
+Four APIs are used by the app to retrieve its data; those are also accessible from the outside:
+- `/acronyms` -> returns json data containing the acronyms and their terms and descriptions
+- `/api/starshiptraits`, `/api/traits`, `/api/equipment` -> returns data for the respective module
+    - parameter `query` can be set to `source` to retrieve the cargo queries used to get the data from the wiki; not supplying it or setting it to `data` returns the data
+    - parameter `override` can be set to `fresh` to return a newly created version of the data or to `cached` to return the cached dataset; not supplying it returns the cached data, but also updates the cache if the data is older than one day

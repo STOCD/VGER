@@ -11,7 +11,7 @@ export const equipment_types_ground = [
 ];
 
 export const costs = [
-    '3k Zen', "Zen Bundle / Mudd's Market", 'Promo', 'Lockbox', 'Phoenix', 'Event', 'Lifetime', 
+    '3k Zen', "Zen Bundle / Mudd's Market", 'Promo', 'Lockbox Ship', 'Phoenix', 'Event', 'Lifetime', 
     'Mission / Exchange / Specialization', 'Lobi Crystal'
 ];
 

@@ -155,8 +155,8 @@ async function create_data(version) {
                             else if (unit === 'R&D' && !cost_filter.includes('Promo')) {
                                 cost_filter.push('Promo');
                             }
-                            else if (unit === 'LB' && !cost_filter.includes('Lockbox')) {
-                                cost_filter.push('Lockbox');
+                            else if (unit === 'LB' && !cost_filter.includes('Lockbox Ship')) {
+                                cost_filter.push('Lockbox Ship');
                             }
                             else if (unit === 'LC' && !cost_filter.includes('Lobi Crystal')) {
                                 cost_filter.push('Lobi Crystal');

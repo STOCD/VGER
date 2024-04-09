@@ -2,6 +2,7 @@ version: "3"
 
 services:
   vger:
+    image: vger:${VGER_VERSION}
     build:
       context: .
       dockerfile: Dockerfile
