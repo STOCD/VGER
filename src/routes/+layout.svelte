@@ -12,7 +12,7 @@
 <style>
   .main {
     background-color: var(--science-blue);
-    padding: 0 var(--gutter) var(--gutter);
+    padding: 0 var(--gutter) var(--gutter) var(--gutter);
     margin-top: 0;
     width: 100%;
     position: fixed;

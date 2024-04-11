@@ -358,7 +358,7 @@ function keyVarToggle(event, variable, state) {
     .settings_div {
         background-color: var(--light-background);
         position: absolute;
-        height: calc(100vh - 100vw*(134/1920) - 6*var(--gutter) - var(--border)); /*viewport height minus top banner height, height of the bottom margin and height of the menu bar*/
+        height: calc(100vh - 100vw*(143/1920) - 5 * var(--gutter)); /* viewport height minus top banner height, height of the bottom margin and height of the menu bar; banner has aspect ratio (1920:134), but for some reason it doesn't work with that, only with (1920:143)*/
         width: 30vw;
         right: -30.5vw;
         margin-right: var(--gutter);
@@ -376,11 +376,11 @@ function keyVarToggle(event, variable, state) {
     }
     .settings_content {
         overflow-y: auto;
-        height: calc(100vh - 100vw*(134/1920) - 5*var(--gutter) - 1.3*var(--aside-image-width)); /*.settings_div height minus .promo_footer height*/
+        height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter) - 1.2*var(--aside-image-width)); /*.settings_div height minus .promo_footer height*/
         margin-right: var(--border);
     }
     .mobile_settings_content {
-        height: calc(100vh - 100vw*(134/1920) - 5*var(--gutter) - 1.4*var(--aside-image-width)); /*.settings_div height minus .promo_footer height*/
+        height: calc(100vh - 100vw*(143/1920) - 5*var(--gutter) - 1.4*var(--aside-image-width)); /*.settings_div height minus .promo_footer height*/
     }
     .seperator {
         background-color: var(--gray-text);

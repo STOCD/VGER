@@ -4,7 +4,7 @@
 
     import Intersector from './Intersector.svelte';
 
-    let once_var = false;
+    let once_var = true;
     let error_handled = false;
     let this_image;
 
