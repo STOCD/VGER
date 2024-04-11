@@ -161,7 +161,7 @@
 <style>
   header {
     display: flex;
-    height: 2.5rem;
+    height: calc(5 * var(--gutter));
     width: 100%;
     background-color: var(--dark-background);
     z-index: 3;

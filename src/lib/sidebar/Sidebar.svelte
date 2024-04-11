@@ -59,7 +59,7 @@
     
     <!-- Name of currently selected item with link -- Equipment -->
     {:else if $activeTab == 'Space Equipment' || $activeTab == 'Ground Equipment'}
-      <a class='item_name' class:mobile_underline='{$mobile}' href={getLink('none', $activeCard.name)} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
+      <a class='item_name' class:mobile_underline='{$mobile}' href={$activeCard.url} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
           on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')}
           on:focus={event => showLinkIcon(event, 'link_icon_header')} on:blur={event => hideLinkIcon(event, 'link_icon_header')}>
         <span class='hover_underline'>{$activeCard.name}</span>

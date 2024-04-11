@@ -24,6 +24,8 @@
 
 <style>
     div {
+        height: calc(var(--card-image-width) * (64 / 49));
+        width: var(--card-image-width);
         margin: 0;
         padding: 0;
     }
