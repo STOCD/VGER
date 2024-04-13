@@ -29,9 +29,9 @@ VITE_DATA_FOLDER_PATH=/vger_data
 - `VGER_DATA_FOLDER_PATH` sets the path of the cache folder on the host (when deploying with docker)
 - `VGER_PORT` sets the port that the app will be accessible through from the outside (when deploying with docker)
 - `VGER_VERSION` is used to tag the docker image (when deploying with docker)
-- `VITE_DATA_FOLDER_PATH` sets the path that the app uses to cache the data when deploying with docker this path is inside the container
+- `VITE_DATA_FOLDER_PATH` sets the path that the app uses to cache the data
     - for development it is recommended to use `./vger_data` to keep data and app close
-    - for deployment with docker this is the path to the cache folder *inside* the container and it must be an absolute path
+    - for deployment with docker this is the path to the cache folder *inside* the container and it must be an absolute path; it is recommended to use `/vger_data`
 
 # Development
 
@@ -52,8 +52,7 @@ To build the app, first make sure to set the correct adapter in `svelte.config.j
 - download or clone the repository to the host machine
 - change the adapter to `adapter-node`
 - create an enviroment variables file and populate it
-    - make sure the specified data folder exists
-
+    - make sure the specified data folder exists on the host machine and is empty
 - run `docker-compose up -d` to build and launch the app
 - run `docker-compose down` to stop and delete the app
 - run `docker-compose start -d` to launch the app in case it has already been built
