@@ -53,10 +53,10 @@ To build the app, first make sure to set the correct adapter in `svelte.config.j
 - change the adapter to `adapter-node`
 - create an enviroment variables file and populate it
     - make sure the specified data folder exists on the host machine and is empty
-- run `docker-compose up -d` to build and launch the app
-- run `docker-compose down` to stop and delete the app
-- run `docker-compose start -d` to launch the app in case it has already been built
-- run `docker-compose stop` to stop the running app without deleting it
+- run `docker compose up -d` to build and launch the app
+- run `docker compose down` to stop and delete the app
+- run `docker compose start -d` to launch the app in case it has already been built
+- run `docker compose stop` to stop the running app without deleting it
 
 ## Netlify
 *Currently, VGER is being deployed to netlify from the `netlify-deploy` branch.*
