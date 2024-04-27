@@ -3,7 +3,6 @@ import { activeCard, mobile_sidebar_active, active_settings } from '$lib/stores'
 import ImageLoader from './ImageLoader.svelte';
     
 export let item;
-export let index;
 
 // makes this card the active card
 const handleClick = () => {
@@ -39,5 +38,5 @@ const handleClick = () => {
 
 <!-- One Grid card -->
 <button class='card' title={item.name} on:click={handleClick}>
-  <ImageLoader src={item.image} alt='' {index}/>
+  <ImageLoader src={item.image} alt=''/>
 </button>

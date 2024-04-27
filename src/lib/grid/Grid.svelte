@@ -181,7 +181,7 @@
   <div id='div1'>
     <!-- inserts a grid card for each item -->
     {#each $filtered as item, index (index)}
-      <GridCard {item} {index}/>
+      <GridCard {item}/>
     {/each}
   </div>
 </section>

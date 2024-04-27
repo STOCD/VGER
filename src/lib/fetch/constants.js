@@ -17,11 +17,13 @@ export const costs = [
 
 export const rarities = ['Epic','Ultra Rare','Very Rare','Rare','Uncommon','Common'];
 
-export const wikihttp = 'https://stowiki.net/wiki/';
+export const wikihttp = 'https://stowiki.net/wiki';
 
-export const filepath = 'Special:Redirect/file/';
+export const filepath = '/Special:Redirect/file/';
 
 export const image_path = wikihttp + filepath;
+
+export const image_path_direct = 'https://stowiki.net/w/images/wiki_images/';
 
 export const image_suffix = '_icon.png';
 
@@ -94,6 +96,24 @@ export function compensate_url(text) {
     text = text.replaceAll('&#039;', '%27');
     text = text.replaceAll('&','%26');
     text = text.replaceAll(':', '%3A');
+    text = text.replaceAll(' ','_');
+    return text;
+}
+
+// replaces various characters to prepare for hashing
+export function compensate_filename(text) {
+    text = text.replaceAll(' ','_');
+    text = text.replaceAll('/','_');
+    text = text.replaceAll('%5F', '_');
+    text = text.replaceAll('&amp;','&');
+    text = text.replaceAll('&#38;','&');
+    text = text.replaceAll('%C2%A0','_');
+    text = text.replaceAll('%26%2339%3B',"'");
+    text = text.replaceAll('%26%2334%3B','"');
+    text = text.replaceAll('&quot;','"');
+    text = text.replaceAll('&#34;','"');
+    text = text.replaceAll('&#39;',"'");
+    text = text.replaceAll('&#039;', "'");
     text = text.replaceAll(' ','_');
     return text;
 }

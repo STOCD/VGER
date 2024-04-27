@@ -15,10 +15,10 @@
   // gets wiki page link
   function getLink(type, name) {
     if (type == 'trait') {
-      return wikihttp + 'Trait:_' + name.replaceAll(' ','_');
+      return wikihttp + '/Trait:_' + name.replaceAll(' ','_');
     }
     else if (type == 'none') {
-      return wikihttp + name.replaceAll(' ','_');
+      return wikihttp + '/' + name.replaceAll(' ','_');
     }
   }
 

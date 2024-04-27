@@ -1,5 +1,7 @@
 /* Fetching helper functions */
 import { writeFile, readFileSync } from 'fs';
+import { createHash } from 'crypto';
+import { image_path_direct } from './constants';
 
 
 // creates fresh data and returns it
@@ -60,7 +62,7 @@ export function fetch_cache(file_path, json_return=false) {
 }
 
 
-// stores json file to github
+// stores json file to server
 function store_json(object, file_path) {
     try {
         writeFile(file_path, JSON.stringify(object), {encoding: 'utf-8'}, (x) => x)
@@ -85,4 +87,11 @@ export async function data_iteration(version, data_factory, cache_path, silent=t
         store_json(new_data, cache_path);
         return new_data;
     }
+}
+
+
+// obtain filepath from filename (https://mediawiki.org/wiki/Manual:$wgHashedUploadDirectory)
+export function get_filepath(file_name) {
+    const hash = createHash('md5').update(file_name).digest('hex');
+    return `${image_path_direct}${hash.charAt(0)}/${hash.substring(0, 2)}/${file_name}`;
 }
