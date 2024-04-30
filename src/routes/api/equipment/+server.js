@@ -182,7 +182,7 @@ async function create_data(version) {
 
             const current_obj = {
                 'name': compensate_wiki_description(current_name.replaceAll(':','')), 
-                'url': wikihttp + compensate_url(current_item.Page) + '#' + compensate_url(current_name), 
+                'url': wikihttp + '/' + compensate_url(current_item.Page) + '#' + compensate_url(current_name), 
                 'type': current_item.type, 
                 'display_type': display_type,
                 'desc': description,
