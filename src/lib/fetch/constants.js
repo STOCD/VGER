@@ -23,7 +23,7 @@ export const filepath = '/Special:Redirect/file/';
 
 export const image_path = wikihttp + filepath;
 
-export const image_path_direct = 'https://stowiki.net/w/images/wiki_images/';
+export const image_path_direct = 'https://stowiki.net/w/images/sto_images/';
 
 export const image_suffix = '_icon.png';
 
