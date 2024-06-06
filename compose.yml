@@ -1,6 +1,7 @@
 services:
   vger:
     image: vger:${VGER_VERSION}
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile
