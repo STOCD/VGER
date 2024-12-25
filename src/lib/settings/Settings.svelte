@@ -4,7 +4,7 @@ import {
     settings_space_slot, settings_ground_slot, settings_rarity, mobile_override, mobile, settings_search_desc,
     settings_cost} from '$lib/stores';
 import {equipment_types_ground, equipment_types_space, rarities, costs} from '$lib/fetch/constants';
-import S31Badge from '$lib/assets/Section31Badge.webp';
+import S31Badge from '$lib/assets/section31badge.webp';
 import STOBuildslogo from '$lib/assets/stobuildslogo.webp';
 
 const links = [{name:'Website',link:'https://stobuilds.com/VGER'},{name:'STOCD',link:'https://github.com/STOCD'},{name:'STOBuilds Discord',link:'https://discord.gg/stobuilds'}]
