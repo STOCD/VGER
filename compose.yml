@@ -9,5 +9,6 @@ services:
     env_file: .env
     volumes:
       - ${VGER_DATA_FOLDER_PATH}:${VITE_DATA_FOLDER_PATH}:rw
+      - ${VGER_IMAGE_FOLDER_PATH}:${VITE_IMAGE_FOLDER_PATH}:rw
     ports:
       - "${VGER_PORT}:3000"

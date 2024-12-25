@@ -27,7 +27,8 @@ VITE_IMAGE_FOLDER_PATH=/vger_images
 ```
 *The shown values are example values that work, but might not yield the desired result.*
 
-- `VGER_DATA_FOLDER_PATH` sets the path of the cache folder on the host (when deploying with docker)
+- `VGER_DATA_FOLDER_PATH` sets the path of the data cache folder on the host (when deploying with docker)
+- `VGER_IMAGE_FOLDER_PATH` sets the path of the image cache folder on the host (when deploying with docker)
 - `VGER_PORT` sets the port that the app will be accessible through from the outside (when deploying with docker)
 - `VGER_VERSION` is used to tag the docker image (when deploying with docker)
 - `VITE_DATA_FOLDER_PATH` sets the path that the app uses to cache the data
