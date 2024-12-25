@@ -1,7 +1,5 @@
 /* Fetching helper functions */
 import { writeFile, readFileSync } from 'fs';
-import { createHash } from 'crypto';
-import { image_path_direct } from './constants';
 
 
 // creates fresh data and returns it
@@ -87,11 +85,4 @@ export async function data_iteration(version, data_factory, cache_path, silent=t
         store_json(new_data, cache_path);
         return new_data;
     }
-}
-
-
-// obtain filepath from filename (https://mediawiki.org/wiki/Manual:$wgHashedUploadDirectory)
-export function get_filepath(file_name) {
-    const hash = createHash('md5').update(file_name).digest('hex');
-    return `${image_path_direct}${hash.charAt(0)}/${hash.substring(0, 2)}/${file_name}`;
 }

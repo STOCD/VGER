@@ -2,19 +2,11 @@ import { writable } from 'svelte/store';
 
 export const activeTab = writable('Visual Glossary for Easy Reference');
 
-export const starship_traits_ready = writable(false);
-
-export const equipment_ready = writable(false);
-
-export const personal_traits_ready = writable(false);
-
 export const activeCard = writable('');
 
 export const srcValue = writable('');
 
 export const filtered = writable([]);
-
-export const item_iterator = writable({});
 
 export const active_settings = writable(false);
 

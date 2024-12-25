@@ -1,4 +1,4 @@
-import acronyms from './acronyms.json'
+import acronyms from '$lib/assets/acronyms.json'
 
 export async function GET() {
     return new Response(

@@ -11,12 +11,10 @@ let currentLink = null;
 // bind search string to filter module
 onMount( () => {
     srcValue.subscribe( () => {
-        if ($activeTab == 'Acronyms') {
-            filtered.set(matchSorter(acronyms, $srcValue, {keys : ['acr', 'term', 'desc']}));
-            let div1 = document.getElementById('div1')
-            if (div1 != null) {
-                div1.scrollTop = 0;
-            }
+        filtered.set(matchSorter(acronyms, $srcValue, {keys : ['acr', 'term', 'desc']}));
+        let div1 = document.getElementById('div1')
+        if (div1 != null) {
+            div1.scrollTop = 0;
         }
     });
 });
@@ -104,6 +102,9 @@ function hideDescription() {
     #div1 {
         overflow-y: auto;
         overflow-x: hidden;
+    }
+    table {
+        background-color: var(--dark-background);
     }
     #tbl1, tr,td {
         border: 0;

@@ -1,47 +1,9 @@
 <script>
     import {
-        activeTab, srcValue, active_settings, activeCard, settings_env, settings_type,
-        settings_av, settings_ground_slot, settings_space_slot, settings_rarity, mobile,
-        mobile_menu_active, mobile_sidebar_active, settings_search_desc, starship_traits_ready,
-        equipment_ready, personal_traits_ready
+        activeTab, srcValue, active_settings, mobile, mobile_menu_active, mobile_sidebar_active
     } from '$lib/stores';
     import HamburgerIcon from './HamburgerIcon.svelte';
     import { slide } from 'svelte/transition';
-
-
-    // swaps modules
-    const handleClick = (title) => {
-        if ($activeTab == title) {
-            return
-        }
-
-        $activeTab = title;
-        $active_settings = false;
-
-        //close mobile menu and sidebar
-        if ($mobile) {
-            $mobile_menu_active = false;
-        }
-        if ($mobile) {
-            $mobile_sidebar_active = false;
-        }
-
-        //clear filters to prevent de-synchronization with the respective buttons
-        $srcValue = '';
-        $activeCard = '';
-        $settings_env = '';
-        $settings_type = [];
-        $settings_av = [];
-        $settings_ground_slot = [];
-        $settings_space_slot = [];
-        $settings_rarity = [];
-        $settings_search_desc = false;
-    };
-
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-    };
 
     // expands settings menu
     const toggleSettings = (event) => {
@@ -68,43 +30,42 @@
     <header>
         <nav>
             <ul class='horizontal_list'>
-                <li class ='desktop_li'>
-                    <button class='desktop_button' class:bt-active={$activeTab === 'Starship Traits'}
-                            disabled='{!$starship_traits_ready}' on:click={() => handleClick('Starship Traits')}>
+                <li class='desktop_li'>
+                    <a class='desktop_button' class:bt-active={$activeTab === 'Starship Traits'}
+                            href='starship-traits'>
                         Starship Traits
-                    </button>
+                    </a>
                 </li>
                 <li class ='desktop_li'>
-                    <button class='desktop_button' class:bt-active={$activeTab === 'Space Equipment'}
-                            disabled='{!$equipment_ready}' on:click={() => handleClick('Space Equipment')}>
+                    <a class='desktop_button' class:bt-active={$activeTab === 'Space Equipment'}
+                            href='space-equipment'>
                         Space Equipment
-                    </button>
+                    </a>
                 </li>
                 <li class ='desktop_li'>
-                    <button class='desktop_button' class:bt-active={$activeTab === 'Ground Equipment'}
-                            disabled='{!$equipment_ready}' on:click={() => handleClick('Ground Equipment')}>
+                    <a class='desktop_button' class:bt-active={$activeTab === 'Ground Equipment'}
+                            href='ground-equipment'>
                         Ground Equipment
-                    </button>
+                    </a>
                 </li>
                 <li class ='desktop_li'>
-                    <button class='desktop_button' class:bt-active={$activeTab === 'Personal Traits'}
-                            disabled='{!$personal_traits_ready}' on:click={() => handleClick('Personal Traits')}>
+                    <a class='desktop_button' class:bt-active={$activeTab === 'Personal Traits'}
+                            href='personal-traits'>
                         Personal Traits
-                    </button>
+                    </a>
                 </li>
                 <li class ='desktop_li'>
-                    <button class='desktop_button' class:bt-active={$activeTab === 'Acronyms'}
-                            on:click={() => handleClick('Acronyms')}>
+                    <a class='desktop_button' class:bt-active={$activeTab === 'Acronyms'}
+                            href='acronyms'>
                         Acronyms
-                    </button>
+                    </a>
                 </li>
             </ul>
         </nav>
-        <form on:submit={handleSubmit}>
-            <label for="search" aria-label="search" class="visually-hidden"> Search </label>
+        <div class='controls'>
             <input type="text" id="search" bind:value={$srcValue} placeholder="SEARCH" title='search the current tab'/>
             <button class="hamburger desktop_button" on:click={toggleSettings} title='Settings and Filters (tab-specific)'><HamburgerIcon /></button>
-        </form>
+        </div>
     </header>
     <div class='seperator_background'><div class='seperator'></div></div>
 
@@ -112,45 +73,42 @@
     <!-- MOBILE -->
     <header>
         <button id='mobile_menu_button' class='desktop_button' on:click={()=>toggleMenu()}>Menu</button>
-        <form class='mobile_form' on:submit={handleSubmit}>
-            <label for="search" aria-label="search" class="visually-hidden"> Search </label>
-            <input type="text" id="search" bind:value={$srcValue} placeholder="SEARCH" title='search the current tab'/>
-            <button class='hamburger desktop_button' on:click={toggleSettings} title='Settings and Filters (tab-specific)'><HamburgerIcon /></button>
-        </form>
+        <input type="text" id="search" bind:value={$srcValue} placeholder="SEARCH" title='search the current tab'/>
+        <button class='hamburger desktop_button' on:click={toggleSettings} title='Settings and Filters (tab-specific)'><HamburgerIcon /></button>
     </header>
 
     {#if $mobile_menu_active}
         <div id='mobile_menu' transition:slide>
             <ul class='vertical_list'>
-                <li class ='mobile_li'>
-                    <button class='mobile_button' class:bt-active={$activeTab === 'Starship Traits'}
-                            disabled='{!$starship_traits_ready}' on:click={() => handleClick('Starship Traits')}>
+                <li class='mobile_li'>
+                    <a class='mobile_button' class:bt-active={$activeTab === 'Starship Traits'}
+                            href='starship-traits'>
                         Starship Traits
-                    </button>
+                    </a>
                 </li>
                 <li class ='mobile_li'>
-                    <button class='mobile_button' class:bt-active={$activeTab === 'Space Equipment'}
-                            disabled='{!$equipment_ready}' on:click={() => handleClick('Space Equipment')}>
+                    <a class='mobile_button' class:bt-active={$activeTab === 'Space Equipment'}
+                            href='space-equipment'>
                         Space Equipment
-                    </button>
+                    </a>
                 </li>
                 <li class ='mobile_li'>
-                    <button class='mobile_button' class:bt-active={$activeTab === 'Ground Equipment'}
-                            disabled='{!$equipment_ready}' on:click={() => handleClick('Ground Equipment')}>
+                    <a class='mobile_button' class:bt-active={$activeTab === 'Ground Equipment'}
+                            href='ground-equipment'>
                         Ground Equipment
-                    </button>
+                    </a>
                 </li>
                 <li class ='mobile_li'>
-                    <button class='mobile_button' class:bt-active={$activeTab === 'Personal Traits'}
-                            disabled='{!$personal_traits_ready}' on:click={() => handleClick('Personal Traits')}>
+                    <a class='mobile_button' class:bt-active={$activeTab === 'Personal Traits'}
+                            href='personal-traits'>
                         Personal Traits
-                    </button>
+                    </a>
                 </li>
                 <li class ='mobile_li'>
-                    <button class='mobile_button' class:bt-active={$activeTab === 'Acronyms'}
-                            on:click={() => handleClick('Acronyms')}>
+                    <a class='mobile_button' class:bt-active={$activeTab === 'Acronyms'}
+                            href='acronyms'>
                         Acronyms
-                    </button>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -161,16 +119,20 @@
 <style>
   header {
     display: flex;
+    gap: var(--border);
+    padding: var(--border);
     height: calc(5 * var(--gutter));
     width: 100%;
+    align-items: center;
     background-color: var(--dark-background);
     z-index: 3;
     border-radius: var(--gutter) var(--gutter) 0 0;
   }
   #search {
-    margin: 0 auto;
+    margin: var(--border) var(--gutter);
     height: 70%;
-    width: 80%;
+    width: 100%;
+    align-self: center;
     font-size: 1rem;
     padding: 0 0.25rem;
     border: var(--border) solid var(--dark-background-hover);
@@ -186,14 +148,14 @@
   }
   nav {
     width: 70%;
-    padding-bottom: var(--border);
+    height: 100%;
   }
   .horizontal_list {
     height: 100%;
     margin: 0;
-    padding: 0 0 var(--border) 0;
+    padding: 0;
     display: flex;
-    justify-content: center;
+    align-items: center;
     list-style: none;
   }
   .vertical_list {
@@ -203,7 +165,7 @@
     list-style: none;
   }
   .bt-active {
-text-decoration: underline !important;
+    text-decoration: underline !important;
   }
   .mobile_li,
   .desktop_li,
@@ -216,10 +178,12 @@ text-decoration: underline !important;
     margin: var(--border) 0 var(--border) var(--border);
   }
   .desktop_button {
+    display: block;
+    align-content: center;
+    text-align: center;
     background-color: var(--dark-background);
     color: var(--light-text);
     border: calc(.1*var(--gutter)) solid var(--dark-background);
-    margin-bottom: var(--border);
     border-radius: var(--gutter);
     text-decoration: none;
     text-transform: uppercase;
@@ -227,6 +191,9 @@ text-decoration: underline !important;
     font-size: 85%;
   }
   .mobile_button {
+    display: block;
+    align-content: center;
+    text-align: center;
     background-color: var(--dark-background);
     color: var(--light-text);
     border: none;
@@ -253,30 +220,16 @@ text-decoration: underline !important;
   .hamburger:active {
     background-color: var(--science-blue-dimmed);
   }
-  form {
+  .controls {
     width: 30%;
     display: flex;
-    justify-content: right;
     align-items: center;
-    background-color: var(--dark-background);
-    border-radius: var(--gutter);
-    padding-top: var(--border);
-    padding-right: var(--border);
+    justify-content: right;
   }
   .hamburger {
     width: 15%;
     display: flex;
     align-items: center;
-    margin-top: var(--border);
-  }
-  .visually-hidden {
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    height: 1px;
-    overflow: hidden;
-    position: absolute;
-    white-space: nowrap;
-    width: 1px;
   }
   #mobile_menu {
     position: absolute;
@@ -286,9 +239,6 @@ text-decoration: underline !important;
     border-top: calc(.5*var(--border)) solid var(--science-blue);
     z-index: 5;
     border-bottom: var(--gutter) solid var(--science-blue);
-  }
-  .mobile_form {
-    width: 100%;
   }
   #mobile_menu_button {
     width: 25%;
@@ -300,6 +250,7 @@ text-decoration: underline !important;
     padding: 0;
   }
   .seperator_background {
+    display: block;
     background-color: var(--dark-background);
   }
 </style>

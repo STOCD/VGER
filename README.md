@@ -23,6 +23,7 @@ VGER_VERSION=2.0.0
 
 # app config
 VITE_DATA_FOLDER_PATH=/vger_data
+VITE_IMAGE_FOLDER_PATH=/vger_images
 ```
 *The shown values are example values that work, but might not yield the desired result.*
 
@@ -31,7 +32,10 @@ VITE_DATA_FOLDER_PATH=/vger_data
 - `VGER_VERSION` is used to tag the docker image (when deploying with docker)
 - `VITE_DATA_FOLDER_PATH` sets the path that the app uses to cache the data
     - for development it is recommended to use `./vger_data` to keep data and app close
-    - for deployment with docker this is the path to the cache folder *inside* the container and it must be an absolute path; it is recommended to use `/vger_data`
+    - for deployment with docker this is the path to the cache folder *inside* the container and it must be an absolute path
+- `VITE_IMAGE_FOLDER_PATH` sets the path that the app uses to cache the images
+    - for development it is recommended to use `./vger_images` to keep images and app close
+    - for deployment with docker this is the path to the cache folder *inside* the container and it must be an absolute path
 
 # Development
 
@@ -71,6 +75,6 @@ To build the app, first make sure to set the correct adapter in `svelte.config.j
 
 Four APIs are used by the app to retrieve its data; those are also accessible from the outside:
 - `/acronyms` -> returns json data containing the acronyms and their terms and descriptions
-- `/api/starshiptraits`, `/api/traits`, `/api/equipment` -> returns data for the respective module
+- `/api/starship-traits`, `/api/traits`, `/api/equipment` -> returns data for the respective module
     - parameter `query` can be set to `source` to retrieve the cargo queries used to get the data from the wiki; not supplying it or setting it to `data` returns the data
     - parameter `override` can be set to `fresh` to return a newly created version of the data or to `cached` to return the cached dataset; not supplying it returns the cached data, but also updates the cache if the data is older than one day

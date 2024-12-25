@@ -4,6 +4,8 @@ import {
     settings_space_slot, settings_ground_slot, settings_rarity, mobile_override, mobile, settings_search_desc,
     settings_cost} from '$lib/stores';
 import {equipment_types_ground, equipment_types_space, rarities, costs} from '$lib/fetch/constants';
+import S31Badge from '$lib/assets/Section31Badge.webp';
+import STOBuildslogo from '$lib/assets/stobuildslogo.webp';
 
 const links = [{name:'Website',link:'https://stobuilds.com/VGER'},{name:'STOCD',link:'https://github.com/STOCD'},{name:'STOBuilds Discord',link:'https://discord.gg/stobuilds'}]
 
@@ -162,6 +164,8 @@ function keyVarToggle(event, variable, state) {
                     </label>
                 {/each}
             </div>
+
+            <hr/>
 
         <!-- Settings exclusive for Personal Traits -->
         {:else if $activeTab == 'Personal Traits'}
@@ -332,7 +336,7 @@ function keyVarToggle(event, variable, state) {
     <!-- Footer present on all tabs at the bottom of the settings sidebar -->
     <div class='seperator'></div>
     <div class='promo_footer'>
-        <img class='footer_img' src={'section31badge.webp'} alt='STOCD'>
+        <img class='footer_img' src={S31Badge} alt='STOCD'>
         <div class='promo_footer_center'>
             <p class='promo_footer_text'>
                 <span style='color:var(--science-blue); font-weight:bold;'>Visual Glossary for Easy Reference</span><br>
@@ -349,7 +353,7 @@ function keyVarToggle(event, variable, state) {
                 </a>
             {/each}
         </div>
-        <img class='footer_img' src={'stobuildslogo.webp'} alt='STOBuilds'>
+        <img class='footer_img' src={STOBuildslogo} alt='STOBuilds'>
     </div>
 
 </div>

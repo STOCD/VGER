@@ -9,6 +9,7 @@
     let this_image;
 
     async function image_error() {
+        return
         if (!error_handled) {
             const this_name = src.split('/').pop()
             fetch(`api/images?image=${this_name}`, {method: 'POST'});

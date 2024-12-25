@@ -8,16 +8,18 @@ than one day (same behavior if no parameter is supplied)
 
 
 import { 
-    data_iteration, fetch_cache, fetch_json, fresh_data_handler, get_filepath
+    data_iteration, fetch_cache, fetch_json, fresh_data_handler
 } from '$lib/fetch/masterfetch'
 import {
-    compensate_name, compensate_wiki_description, image_suffix, wikihttp, compensate_filename
+    compensate_name, compensate_wiki_description, wikihttp
 } from '$lib/fetch/constants'
 
 
 const data_folder_path = import.meta.env.VITE_DATA_FOLDER_PATH;
 const trait_file_path = data_folder_path + '/starship_traits.json';
-const redirect_file_path = data_folder_path + '/redirects.json';
+const headers = {
+    'Content-Type': 'application/json',
+};
 
 
 const starship_trait_query =
@@ -61,7 +63,7 @@ export async function GET({url}) {
             if (data !== null) {
                 return new Response(
                     data,
-                    {status: 200, headers: {'Content-Type': 'application/json'}}
+                    {status: 200, headers}
                 );
             }
             return new Response(
@@ -80,9 +82,12 @@ export async function GET({url}) {
                 if (cached_data.version + 86400000 < timestamp) {
                     data_iteration(timestamp, create_data, trait_file_path, true);
                 }
+                else {
+                    headers['Cache-Control'] = 'public, max-age=86400, immutable';
+                }
                 return new Response(
                     JSON.stringify(cached_data),
-                    {status: 200, headers: {'Content-Type': 'application/json'}}
+                    {status: 200, headers}
                 );
             }
             return new Response(
@@ -99,7 +104,7 @@ export async function GET({url}) {
         };
         return new Response(
             JSON.stringify(r_obj),
-            {status: 200, headers: {'Content-Type': 'application/json'}}
+            {status: 200, headers}
         );
     }  
 }
@@ -109,12 +114,8 @@ async function create_data(version) {
     // requests and saves cargo tables
     const starship_trait_json = await fetch_json(starship_trait_query)
     const ships_json = await fetch_json(starship_query)
-    let redirects = await fetch_cache(redirect_file_path, true);
     if (starship_trait_json === null || ships_json === null) {
         return null;
-    }
-    if (redirects === null || redirects === '') {
-        redirects = {};
     }
 
     let temp_data = {
@@ -185,21 +186,13 @@ async function create_data(version) {
                     cost_filter.push('Mission / Exchange / Specialization')
                 }
             }
-            let image_url = compensate_filename(current_trait.name + image_suffix);
-            if (image_url in redirects) {
-                image_url = redirects[image_url];
-            }
-            else {
-                image_url = get_filepath(image_url);
-            }
             temp_data.starship_traits.push({
                 'name': compensate_name(current_trait.name),
                 'type': 'Starship Trait',
                 'obtained': obtained,
                 'cost': costs,
                 'cost_filter': cost_filter,
-                'desc': compensate_wiki_description(current_trait.detailed),
-                'image': image_url
+                'desc': compensate_wiki_description(current_trait.detailed)
             });
         }
     }

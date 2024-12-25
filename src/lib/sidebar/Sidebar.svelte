@@ -1,6 +1,13 @@
 <script>
   import { activeCard, activeTab, mobile, mobile_sidebar_active} from '$lib/stores';
   import { compensate_wiki_description, rarities, wikihttp } from '$lib/fetch/constants';
+  import EVENT_ICON from '$lib/assets/event.webp';
+  import LB_ICON from '$lib/assets/lb.webp';
+  import LTS_ICON from '$lib/assets/lifetime.webp';
+  import LOBI_ICON from '$lib/assets/lobi_crystal.webp';
+  import PHOENIX_ICON from '$lib/assets/ppp5.webp';
+  import PROMO_ICON from '$lib/assets/promo.webp';
+  import ZEN_ICON from '$lib/assets/zen.webp';
 
   // shows chain icon
   function showLinkIcon(e, id) {
@@ -42,27 +49,27 @@
   }
 </script>
 
-{#if $activeCard}
+{#if $activeCard !== ''}
   <div class='sidebar_content' class:mobile_sidebar_content='{$mobile}'>
 
     <!-- Image of current card -->
-    <img class='aside_image' src={$activeCard.image} referrerpolicy='no-referrer' alt={$activeCard.name}>
+    <img class='aside_image' src={'/api/i/' + $activeCard.name} referrerpolicy='no-referrer' alt={$activeCard.name}>
 
     <!-- Name of currently selected item with link -- Traits -->
     {#if $activeTab == 'Starship Traits' || $activeTab == 'Personal Traits'}
-      <a class='item_name' class:mobile_underline='{$mobile}' href={getLink('trait', $activeCard.name)} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
+      <a class='item_name' href={getLink('trait', $activeCard.name)} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
           on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')}
           on:focus={event => showLinkIcon(event, 'link_icon_header')} on:blur={event => hideLinkIcon(event, 'link_icon_header')}>
-        <span class='hover_underline'>{$activeCard.name}</span>
+        <span class='hover_underline' class:mobile_underline='{$mobile}'>{$activeCard.name}</span>
         <i class='fa fa-link link_icon' id='link_icon_header' class:show_link_icon='{$mobile}'/>
       </a>
     
     <!-- Name of currently selected item with link -- Equipment -->
     {:else if $activeTab == 'Space Equipment' || $activeTab == 'Ground Equipment'}
-      <a class='item_name' class:mobile_underline='{$mobile}' href={$activeCard.url} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
+      <a class='item_name' href={$activeCard.url} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
           on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')}
           on:focus={event => showLinkIcon(event, 'link_icon_header')} on:blur={event => hideLinkIcon(event, 'link_icon_header')}>
-        <span class='hover_underline'>{$activeCard.name}</span>
+        <span class='hover_underline' class:mobile_underline='{$mobile}'>{$activeCard.name}</span>
         <i class='fa fa-link link_icon' id='link_icon_header' class:show_link_icon='{$mobile}'/>
       </a>
     {/if}
@@ -99,26 +106,26 @@
           <li style="font-size: 100%;">
             <i class='fa fa-angle-right'/>
             {#if current_unit == 'Zen'}
-              <span title='Zen'>{current_amount} <img class='unit_image' src='zen.webp' alt='Zen'></span>
+              <span title='Zen'>{current_amount} <img class='unit_image' src={ZEN_ICON} alt='Zen'></span>
             {:else if current_unit == 'LB'}
-              <span title='Lockbox'>{current_amount} <img class='unit_image' src='lb.webp' alt='Lockbox'></span>
+              <span title='Lockbox'>{current_amount} <img class='unit_image' src={LB_ICON} alt='Lockbox'></span>
             {:else if current_unit == 'APP'}
-              <span title='Event'>{current_amount} <img class='unit_image' src='event.webp' alt='Event'></span>
+              <span title='Event'>{current_amount} <img class='unit_image' src={EVENT_ICON} alt='Event'></span>
             {:else if current_unit == 'PPP5'}
               <span title='Epic Phoenix Prize Pack Token'>
-                {current_amount} <img class='unit_image' src='ppp5.webp' alt='Epic Phoenix Prize Pack Token'>
+                {current_amount} <img class='unit_image' src={PHOENIX_ICON} alt='Epic Phoenix Prize Pack Token'>
               </span>
             {:else if current_unit == 'Veteran'}
               <span title='Lifetime Subscription'>
-                {current_amount} <img class='unit_image' src='lifetime.webp' alt='Lifetime Subscription'>
+                {current_amount} <img class='unit_image' src={LTS_ICON} alt='Lifetime Subscription'>
               </span>
             {:else if current_unit == 'R&D'}
               <span title='Promotional T6 Ship Choice Pack'>
-                {current_amount} <img class='unit_image' src='promo.webp' alt='Promotional T6 Ship Choice Pack'>
+                {current_amount} <img class='unit_image' src={PROMO_ICON} alt='Promotional T6 Ship Choice Pack'>
               </span>
             {:else if current_unit == 'LC'}
               <span title='Lobi Crystal'>
-                {current_amount} <img class='unit_image' src='lobi_crystal.webp' alt='Lobi Crystal'>
+                {current_amount} <img class='unit_image' src={LOBI_ICON} alt='Lobi Crystal'>
               </span>
             {:else}
               {current_amount}
@@ -217,7 +224,6 @@ a {
   text-decoration-color: transparent !important;
   visibility: hidden;
   cursor: pointer;
-  position: absolute;
   border-radius: 20%;
   background-color: var(--dark-background);
   padding: var(--border);
@@ -258,7 +264,7 @@ ul {
   float: right;
 }
 .item_name {
-  display: block;
+  /* display: block; */
   font-size: 170%;
   font-weight: bold;
   margin: 0;
@@ -329,8 +335,7 @@ ul {
   overflow-y: auto;
 }
 .mobile_sidebar_content {
-  height: calc(100vh - 100vw*(143/1920) - 12.5*var(--gutter)); /*height of parent div minus it's padding minus close button height*/
-  height: calc(var(--vh, 1vh) * 100 - 100vw*(143/1920) - 12.5*var(--gutter));
+  height: calc(100vh - 100vw*(143/1920) - 14.5*var(--gutter)); /*height of parent div minus it's padding minus close button height*/
 }
 .mobile_margin {
   margin-top: var(--gutter);

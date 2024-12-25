@@ -1,13 +1,15 @@
 <script>
     import GridCard from "./GridCard.svelte";
     import {
-        srcValue, filtered, activeTab, settings_cost, settings_env, settings_type,
-        settings_av, settings_ground_slot, settings_space_slot, settings_rarity, mobile,
+        srcValue, filtered, settings_cost, settings_env, settings_type,
+        settings_av, settings_ground_slot, settings_space_slot, settings_rarity,
         settings_search_desc
     } from '$lib/stores';
     import { matchSorter } from 'match-sorter';
 
     export let data;
+    const items = data.items;
+    const tab = data.tab;
 
     // update filter and search on change of any filter store variable
     srcValue.subscribe( () => update_filter() );
@@ -23,12 +25,12 @@
     // updates the filter for the current tab
     function update_filter() {
         // Personal Traits
-        if ($activeTab == 'Personal Traits') {
+        if (tab == 'Personal Traits') {
             
             // environment filter
-            let environment_filtered = data;
+            let environment_filtered = items;
             if ($settings_env != '') {
-                environment_filtered = matchSorter(data, $settings_env, {keys: ['environment'], threshold: matchSorter.rankings.EQUAL})
+                environment_filtered = matchSorter(items, $settings_env, {keys: ['environment'], threshold: matchSorter.rankings.EQUAL})
             }
 
             // type filters
@@ -76,15 +78,15 @@
         }
 
         // Starship Traits
-        else if ($activeTab == 'Starship Traits') {
+        else if (tab == 'Starship Traits') {
             // cost filter
             let cost_filtered = [];
             if ($settings_cost.length == 0){
-                cost_filtered = data;
+                cost_filtered = items;
             }
             else {
                 for (let j = 0; j < $settings_cost.length; j++) {
-                    cost_filtered.push(...matchSorter(data, $settings_cost[j], {keys: ['cost_filter'], threshold: matchSorter.rankings.EQUAL}));
+                    cost_filtered.push(...matchSorter(items, $settings_cost[j], {keys: ['cost_filter'], threshold: matchSorter.rankings.EQUAL}));
                 }
             }
 
@@ -100,16 +102,16 @@
         }
 
         // Space Equipment
-        else if ($activeTab == 'Space Equipment') {
+        else if (tab == 'Space Equipment') {
 
             // type filters
             let type_filtered = [];
             if ($settings_space_slot.length == 0) {
-                type_filtered = data;
+                type_filtered = items;
             }
             else {
                 for (let k = 0; k < $settings_space_slot.length; k++) {
-                    type_filtered.push(...matchSorter(data, $settings_space_slot[k], {keys: ['type'], threshold: matchSorter.rankings.EQUAL}))
+                    type_filtered.push(...matchSorter(items, $settings_space_slot[k], {keys: ['type'], threshold: matchSorter.rankings.EQUAL}))
                 }
             }
             let rarity_filtered = [];
@@ -138,16 +140,16 @@
         }
 
         // ground equipment
-        else if ($activeTab == 'Ground Equipment') {
+        else if (tab == 'Ground Equipment') {
 
             // type filters
             let type_filtered = []
             if ($settings_ground_slot.length == 0) {
-                type_filtered = data;
+                type_filtered = items;
             }
             else {
                 for (let k = 0; k < $settings_ground_slot.length; k++) {
-                    type_filtered.push(...matchSorter(data, $settings_ground_slot[k], {keys: ['type'], threshold: matchSorter.rankings.EQUAL}))
+                    type_filtered.push(...matchSorter(items, $settings_ground_slot[k], {keys: ['type'], threshold: matchSorter.rankings.EQUAL}))
                 }
             }
             let rarity_filtered = [];
@@ -176,15 +178,13 @@
     }
 </script>
 
-<!-- main grid section -->
-<section class='section' class:mobile_section='{$mobile}' id='main_section'>
-  <div id='div1'>
+
+<div id='div1'>
     <!-- inserts a grid card for each item -->
     {#each $filtered as item, index (index)}
-      <GridCard {item}/>
+        <GridCard {item}/>
     {/each}
-  </div>
-</section>
+</div>
 
 <style>
   #div1 {
@@ -192,14 +192,5 @@
     grid-template-columns: repeat(auto-fill, minmax(calc(var(--card-image-width) +  var(--gutter)), 1fr));
     gap: var(--gutter) var(--gutter);
     margin-right: var(--gutter);
-  }
-  .section {
-    width: 70%;
-    overflow-y: scroll;
-    margin-right: var(--gutter);
-  }
-  .mobile_section {
-    width: 100%;
-    margin: 0;
   }
 </style>

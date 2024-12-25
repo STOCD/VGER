@@ -1,5 +1,7 @@
 <script>
-import { activeCard, mobile_sidebar_active, active_settings } from '$lib/stores';
+import {
+    activeCard, mobile_sidebar_active, active_settings, mobile_menu_active
+} from '$lib/stores';
 import ImageLoader from './ImageLoader.svelte';
     
 export let item;
@@ -8,6 +10,7 @@ export let item;
 const handleClick = () => {
   $activeCard = item;
   $mobile_sidebar_active = true;
+  $mobile_menu_active = false;
   $active_settings = false;
 };
 </script>
@@ -38,5 +41,5 @@ const handleClick = () => {
 
 <!-- One Grid card -->
 <button class='card' title={item.name} on:click={handleClick}>
-  <ImageLoader src={item.image} alt=''/>
+  <ImageLoader src={'/api/i/' + item.name} alt=''/>
 </button>

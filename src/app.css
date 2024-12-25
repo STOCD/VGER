@@ -1,24 +1,33 @@
 :root {
-  
-  font-family: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    
+    font-family: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
     Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    
+    --dark-background: #1a1a1a;
+    --dark-background-hover: #333333;
+    --light-background: #2c2c2c;
+    --light-background-hover: #333333;
+    --science-blue: #1265c3;
+    --science-blue-dimmed: rgba(18, 101, 195, .2);
+    --science-blue-transparent: rgba(18, 101, 195, .1);
+    --gray-text: #888888;
+    --medium-text: #bbb;
+    --light-text: #eee;
+    --light-text-hover: #c6c6c6;
+    --dark-text: #000;
+    --gutter: 0.5rem;
+    --border: calc(0.25*var(--gutter));
+    --card-image-width: 3rem;
+    --aside-image-width: 6rem;
+}
 
-  --dark-background: #1a1a1a;
-  --dark-background-hover: #333333;
-  --light-background: #2c2c2c;
-  --light-background-hover: #333333;
-  --science-blue: #1265c3;
-  --science-blue-dimmed: rgba(18, 101, 195, .2);
-  --science-blue-transparent: rgba(18, 101, 195, .1);
-  --gray-text: #888888;
-  --medium-text: #bbb;
-  --light-text: #eee;
-  --light-text-hover: #c6c6c6;
-  --dark-text: #000;
-  --gutter: 0.5rem;
-  --border: calc(0.25*var(--gutter));
-  --card-image-width: 3rem;
-  --aside-image-width: 6rem;
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 * {
@@ -38,3 +47,51 @@ hr {
 #svelte {
   height: 100%;
 }
+
+main {
+    display: flex;/* minus the height of the rest of the UI -- the term 100vw*(143/1920) calculates the height occupied by the banner image */
+    height: calc(100vh - 100vw * (143/1920) - 5 * var(--gutter));
+    width: 100%;
+    margin: 0;
+    padding: var(--gutter);
+    background-color: var(--dark-background);
+    overflow: hidden;
+    border-radius: 0 0 var(--gutter) var(--gutter);
+}
+aside {
+    width: 30%;
+    padding: 1rem;
+    background-color: var(--dark-background);
+    border: calc(.5*var(--gutter)) solid var(--light-background);
+    border-radius: var(--gutter);
+    overflow-y: auto;
+}
+.section {
+    width: 70%;
+    overflow-y: scroll;
+    margin-right: var(--gutter);
+}
+.mobile_section {
+    width: 100%;
+    margin: 0;
+}
+
+.loading {
+    width: var(--aside-image-width);
+    height: var(--aside-image-width);
+    border: var(--gutter) solid var(--medium-text);
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 2s linear infinite;
+}
+
+.loader_container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
