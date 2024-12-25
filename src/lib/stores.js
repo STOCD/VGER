@@ -12,6 +12,8 @@ export const active_settings = writable(false);
 
 export const settings_cost = writable([]);
 
+export const settings_cost = writable([]);
+
 export const settings_env = writable('');
 
 export const settings_type = writable([]);
