@@ -39,6 +39,7 @@ const handleClick = () => {
   }
 img {
     width: var(--card-image-width);
+    height: calc(var(--card-image-width) * (64 / 49));
     border-radius: calc(.5*var(--gutter));
     display: block;
 }
