@@ -30,7 +30,7 @@
         background-color: var(--dark-background);
         overflow-y: visible;
         position: absolute;
-        height: calc(100vh - 100vw * (143/1920) - 6 * var(--gutter));
+        height: calc(100dvh - 100vw * (143/1920) - 6 * var(--gutter));
         left: -100vw;
         transition: transform .5s cubic-bezier(0.075, 0.1, 0.165, 1);
         z-index: 3;

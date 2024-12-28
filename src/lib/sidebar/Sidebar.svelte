@@ -335,7 +335,7 @@ ul {
   overflow-y: auto;
 }
 .mobile_sidebar_content {
-  height: calc(100vh - 100vw*(143/1920) - 14.5*var(--gutter)); /*height of parent div minus it's padding minus close button height*/
+  height: calc(100dvh - 100vw*(143/1920) - 14.5*var(--gutter)); /*height of parent div minus it's padding minus close button height*/
 }
 .mobile_margin {
   margin-top: var(--gutter);

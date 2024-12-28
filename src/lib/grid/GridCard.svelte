@@ -37,9 +37,15 @@ const handleClick = () => {
   .card:active {
     transform: scale(0.98);
   }
+img {
+    width: var(--card-image-width);
+    border-radius: calc(.5*var(--gutter));
+    display: block;
+}
 </style>
 
 <!-- One Grid card -->
 <button class='card' title={item.name} on:click={handleClick}>
-  <ImageLoader src={'/api/i/' + item.name} alt=''/>
+  <!-- <ImageLoader src={'/api/i/' + item.name} alt=''/> -->
+   <img src={'/api/i/' + item.name} alt='' referrerpolicy='no-referrer' loading='lazy'/>
 </button>
