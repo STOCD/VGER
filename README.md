@@ -3,7 +3,7 @@
 
 VGER (**V**isual **G**lossary for **E**asy **R**eference) is a web-based glossary for Star Trek Online.<br>
 APP: https://vger.netlify.app <br>
-Website: https://stobuilds.com/VGER <br>
+Website: https://stobuilds.com/apps/vger <br>
 
 ## Functionality
 VGER consists of five modules: Four Visual Glossary modules for Starship and Personal Traits as well as for  Space and Ground Equipment. Number five is an acronym list for STO-specific acronyms. Each of the visual Glossary sections shows you an image grid with all items of the respective category. Because that's still too much to find a specific item in, it is highly encouraged to use the filters on the settings menu, which is opened with the hamburger button (three horizontal bars on top of each other) on the rightmost edge of the menu bar. For each module there are several filters available; it is possible to mix and match the filters. Not applying any filter shows the entire list. 
