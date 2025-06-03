@@ -7,7 +7,7 @@ import {equipment_types_ground, equipment_types_space, rarities, costs} from '$l
 import S31Badge from '$lib/assets/section31badge.webp';
 import STOBuildslogo from '$lib/assets/stobuildslogo.webp';
 
-const links = [{name:'Website',link:'https://stobuilds.com/VGER'},{name:'STOCD',link:'https://github.com/STOCD'},{name:'STOBuilds Discord',link:'https://discord.gg/stobuilds'}]
+const links = [{name:'Website',link:'https://stobuilds.com/apps/vger'},{name:'STOCD',link:'https://github.com/STOCD'},{name:'STOBuilds Discord',link:'https://discord.gg/stobuilds'}]
 
 // listens for request to open settings menu
 active_settings.subscribe(() => {
@@ -460,7 +460,7 @@ function keyVarToggle(event, variable, state) {
         cursor: pointer;
         position: absolute;
         border-radius: 20%;
-        background-color: var(--dark-background-hover);
+        background-color: var(--light-background);
         padding: var(--border);
     }
     .link_list {

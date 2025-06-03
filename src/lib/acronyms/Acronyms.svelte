@@ -1,6 +1,6 @@
 <script>
 
-import { srcValue, filtered, activeTab, mobile, mobile_description } from '$lib/stores';
+import { srcValue, filtered, activeTab, mobile, mobile_description, mobile_menu_active } from '$lib/stores';
 import { matchSorter } from 'match-sorter';
 import { onMount } from 'svelte';
 
@@ -23,7 +23,8 @@ onMount( () => {
 function rowClickAction(title=null, text=null, link=null) {
     currentLink = link
     if ($mobile) {
-        showDescription(title, text, link)
+        showDescription(title, text, link);
+        $mobile_menu_active = false;
     }
     else {
         openURL()

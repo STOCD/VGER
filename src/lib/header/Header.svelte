@@ -3,7 +3,11 @@
         activeTab, srcValue, active_settings, mobile, mobile_menu_active, mobile_sidebar_active
     } from '$lib/stores';
     import HamburgerIcon from './HamburgerIcon.svelte';
+    import InfoIcon from './InfoIcon.svelte';
+    import Close from './Close.svelte';
     import { slide } from 'svelte/transition';
+
+    let dialog_element;
 
     // expands settings menu
     const toggleSettings = (event) => {
@@ -24,6 +28,34 @@
         }
     }
 </script>
+
+<dialog bind:this={dialog_element}>
+    <div class='sticky_container' >
+        <button class='dialog_close icon_button' on:click={() => dialog_element.close()}><Close/></button>
+    </div>
+    <div>
+        <h2 class='first_heading'>General</h2>
+        <ul class='info_list'>
+            <li>Click an icon to show details in the sidebar.</li>
+            <li>The search bar can be used to narrow down shown icons.</li>
+            <li>Item names and ship names on starship traits link to the according wiki page.</li>
+            <li>Acronyms can be clicked to open a wiki page containing more information.</li>
+        </ul>
+        <h2>Search</h2>
+        <ul class='info_list'>
+            <li>The search recognizes acronyms in item names. Example: Searching "DPRM" will show "Console - Universal - Dynamic Power Redistributor Module".</li>
+            <li>In the starship traits module, searching for a ship name will show its trait(s).</li>
+            <li>Item descriptions are automatically searched within the starship and personal traits modules.</li>
+            <li>To search item descriptions in the equipment modules, enable the "Search Descriptions" setting.</li>
+        </ul>
+        <h2>Filters and Settings</h2>
+        <ul class='info_list'>
+            <li>Multiple filters can be applied, narrowing down shown icons. Selecting multiple filters requires an item to match all applied filters to be shown.</li>
+            <li>Some filter buttons can be hovered to reveal details on the filter.</li>
+        </ul>
+        <p class='more_info_text'>For more detailed information please visit our website, linked at the bottom of the settings menu.</p>
+    </div>
+</dialog>
 
 {#if !$mobile}
     <!-- DESKTOP -->
@@ -63,8 +95,9 @@
             </ul>
         </nav>
         <div class='controls'>
+            <button class='icon_button' on:click={() => dialog_element.showModal()}><InfoIcon/></button>
             <input type="text" id="search" bind:value={$srcValue} placeholder="SEARCH" title='search the current tab'/>
-            <button class="hamburger desktop_button" on:click={toggleSettings} title='Settings and Filters (tab-specific)'><HamburgerIcon /></button>
+            <button class="icon_button" on:click={toggleSettings} title='Settings and Filters (tab-specific)'><HamburgerIcon /></button>
         </div>
     </header>
     <div class='seperator_background'><div class='seperator'></div></div>
@@ -74,7 +107,7 @@
     <header>
         <button id='mobile_menu_button' class='desktop_button' on:click={()=>toggleMenu()}>Menu</button>
         <input type="text" id="search" bind:value={$srcValue} placeholder="SEARCH" title='search the current tab'/>
-        <button class='hamburger desktop_button' on:click={toggleSettings} title='Settings and Filters (tab-specific)'><HamburgerIcon /></button>
+        <button class='icon_button' on:click={toggleSettings} title='Settings and Filters (tab-specific)'><HamburgerIcon /></button>
     </header>
 
     {#if $mobile_menu_active}
@@ -109,6 +142,9 @@
                             href='acronyms'>
                         Acronyms
                     </a>
+                </li>
+                <li class='mobile_li'>
+                    <button class='mobile_button' on:click={() => dialog_element.showModal()}>Short Guide</button>
                 </li>
             </ul>
         </div>
@@ -200,6 +236,7 @@
     text-decoration: none;
     text-transform: uppercase;
     font-weight: bold;
+    font-size: 1rem;
     width: 100%;
     height: 2.5rem;
   }
@@ -214,11 +251,8 @@
     background-color: var(--dark-background-hover);
     text-decoration: underline;
   }
-  .desktop_button:active:not(.hamburger),.mobile_button:active:not(.hamburger) {
+  .desktop_button:active, .mobile_button:active {
     transform: scale(0.98);
-  }
-  .hamburger:active {
-    background-color: var(--science-blue-dimmed);
   }
   .controls {
     width: 30%;
@@ -226,10 +260,18 @@
     align-items: center;
     justify-content: right;
   }
-  .hamburger {
-    width: 15%;
+  .icon_button {
+    color: var(--medium-text);
+    background: none;
+    border: none;
+    height: 100%;
     display: flex;
     align-items: center;
+    justify-content: center;
+  }
+  .icon_button:hover {
+    color: var(--light-text);
+    cursor: pointer;
   }
   #mobile_menu {
     position: absolute;
@@ -252,5 +294,49 @@
   .seperator_background {
     display: block;
     background-color: var(--dark-background);
+  }
+  dialog {
+    background-color: var(--dark-background);
+    border: var(--border) solid var(--science-blue);
+    border-radius: var(--gutter);
+    color: var(--light-text);
+    max-width: 95vw;
+    padding: 1.2rem;
+  }
+  dialog::backdrop {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(1px);
+  }
+  .dialog_close {
+    padding: var(--gutter);
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: fit-content;
+    border-radius: 50%;
+    background-color: #1a1a1aaa;
+  }
+  .sticky_container {
+    position: sticky;
+    top: 0;
+    right: 0;
+  }
+  h2 {
+    margin-top: 1.2rem;
+    margin-bottom: 0;
+  }
+  .first_heading {
+    margin-top: 0;
+  }
+  .info_list {
+    margin-top: var(--gutter);
+    margin-bottom: 0;
+    padding-left: 2rem;
+    line-height: 130%;
+  }
+  .more_info_text {
+    margin-bottom: 0;
+    margin-top: 1.2rem;
+    font-style: italic;
   }
 </style>
