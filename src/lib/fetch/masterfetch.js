@@ -14,7 +14,7 @@ export async function fresh_data_handler(version, data_factory, cache_path) {
     return new Response(
         'One or more cargo queries failed.',
         {status: 503, headers: {'Content-Type': 'text/plain'}}
-    )
+    );
 }
 
 
@@ -74,7 +74,14 @@ function store_json(object, file_path) {
 // wrapper for creating and storing data
 export async function data_iteration(version, data_factory, cache_path, silent=true) {
     if (silent == true) {
-        data_factory(version).then(new_data => store_json(new_data, cache_path));
+        data_factory(version).then(new_data => {
+            if (new_data === null) {
+                return null;
+            }
+            else {
+                store_json(new_data, cache_path);
+            }
+        });
         return null;
     }
     else {

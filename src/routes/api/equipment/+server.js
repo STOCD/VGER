@@ -8,7 +8,7 @@ than one day (same behavior if no parameter is supplied)
 
 
 import { 
-    data_iteration,  fetch_cache, fetch_json, fresh_data_handler
+    data_iteration, fetch_cache, fetch_json, fresh_data_handler
 } from '$lib/fetch/masterfetch'
 import {
     compensate_url, compensate_wiki_description, equipment_types_ground,
