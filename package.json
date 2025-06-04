@@ -1,6 +1,6 @@
 {
 	"name": "vger",
-	"version": "2.2.1",
+	"version": "2.2.2",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -8,8 +8,6 @@
 		"preview": "vite preview"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^3.0.0",
-		"@sveltejs/adapter-netlify": "^4.1.0",
 		"@sveltejs/adapter-node": "^5.0.1",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
@@ -18,7 +16,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"follow-redirects-fast": "^1.1.2",
 		"match-sorter": "^6.3.4",
 		"sharp": "^0.33.5"
 	}
