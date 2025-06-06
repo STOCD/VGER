@@ -11,6 +11,8 @@
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
 
+  export let data;
+
   $: {
     switch ($page.url.pathname) {
         case '/starship-traits':
@@ -81,7 +83,7 @@
 
 <div class='background'>
     <!-- Menu bar -->
-    <Header />
+    <Header vger_data={data}/>
 
     <!-- Settings sidebar, outside of viewport by default -->
     <Settings/>

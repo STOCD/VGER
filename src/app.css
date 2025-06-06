@@ -10,6 +10,7 @@
     --science-blue: #1265c3;
     --science-blue-dimmed: rgba(18, 101, 195, .2);
     --science-blue-transparent: rgba(18, 101, 195, .1);
+    --science-blue-mark: rgba(18, 101, 195, .7);
     --gray-text: #888888;
     --medium-text: #bbb;
     --light-text: #eee;
@@ -32,6 +33,10 @@
 
 * {
   box-sizing: border-box;
+}
+
+::selection {
+    background-color: var(--science-blue-transparent);
 }
 
 body {
@@ -86,6 +91,12 @@ aside {
     box-sizing: border-box;
     animation: rotation 2s linear infinite;
 }
+.loading.small {
+    border-width: var(--border);
+    border-radius: .37rem;
+    height: .8rem;
+    width: .8rem;
+}
 
 .loader_container {
     display: flex;
@@ -93,5 +104,8 @@ aside {
     width: 100%;
     align-items: center;
     justify-content: center;
+}
+.loader_container.small {
+    display: inline;
 }
 

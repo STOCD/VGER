@@ -1,13 +1,25 @@
 <script>
     import {
-        activeTab, srcValue, active_settings, mobile, mobile_menu_active, mobile_sidebar_active
+        activeTab, active_settings, mobile, mobile_menu_active, mobile_sidebar_active, srcValue
     } from '$lib/stores';
+    import Close from './Close.svelte';
     import HamburgerIcon from './HamburgerIcon.svelte';
     import InfoIcon from './InfoIcon.svelte';
-    import Close from './Close.svelte';
+    import Search from './Search.svelte';
     import { slide } from 'svelte/transition';
+    import { afterNavigate } from '$app/navigation';
+    import { page } from '$app/stores';
+
+    export let vger_data;
 
     let dialog_element;
+
+    afterNavigate(() => {
+        const sv = $page.url.searchParams.get('s');
+        if (sv != null) {
+            $srcValue = sv;
+        }
+    });
 
     // expands settings menu
     const toggleSettings = (event) => {
@@ -47,6 +59,7 @@
             <li>In the starship traits module, searching for a ship name will show its trait(s).</li>
             <li>Item descriptions are automatically searched within the starship and personal traits modules.</li>
             <li>To search item descriptions in the equipment modules, enable the "Search Descriptions" setting.</li>
+            <li>Hitting Enter on the search bar opens a search window that searches all visual glossary modules including descriptions.</li>
         </ul>
         <h2>Filters and Settings</h2>
         <ul class='info_list'>
@@ -96,7 +109,7 @@
         </nav>
         <div class='controls'>
             <button class='icon_button' on:click={() => dialog_element.showModal()}><InfoIcon/></button>
-            <input type="text" id="search" bind:value={$srcValue} placeholder="SEARCH" title='search the current tab'/>
+            <Search vger_data={vger_data}/>
             <button class="icon_button" on:click={toggleSettings} title='Settings and Filters (tab-specific)'><HamburgerIcon /></button>
         </div>
     </header>
@@ -106,7 +119,7 @@
     <!-- MOBILE -->
     <header>
         <button id='mobile_menu_button' class='desktop_button' on:click={()=>toggleMenu()}>Menu</button>
-        <input type="text" id="search" bind:value={$srcValue} placeholder="SEARCH" title='search the current tab'/>
+        <Search vger_data={vger_data}/>
         <button class='icon_button' on:click={toggleSettings} title='Settings and Filters (tab-specific)'><HamburgerIcon /></button>
     </header>
 
@@ -163,24 +176,6 @@
     background-color: var(--dark-background);
     z-index: 3;
     border-radius: var(--gutter) var(--gutter) 0 0;
-  }
-  #search {
-    margin: var(--border) var(--gutter);
-    height: 70%;
-    width: 100%;
-    align-self: center;
-    font-size: 1rem;
-    padding: 0 0.25rem;
-    border: var(--border) solid var(--dark-background-hover);
-    border-radius: calc(2*var(--border));
-    background-color: var(--dark-background);
-    color: var(--light-text);
-  }
-  #search:hover {
-    background-color: var(--dark-background-hover);
-  }
-  #search::placeholder {
-    color: var(--light-text);
   }
   nav {
     width: 70%;
@@ -255,6 +250,7 @@
     transform: scale(0.98);
   }
   .controls {
+    height: 100%;
     width: 30%;
     display: flex;
     align-items: center;
