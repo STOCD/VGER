@@ -28,12 +28,12 @@ const trait_query =
     + 'tables=Traits&'
     + 'fields=Traits._pageName%3DPage,'
     + 'Traits.name,'
-    + 'Traits.chartype,'
     + 'Traits.environment,'
     + 'Traits.type,'
     + 'Traits.required,'
     + 'Traits.possible,'
-    + 'Traits.description&'
+    + 'Traits.description,'
+    + 'Traits.short_description&'
     + 'limit=2500&'
     + 'format=json';
 
@@ -114,7 +114,7 @@ async function create_data(version) {
 
     for (let i2 = 0; i2 < trait_json.length; i2++) {
         let current_page = trait_json[i2];
-        if ('chartype' in current_page && current_page['chartype'] == 'char') {
+        if ('type' in current_page && current_page['type'] != 'boff' && current_page['type'] != 'doff') {
             if ('name' in current_page
                 && current_page['name'] !== ''
                 && current_page['name'] !== null)

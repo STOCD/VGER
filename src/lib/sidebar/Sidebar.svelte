@@ -20,13 +20,19 @@
   }
 
   // gets wiki page link
-  function getLink(type, name) {
-    if (type == 'trait') {
-      return wikihttp + '/Trait:_' + name.replaceAll(' ','_');
+  function getTraitLink(name, environment) {
+    if ($activeTab == 'Starship Traits') {
+        return wikihttp + '/' + name.replaceAll(' ','_') + '_(starship_trait)';
     }
-    else if (type == 'none') {
-      return wikihttp + '/' + name.replaceAll(' ','_');
+    else if ($activeTab == 'Personal Traits') {
+        return wikihttp + '/' + name.replaceAll(' ','_') + '_(' + environment + '_trait)';
     }
+    return '' 
+  }
+
+  // gets wiki page link
+  function getLink(name) {
+    return wikihttp + '/' + name.replaceAll(' ','_');
   }
 
   // makes the display type look pretty
@@ -57,7 +63,7 @@
 
     <!-- Name of currently selected item with link -- Traits -->
     {#if $activeTab == 'Starship Traits' || $activeTab == 'Personal Traits'}
-      <a class='item_name' href={getLink('trait', $activeCard.name)} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
+      <a class='item_name' href={getTraitLink($activeCard.name, $activeCard.environment)} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
           on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')}
           on:focus={event => showLinkIcon(event, 'link_icon_header')} on:blur={event => hideLinkIcon(event, 'link_icon_header')}>
         <span class='hover_underline' class:mobile_underline='{$mobile}'>{$activeCard.name}</span>
@@ -87,7 +93,7 @@
       <ul class='item_obtained'>
         {#each $activeCard.obtained as method, i}
           <li style="font-size: 100%;" class:mobile_margin='{$mobile}'>
-            <a href={getLink('none', method)} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
+            <a href={getLink(method)} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
               on:mouseover={event => showLinkIcon(event, 'link_icon_'+i)} on:mouseleave={event => hideLinkIcon(event, 'link_icon_'+i)}
               on:focus={event => showLinkIcon(event, 'link_icon_'+i)} on:blur={event => hideLinkIcon(event, 'link_icon_'+i)}>
               <i class='fa fa-angle-right'/>
