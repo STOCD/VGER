@@ -59,7 +59,7 @@
   <div class='sidebar_content' class:mobile_sidebar_content='{$mobile}'>
 
     <!-- Image of current card -->
-    <img class='aside_image' src={'/api/i/' + $activeCard.name} referrerpolicy='no-referrer' alt={$activeCard.name}>
+    <img class='aside_image' src={'/api/i/' + ($activeCard.icon_name ? $activeCard.icon_name : $activeCard.name)} referrerpolicy='no-referrer' alt={$activeCard.name}>
 
     <!-- Name of currently selected item with link -- Traits -->
     {#if $activeTab == 'Starship Traits' || $activeTab == 'Personal Traits'}

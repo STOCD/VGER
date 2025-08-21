@@ -33,7 +33,8 @@ const trait_query =
     + 'Traits.required,'
     + 'Traits.possible,'
     + 'Traits.description,'
-    + 'Traits.short_description&'
+    + 'Traits.short_description,'
+    + 'Traits.icon_name&'
     + 'limit=2500&'
     + 'format=json';
 
@@ -197,6 +198,11 @@ async function create_data(version) {
                     availability_type = 'species';
                 }
 
+                let icon_name = compensate_name(current_page['name'])
+                if (current_page['icon name'] !== null) {
+                    icon_name = compensate_name(current_page['icon name'])
+                }
+
                 temp_data.personal_traits.push({
                     'name': compensate_name(current_page['name']),
                     'type': type,
@@ -204,7 +210,8 @@ async function create_data(version) {
                     'display_type': display_type,
                     'desc': compensate_wiki_description(current_page.description),
                     'availability': availability,
-                    'availability_type': availability_type
+                    'availability_type': availability_type,
+                    'icon_name': icon_name
                 });
             }
         }

@@ -2,9 +2,18 @@
 import {
     activeCard, mobile_sidebar_active, active_settings, mobile_menu_active
 } from '$lib/stores';
-import ImageLoader from './ImageLoader.svelte';
     
 export let item;
+
+let icon_name
+$: {
+    if (item.icon_name) {
+        icon_name = '/api/i/' + item.icon_name
+    }
+    else {
+        icon_name = '/api/i/' + item.name
+    }
+}
 
 // makes this card the active card
 const handleClick = () => {
@@ -47,6 +56,5 @@ img {
 
 <!-- One Grid card -->
 <button class='card' title={item.name} on:click={handleClick}>
-  <!-- <ImageLoader src={'/api/i/' + item.name} alt=''/> -->
-   <img src={'/api/i/' + item.name} alt='' referrerpolicy='no-referrer' loading='lazy'/>
+   <img src={icon_name} alt='' referrerpolicy='no-referrer' loading='lazy'/>
 </button>
