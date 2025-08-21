@@ -28,6 +28,6 @@
 
 <Intersector once={once_var} let:intersecting={intersecting}>
     {#if intersecting}
-        <img {src} {alt} on:error={image_error} bind:this={this_image} referrerpolicy='no-referrer' loading='lazy'/>
+        <img {src} {alt} on:error={image_error} bind:this={this_image} loading='lazy'/>
     {/if}
 </Intersector>

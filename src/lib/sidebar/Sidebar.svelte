@@ -59,11 +59,11 @@
   <div class='sidebar_content' class:mobile_sidebar_content='{$mobile}'>
 
     <!-- Image of current card -->
-    <img class='aside_image' src={'/api/i/' + ($activeCard.icon_name ? $activeCard.icon_name : $activeCard.name)} referrerpolicy='no-referrer' alt={$activeCard.name}>
+    <img class='aside_image' src={'/api/i/' + ($activeCard.icon_name ? $activeCard.icon_name : $activeCard.name)} alt={$activeCard.name}>
 
     <!-- Name of currently selected item with link -- Traits -->
     {#if $activeTab == 'Starship Traits' || $activeTab == 'Personal Traits'}
-      <a class='item_name' href={getTraitLink($activeCard.name, $activeCard.environment)} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
+      <a class='item_name' href={getTraitLink($activeCard.name, $activeCard.environment)} target='_blank' rel='noopener' referrerpolicy='origin'
           on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')}
           on:focus={event => showLinkIcon(event, 'link_icon_header')} on:blur={event => hideLinkIcon(event, 'link_icon_header')}>
         <span class='hover_underline' class:mobile_underline='{$mobile}'>{$activeCard.name}</span>
@@ -72,7 +72,7 @@
     
     <!-- Name of currently selected item with link -- Equipment -->
     {:else if $activeTab == 'Space Equipment' || $activeTab == 'Ground Equipment'}
-      <a class='item_name' href={$activeCard.url} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
+      <a class='item_name' href={$activeCard.url} target='_blank' rel='noopener' referrerpolicy='origin'
           on:mouseover={event => showLinkIcon(event, 'link_icon_header')} on:mouseleave={event => hideLinkIcon(event, 'link_icon_header')}
           on:focus={event => showLinkIcon(event, 'link_icon_header')} on:blur={event => hideLinkIcon(event, 'link_icon_header')}>
         <span class='hover_underline' class:mobile_underline='{$mobile}'>{$activeCard.name}</span>
@@ -93,7 +93,7 @@
       <ul class='item_obtained'>
         {#each $activeCard.obtained as method, i}
           <li style="font-size: 100%;" class:mobile_margin='{$mobile}'>
-            <a href={getLink(method)} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
+            <a href={getLink(method)} target='_blank' rel='noopener' referrerpolicy='origin'
               on:mouseover={event => showLinkIcon(event, 'link_icon_'+i)} on:mouseleave={event => hideLinkIcon(event, 'link_icon_'+i)}
               on:focus={event => showLinkIcon(event, 'link_icon_'+i)} on:blur={event => hideLinkIcon(event, 'link_icon_'+i)}>
               <i class='fa fa-angle-right'/>

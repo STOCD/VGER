@@ -344,7 +344,7 @@ function keyVarToggle(event, variable, state) {
                 Check out links below!
             </p>
             {#each links as link, i}
-                <a style="font-size: 70%;" class='link_list' class:mobile_margin='{$mobile}' href={link.link} target='_blank' rel='noopener noreferrer' referrerpolicy='no-referrer'
+                <a style="font-size: 70%;" class='link_list' class:mobile_margin='{$mobile}' href={link.link} target='_blank' rel='noopener' referrerpolicy='origin'
                         on:mouseover={event => showLinkIcon(event, 'settings_link_icon'+i)} on:mouseleave={event => hideLinkIcon(event, 'settings_link_icon'+i)}
                         on:focus={event => showLinkIcon(event, 'settings_link_icon'+i)} on:blur={event => hideLinkIcon(event, 'settings_link_icon'+i)}>
                     <i class='fa fa-angle-right'/>

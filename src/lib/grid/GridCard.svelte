@@ -56,5 +56,5 @@ img {
 
 <!-- One Grid card -->
 <button class='card' title={item.name} on:click={handleClick}>
-   <img src={icon_name} alt='' referrerpolicy='no-referrer' loading='lazy'/>
+   <img src={icon_name} alt='' loading='lazy'/>
 </button>

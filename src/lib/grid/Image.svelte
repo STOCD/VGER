@@ -27,4 +27,4 @@
     }
 </style>
 
-<img {src} {alt} class:loaded bind:this={thisImage} referrerpolicy='no-referrer' loading='lazy'/>
+<img {src} {alt} class:loaded bind:this={thisImage} loading='lazy'/>
