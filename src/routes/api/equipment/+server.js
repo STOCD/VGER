@@ -118,12 +118,13 @@ async function create_data(version) {
 
     for (let i3 = 0; i3 < equipment_json.length; i3++) {
         const current_item = equipment_json[i3];
-        if (!current_item.name == ''
+        if (current_item.name != ''
             && (equipment_types_space.includes(current_item.type)
                 || equipment_types_ground.includes(current_item.type))
             && ((current_item.name.indexOf('Hangar - Advanced') == -1
                 && current_item.name.indexOf('Hangar - Elite') == -1)
-                    || current_item.name.indexOf('Valor') != -1))
+                    || current_item.name.indexOf('Valor') != -1
+                    || current_item.name.indexOf('Federation Mission Scout') != -1))
         {
 
             let current_name = current_item.name;
