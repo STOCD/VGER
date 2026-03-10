@@ -1,3 +1,4 @@
+<!-- svelte-ignore a11y-autofocus -->
 <script>
     import {
         srcValue, mobile
@@ -50,6 +51,11 @@
     beforeNavigate(() => {
         dialog_element.close();
     });
+
+    function clear_search(event) {
+        global_search_element.value = '';
+        update_search();
+    }
 
     function show_search_key(event) {
         if (event.key == 'Enter') {
@@ -173,6 +179,21 @@
         max-height: 100%;
         overflow: hidden;
     }
+    .clear_search {
+        align-self: center;
+        align-content: center;
+        background: none;
+        border: none;
+        color: var(--gray-text);
+        cursor: pointer;
+        display: flex;
+        height: fit-content;
+        margin-right: var(--gutter);
+        visibility: hidden;
+    }
+    .clear_search:hover {
+        color: var(--medium-text);
+    }
     .container {
         display: flex;
         width: 100%;
@@ -182,6 +203,22 @@
         border: var(--border) solid var(--light-background);
         border-radius: var(--gutter);
     }
+    .dialog_close {
+        align-self: flex-end;
+        align-content: center;
+        background-color: var(--dark-background);
+        border: none;
+        border-radius: 50%;
+        color: var(--gray-text);
+        cursor: pointer;
+        display: flex;
+        padding: var(--gutter);
+        margin-bottom: var(--gutter);
+        width: fit-content;
+    }
+    .dialog_close:hover {
+        color: var(--medium-text);
+    }
     .key {
         align-self: center;
         background: none;
@@ -189,19 +226,10 @@
         border-radius: calc(.5 * var(--gutter));
         box-shadow: var(--border) var(--border) .5px #555555;
         color: var(--medium-text);
+        cursor: pointer;
         height: fit-content;
         margin-right: var(--gutter);
         visibility: hidden;
-    }
-    .icon_button {
-        background: none;
-        border: none;
-        padding: 0 var(--gutter);
-        color: var(--gray-text);
-    }
-    .icon_button:hover {
-        color: var(--light-text);
-        cursor: pointer;
     }
     .loading_placeholder {
         color: var(--medium-text);
@@ -256,7 +284,21 @@
     }
     .search_bar {
         display: flex;
+        min-height: 1.8rem;
         width: 100%;
+    }
+    .search_button {
+        align-self: center;
+        background: none;
+        border: none;
+        color: var(--gray-text);
+        display: flex;
+        padding: 0 var(--gutter);
+        margin-right: var(--gutter);
+    }
+    .search_button:hover {
+        color: var(--light-text);
+        cursor: pointer;
     }
     .search_header {
         border-radius: var(--gutter);
@@ -278,35 +320,37 @@
         top: 0;
         z-index: 2;
     }
-    .h_seperator {
+    .h_separator {
         background-color: var(--light-background-hover);
         margin: 0 var(--gutter);
         padding-top: var(--border);
     }
-    .v_seperator {
+    .v_separator {
         background-color: var(--light-background-hover);
         margin: 0;
         width: var(--border);
     }
-    .show_key {
+
+    .button_visible {
         visibility: visible;
     }
 </style>
 
 <dialog bind:this={dialog_element}>
+    <button class='dialog_close' on:click={() => dialog_element.close()}><Close/></button>
     <div class='bg_container'>
         <div class='search_header'>
             <div class='search_bar'>
-                <input type='text' id='global_search' placeholder='Search' bind:this={global_search_element} on:keydown={(event) => update_search_key(event)}>
-                <button class='icon_button'><SearchIcon/></button>
+                <input autofocus type='text' id='global_search' placeholder='Search' bind:this={global_search_element} on:keydown={(event) => update_search_key(event)}>
+                <button class='clear_search' class:button_visible={$srcValue.length > 0} on:click={() => clear_search()}><Close width=18 height=18/></button>
+                <div class='v_separator'></div>
+                <button class='search_button' on:click={update_search}><SearchIcon/></button>
             </div>
-            <div class='v_seperator'></div>
-            <button class='icon_button' on:click={() => dialog_element.close()}><Close/></button>
         </div>
         {#if !search_ready}
             <div class='loading_placeholder'>Search loading <div class='loader_container small'><span class='loading small'></span></div></div>
         {:else if search_results.starship_traits.length + search_results.space_equipment.length + search_results.ground_equipment.length + search_results.traits.length > 0 }
-            <div class='h_seperator'></div>
+            <div class='h_separator'></div>
             <div class='results_scroll' bind:this={results_element}>
                 {#if search_results.starship_traits.length > 0}
                     <h2 class='section_header'>Starship Traits</h2>
@@ -352,5 +396,6 @@
 
 <div class='container' class:mobile={$mobile}>
     <input type='text' id='search' placeholder='Search' bind:value={$srcValue} on:keyup={(event) => show_search_key(event)} title='Search the current module. Hit Enter to search globally.'/>
-    <button class='key' class:show_key={$srcValue.length > 0} on:click={() => show_search()}><EnterIcon/></button>
+    <button class='clear_search' class:button_visible={$srcValue.length > 0} on:click={() => $srcValue = ''}><Close width=18 height=18/></button>
+    <button class='key' class:button_visible={$srcValue.length > 0} on:click={() => show_search()}><EnterIcon/></button>
 </div>
