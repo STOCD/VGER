@@ -1,6 +1,9 @@
 /* Fetching helper functions */
 import { writeFile, readFileSync } from 'fs';
 
+const env_file_path = import.meta.env.VITE_ENV_FOLDER_PATH + '/requests.env';
+const env_identifiers = ['CF_CLEARANCE', 'USER_AGENT'];
+
 
 // creates fresh data and returns it
 export async function fresh_data_handler(version, data_factory, cache_path) {
@@ -18,11 +21,38 @@ export async function fresh_data_handler(version, data_factory, cache_path) {
 }
 
 
+// parses env file
+function get_requests_env() {
+    const env_string = readFileSync(env_file_path, {encoding: 'utf-8'});
+    const env_vars = {};
+    if (env_string != null && env_string.length > 0) {
+        for (let line of env_string.split('\n')) {
+            for (let identifier of env_identifiers) {
+                if (line.startsWith(identifier + '=')) {
+                    env_vars[identifier] = line.trim().slice(identifier.length + 1);
+                }
+            }
+        }
+    }
+    return env_vars;
+}
+
+
 // requests and returns a json
 export async function fetch_json(url) {
+    const env_vars = get_requests_env();
+    const headers = {
+        'Accept': 'application/json'
+    }
+    if ('CF_CLEARANCE' in env_vars) {
+        headers['cookie'] = `cf_clearance=${env_vars.CF_CLEARANCE};`;
+    }
+    if ('USER_AGENT' in env_vars) {
+        headers['User-Agent'] = env_vars.USER_AGENT;
+    }
     const res = await fetch(
         url,
-        {headers: {method: 'GET', headers: {'Accept': 'application/json'}}}
+        {headers: headers, method: 'GET'}
     );
     if (res.ok) {
         const json_data = await res.json();

@@ -10,5 +10,6 @@ services:
     volumes:
       - ${VGER_DATA_FOLDER_PATH}:${VITE_DATA_FOLDER_PATH}:rw
       - ${VGER_IMAGE_FOLDER_PATH}:${VITE_IMAGE_FOLDER_PATH}:rw
+      - ${VGER_ENV_FOLDER_PATH}:${VITE_ENV_FOLDER_PATH}:r
     ports:
       - "${VGER_PORT}:3000"
