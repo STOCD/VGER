@@ -22,7 +22,7 @@ export async function fresh_data_handler(version, data_factory, cache_path) {
 
 
 // parses env file
-function get_requests_env() {
+export function get_requests_env() {
     const env_string = readFileSync(env_file_path, {encoding: 'utf-8'});
     const env_vars = {};
     if (env_string != null && env_string.length > 0) {
