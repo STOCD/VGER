@@ -32,7 +32,8 @@ const starship_trait_query =
     + 'StarshipTraits.type,'
     + 'StarshipTraits.detailed,'
     + 'StarshipTraits.obtained,'
-    + 'StarshipTraits.basic&'
+    + 'StarshipTraits.basic,'
+    + 'StarshipTraits.icon_name=icon_name&'
     + 'limit=2500&'
     + 'format=json';
 
@@ -186,14 +187,18 @@ async function create_data(version) {
                     cost_filter.push('Mission / Exchange / Specialization')
                 }
             }
-            temp_data.starship_traits.push({
+            let starship_trait = {
                 'name': compensate_name(current_trait.name),
                 'type': 'Starship Trait',
                 'obtained': obtained,
                 'cost': costs,
                 'cost_filter': cost_filter,
                 'desc': compensate_wiki_description(current_trait.detailed)
-            });
+            }
+            if (current_trait.icon_name != null) {
+                starship_trait.icon_name = current_trait.icon_name;
+            }
+            temp_data.starship_traits.push(starship_trait);
         }
     }
 
